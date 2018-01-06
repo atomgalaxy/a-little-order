@@ -109,21 +109,21 @@
 \newcommand{\cvref}{\emph{cv-ref qualifiers}\xspace}
 \newcommand{\spaceship}{\ensuremath{<=>}\xspace}
 
-%\date{\today}
+\date{2018-01-06}
 \title{Allow user overriding of \code{strong\_order} in p0768}
-%\author{Gašper Ažman}
+\author{Gašper Ažman}
 
 \newcommand{\emailaddressa}{gasper.azman@gmail.com}
 \newcommand{\emaila}{\href{mailto:\emailaddressa}{\emailaddressa}}
 
 \begin{document}
 
-\maketitle\vspace{-2cm}
+\maketitle
 
 \begin{flushright}
   \begin{tabular}{ll}
   Document \mypound{}: &DxxxxR0\\
-  Date:       &\today\\
+  Date:       &2018-01-06\\
   Audience:   &Library Working Group\\
   Reply-to:   &\author{Gašper Ažman}, \emailaddressa\\
   \end{tabular}
@@ -175,14 +175,14 @@ constexpr strong\_ordering strong\_order(const T\& a, const T\& b);}
 Point 1.1 hints at the potential for \code{strong\_order} to be the elusive
 \emph{default ordering} that Stepanov and McJones require for \emph{Regular}
 types to enable logarithmic searching and algorithms such as
-Unique.\cite{EoP}, page 62, section 4.4.
+unique(\cite{EoP}, page 62, section 4.4).
 
-In Elements of Programming, they make it a point to mention that many types do
-not have a \emph{natural order}, but a \emph{default order} (a total order that
-respects at least representational equality) should be provided for all
-\emph{Regular} types, because the efficiency gains enabled by sorting are
-enormous. For types that do have a natural total order (possibly only in some of
-the domain), the \emph{default order} should agree with it wherever defined.
+Elements of Programming stresses that many types do not have a \emph{natural
+order}; even then, a \emph{default order} (a total order that respects at least
+representational equality) should be provided for all \emph{Regular} types,
+because the efficiency gains enabled by sorting are enormous. For types that do
+have a natural total order (possibly only in some of the domain), the
+\emph{default order} should agree with it wherever defined.
 
 As an example, the lexicographic ordering of the gaussian integers would be one
 such default order: any two comparable numbers ($1+0j < 2+0j$, $0+1j < 0+2j$)
