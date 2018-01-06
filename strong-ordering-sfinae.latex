@@ -1,0 +1,247 @@
+\documentclass[a4paper]{article}
+
+\usepackage{color}
+\usepackage{xcolor}
+\usepackage{fullpage}
+\usepackage[colorlinks, allcolors=blue]{hyperref}
+\usepackage{listings}
+\usepackage{parskip}
+\usepackage{url}
+\usepackage{courier}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{xspace}
+% \usepackage{libertine}%% Only as example for the romans/sans fonts
+\usepackage[scaled=0.85]{beramono}
+\usepackage{changepage}
+\usepackage{nameref}
+\usepackage[nottoc]{tocbibind}
+
+\usepackage[bordercolor=white,backgroundcolor=gray!30,linecolor=black,colorinlistoftodos]{todonotes}
+\newcommand{\takeaway}[1]{\todo[color=yellow,inline]{#1}}
+
+\usepackage[style=iso]{datetime2}
+\usepackage{biblatex}
+\addbibresource{bibliography.bib}
+
+% Solarized colour scheme for listings
+\definecolor{solarized@base03}{HTML}{002B36}
+\definecolor{solarized@base02}{HTML}{073642}
+\definecolor{solarized@base01}{HTML}{586e75}
+\definecolor{solarized@base00}{HTML}{657b83}
+\definecolor{solarized@base0}{HTML}{839496}
+\definecolor{solarized@base1}{HTML}{93a1a1}
+\definecolor{solarized@base2}{HTML}{EEE8D5}
+\definecolor{solarized@base3}{HTML}{FDF6E3}
+\definecolor{solarized@yellow}{HTML}{B58900}
+\definecolor{solarized@orange}{HTML}{CB4B16}
+\definecolor{solarized@red}{HTML}{DC322F}
+\definecolor{solarized@magenta}{HTML}{D33682}
+\definecolor{solarized@violet}{HTML}{6C71C4}
+\definecolor{solarized@blue}{HTML}{268BD2}
+\definecolor{solarized@cyan}{HTML}{2AA198}
+\definecolor{solarized@green}{HTML}{859900}
+
+\lstset{
+  basicstyle=\footnotesize\ttfamily,
+  rangeprefix=//\ ,
+  includerangemarker=false,
+}
+
+% Define C++ syntax highlighting colour scheme
+\lstdefinelanguage{cpp}{
+  language=C++,
+  basicstyle=\footnotesize\ttfamily,
+  numbers=left,
+  numberstyle=\footnotesize,
+  tabsize=2,
+  breaklines=true,
+  escapeinside={@}{@},
+  numberstyle=\tiny\color{solarized@base01},
+  keywordstyle=\color{solarized@green},
+  stringstyle=\color{solarized@cyan}\ttfamily,
+  identifierstyle=\color{solarized@blue},
+  commentstyle=\color{solarized@base01},
+  emphstyle=\color{solarized@red},
+  frame=single,
+  rulecolor=\color{solarized@base2},
+  rulesepcolor=\color{solarized@base2},
+  showstringspaces=false,
+}
+
+\lstdefinelanguage{diff}{
+  morecomment=[f][\color{blue}]{@@},           % group identifier
+  morecomment=[f][\color{red}]{-},             % deleted lines
+  morecomment=[f][\color{green!50!black}]{+},  % added lines
+  morecomment=[f][\color{magenta}]{---},       % diff header lines
+  morecomment=[f][\color{magenta}]{+++},
+}
+
+\lstdefinelanguage{plus}{
+  basicstyle=\footnotesize\ttfamily\color{green!50!black},
+  emph={see,below,TypeSwitch,unspecified},
+  emphstyle=\itshape
+}
+
+\lstdefinelanguage{signature}{
+  basicstyle=\ttfamily\color{green!50!black},
+  emph={see,below,TypeSwitch,unspecified},
+  emphstyle=\itshape
+}
+
+\newcommand{\desc}[1]{\textit{#1}}
+\newcommand{\requires}{\desc{Requires}}
+\newcommand{\effects}{\desc{Effects}}
+\newcommand{\precondition}{\desc{Precondition}}
+\newcommand{\postcondition}{\desc{Postcondition}}
+\newcommand{\throws}{\desc{Throws}}
+\newcommand{\returns}{\desc{Returns}}
+\newcommand{\remarks}{\desc{Remarks}}
+\newcommand{\exceptionsafety}{\desc{Exception Safety}}
+\newcommand{\fullref}[1]{\ref{#1} \nameref{#1}}
+
+\def\code#1{\texttt{#1}}
+\newcommand\mypound{\protect\scalebox{0.8}{\raisebox{0.4ex}{\#}}}
+\newcommand{\CC}{C\nolinebreak\hspace{-.05em}\raisebox{0.4ex}{\resizebox{!}{0.6\height}{\bf++}}}
+\newcommand{\cplusplus}{\protect\CC}
+\newcommand{\this}{\code{this}\xspace}
+\newcommand{\self}{\code{self}\xspace}
+\newcommand{\cvref}{\emph{cv-ref qualifiers}\xspace}
+\newcommand{\spaceship}{\ensuremath{<=>}\xspace}
+
+%\date{\today}
+\title{Allow user overriding of \code{strong\_order} in p0768}
+%\author{Gašper Ažman}
+
+\newcommand{\emailaddressa}{gasper.azman@gmail.com}
+\newcommand{\emaila}{\href{mailto:\emailaddressa}{\emailaddressa}}
+
+\begin{document}
+
+\maketitle\vspace{-2cm}
+
+\begin{flushright}
+  \begin{tabular}{ll}
+  Document \mypound{}: &DxxxxR0\\
+  Date:       &\today\\
+  Audience:   &Library Working Group\\
+  Reply-to:   &\author{Gašper Ažman}, \emailaddressa\\
+  \end{tabular}
+\end{flushright}
+
+{\hypersetup{linkcolor=black}
+  \tableofcontents
+}
+
+\section{Status of this paper}
+This paper represents a defect-report to a paper that has been voted into the
+working draft. It seeks to highlight an issue with the currently proposed
+\code{strong\_order} algorithm.
+
+The wording for the entire fix is not provided in this paper, and shall be
+written if this paper receives support.
+
+\section{Problem description}
+
+The paper p0768r1\cite{p0768r1} proposes the library extensions for operator
+\spaceship. Among them is the function \code{strong\_order(const T\& a, const
+T\& b)}, specified in section \emph{cmp.alg}.
+
+This is the specification in that paper:
+
+\code{template<class T>
+constexpr strong\_ordering strong\_order(const T\& a, const T\& b);}
+
+\begin{enumerate}
+  \item Effects: Compares two values and produces a result of type \code{strong\_ordering}:
+
+\begin{enumerate}
+  \item If \code{numeric\_limits<T>::is\_iec559} is true, returns a result of
+    type \code{strong\_ordering} that is consistent with the totalOrder
+    operation as specified in ISO/IEC/IEEE 60559.
+  \item Otherwise, returns \code{a \spaceship b} if that expression is
+    well-formed and convertible to \code{strong\_ordering}.
+  \item Otherwise, if the expression \code{a \spaceship b} is well-formed, then
+    the function shall be defined as deleted.
+  \item Otherwise, if the expressions \code{a == b} and \code{a < b} are each
+    well-formed and convertible to \code{bool}, returns
+    \code{strong\_ordering::equal} when \code{a == b} is \code{true}, otherwise
+    returns \code{strong\_ordering::less} when \code{a < b} is \code{true}, and
+    otherwise returns \code{strong\_ordering::greater}.
+  \item Otherwise, the function shall be defined as deleted.
+\end{enumerate}
+\end{enumerate}
+
+Point 1.1 hints at the potential for \code{strong\_order} to be the elusive
+\emph{default ordering} that Stepanov and McJones require for \emph{Regular}
+types to enable logarithmic searching and algorithms such as
+Unique.\cite{EoP}, page 62, section 4.4.
+
+In Elements of Programming, they make it a point to mention that many types do
+not have a \emph{natural order}, but a \emph{default order} (a total order that
+respects at least representational equality) should be provided for all
+\emph{Regular} types, because the efficiency gains enabled by sorting are
+enormous. For types that do have a natural total order (possibly only in some of
+the domain), the \emph{default order} should agree with it wherever defined.
+
+As an example, the lexicographic ordering of the gaussian integers would be one
+such default order: any two comparable numbers ($1+0j < 2+0j$, $0+1j < 0+2j$)
+still compare correctly, and any two incomparable numbers have a consistent
+default order.
+
+Unfortunately, the hope of finally having a canonical way of naming the default
+ordering (\code{std::less} was never really that, except for pointers) is
+destroyed by Point 1.3.
+
+This is because the spaceship operator is explicitly designed\footnote{This is
+clear because of the various orderings that it supports.} to represent the
+\emph{natural ordering} over the values of \code{T}. In the case of floating
+point, iec559 extends this natural order to a total order, thus achieving our
+fabled \emph{default ordering}. However, as per point 1.3, the user is not
+allowed to specify this extension themselves, because the function is specified
+as deleted, which means it still participates in overload resolution.
+
+\section{Proposal}
+This paper proposes changing point 1.3 to read:
+
+\emph{Otherwise, if the expression \code{a \spaceship  b} is
+well-formed,\footnote{Note: point 1.2 already takes care of the case where
+\spaceship provides a strong (and thus valid default) order.} the function does
+not participate in overload resolution.}
+
+
+After the list, add remark:
+
+\emph{This function is the idiomatic way to provide a default strong order for
+your types. This strong order should be consistent with the natural order
+provided by operator \spaceship ($a \spaceship b = \textrm{strong\_order}(a, b)$
+for all $a, b$ where $a \spaceship b \neq 0$).}
+
+
+\section{Fixups}
+Intuitively, one would expect that if \code{strong\_order} is available, then so
+are \code{strong\_equal}, \code{weak\_order} and \code{partial\_order} (with
+\code{weak\_equal} and \code{partial\_equal} being consequences of those). The
+current situation seems to provide for that by pure accident, with no reference
+to this fact.
+
+However, if \code{strong\_order} is the customization point for a default order
+that \emph{may} be stronger than the order on operator \spaceship, then the
+above expectation no longer holds.
+
+The fix-up for each of the sections describing the above primitives would be to
+insert, after point x.1 (which describes the algorithm in terms of \spaceship)
+the automatic fallback to a call to \code{strong\_order}, if it is resolvable 
+through an unqualified call (thus enabling argument-dependent lookup).
+
+\section{Alternative}
+If the purpose of \code{strong\_order} is not enabling a default-ordering for
+types, the iec559 exception should be removed from the wording, and a different
+customization point (perhaps called \code{total\_order}) added for the express
+purpose of providing an arbitrary total order on the entire domain of a type.
+
+\printbibliography
+
+
+\end{document}
+
