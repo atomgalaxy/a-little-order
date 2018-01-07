@@ -1,21 +1,22 @@
 \documentclass[a4paper]{article}
 
-\usepackage{color}
-\usepackage{xcolor}
-\usepackage{fullpage}
+% \usepackage{libertine}%% Only as example for the romans/sans fonts
+\usepackage[T1]{fontenc}
 \usepackage[colorlinks, allcolors=blue]{hyperref}
+\usepackage[nottoc]{tocbibind}
+\usepackage[scaled=0.85]{beramono}
+\usepackage[utf8]{inputenc}
+\usepackage{changepage}
+\usepackage{color}
+\usepackage{courier}
+\usepackage{enumitem}
+\usepackage{fullpage}
 \usepackage{listings}
+\usepackage{nameref}
 \usepackage{parskip}
 \usepackage{url}
-\usepackage{courier}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
+\usepackage{xcolor}
 \usepackage{xspace}
-% \usepackage{libertine}%% Only as example for the romans/sans fonts
-\usepackage[scaled=0.85]{beramono}
-\usepackage{changepage}
-\usepackage{nameref}
-\usepackage[nottoc]{tocbibind}
 
 \usepackage[bordercolor=white,backgroundcolor=gray!30,linecolor=black,colorinlistoftodos]{todonotes}
 \newcommand{\takeaway}[1]{\todo[color=yellow,inline]{#1}}
@@ -152,27 +153,29 @@ T\& b)}, specified in section \stableref{cmp.alg}.
 
 This is the specification in that paper:
 
-\code{template<class T>
+\code{template<class T>\\
 constexpr strong\_ordering strong\_order(const T\& a, const T\& b);}
 
 \begin{enumerate}
   \item Effects: Compares two values and produces a result of type \code{strong\_ordering}:
 
-\begin{enumerate}
-  \item If \code{numeric\_limits<T>::is\_iec559} is true, returns a result of
-    type \code{strong\_ordering} that is consistent with the totalOrder
-    operation as specified in ISO/IEC/IEEE 60559.
-  \item Otherwise, returns \code{a \spaceship b} if that expression is
-    well-formed and convertible to \code{strong\_ordering}.
-  \item Otherwise, if the expression \code{a \spaceship b} is well-formed, then
-    the function shall be defined as deleted.
-  \item Otherwise, if the expressions \code{a == b} and \code{a < b} are each
-    well-formed and convertible to \code{bool}, returns
-    \code{strong\_ordering::equal} when \code{a == b} is \code{true}, otherwise
-    returns \code{strong\_ordering::less} when \code{a < b} is \code{true}, and
-    otherwise returns \code{strong\_ordering::greater}.
-  \item Otherwise, the function shall be defined as deleted.
-\end{enumerate}
+  \begin{enumerate}[label*=\arabic*.]
+    \item If \code{numeric\_limits<T>::is\_iec559} is true, returns a result of
+      type \code{strong\_ordering} that is consistent with the totalOrder
+      operation as specified in ISO/IEC/IEEE 60559.
+    \item Otherwise, returns \code{a \spaceship b} if that expression is
+      well-formed and convertible to \code{strong\_ordering}.
+    \item Otherwise, if the expression \code{a \spaceship b} is well-formed, then
+      the function shall be defined as deleted.
+    \item Otherwise, if the expressions \code{a == b} and \code{a < b} are each
+      well-formed and convertible to \code{bool},\\
+      returns \code{strong\_ordering::equal} when \code{a == b} is
+      \code{true},\\
+      otherwise returns \code{strong\_ordering::less} when \code{a < b} is
+      \code{true},\\
+      and otherwise returns \code{strong\_ordering::greater}.
+    \item Otherwise, the function shall be defined as deleted.
+  \end{enumerate}
 \end{enumerate}
 
 Point 1.1 hints at the potential for \StrongOrder to be the elusive
