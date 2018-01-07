@@ -16,6 +16,7 @@
 \usepackage{parskip}
 \usepackage{url}
 \usepackage{xcolor}
+\usepackage[multiple]{footmisc}
 \usepackage{xspace}
 
 \usepackage[bordercolor=white,backgroundcolor=gray!30,linecolor=black,colorinlistoftodos]{todonotes}
@@ -191,10 +192,9 @@ because the efficiency gains enabled by sorting are enormous. For types that do
 have a natural total order (possibly only in some of the domain), they specify
 the \emph{default order} should agree with it wherever defined.
 
-As an example, the lexicographic ordering of the gaussian integers would be one
-such default order: any two integers ($1+0j < 2+0j$) still still compare
-according to the natural order on the integers, and any two non-integer
-(incomparable) gaussian integers have a consistent default order.
+As an example, consider the lexicographic ordering of the gaussian integes. This
+forms a total order, and its restriction to the integers (gaussian integers of
+the form $n +0j$ agrees with the natural order on the integers.
 
 Unfortunately, the hope of finally having a canonical way of naming the default
 ordering\footnote{\code{std::less} was never really the canonical way of
@@ -225,10 +225,12 @@ After the list, add a Note:
 user-defined types.  This strong order should be consistent with the natural
 order provided by operator \spaceship.
 If operator \spaceship already orders $a$ and $b$, the default order should
-agree. Otherwise (if operator \spaceship deems $a$ and $b$ unordered), the
-default order should order them if they are unequal.}\footnote{An ordering
-weaker than \emph{strong} implies the existence of unequal, unordered
-elements.}\footnote{\emph{unequal} does not refer to \code{operator==}, but to
+agree. Otherwise (if operator \spaceship deems $a$ and $b$ unordered or
+equivalent), the default order should order them if they are
+unequal.}\footnote{An ordering
+weaker than \emph{strong} implies the existence of elements that are unequal,
+but are not distinguished (deemed either equivalent or unordered) by \spaceship.}
+\footnote{\emph{unequal} does not refer to \code{operator==}, but to
 the notion of equality exemplified by iec559 for floating point. It's the answer
 to the question "what should \code{unique} do (by default)?".}
  
