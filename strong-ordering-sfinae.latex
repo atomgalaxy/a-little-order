@@ -250,9 +250,9 @@ Intuitively, one would expect that if \StrongOrder is available, then so are
 \code{strong\_equal}, \code{weak\_order} and \code{partial\_order} (with
 \code{weak\_equal} and \code{partial\_equal} being consequences of those). The
 current situation seems to provide for that by pure accident\footnote{the rules
-are identical, except for the iec559 exception in strong\_order, and
-floating-point types possess \code{operator<} and \code{operator==}.}, with no
-reference to this fact.
+are identical, except for the iec559 exception in \StrongOrder, while
+floating-point types possess \code{operator<} and \code{operator==}, thus
+enabling the presence of all those primitives.}, with no reference to this fact.
 
 However, if \StrongOrder is the customization point for a default order
 that \emph{may} be stronger than the order on operator \spaceship, then the
