@@ -107,10 +107,13 @@
 \newcommand{\this}{\code{this}\xspace}
 \newcommand{\self}{\code{self}\xspace}
 \newcommand{\cvref}{\emph{cv-ref qualifiers}\xspace}
-\newcommand{\spaceship}{\ensuremath{<=>}\xspace}
+\newcommand{\spaceship}{\code{<=>}\xspace}
+\def\stableref#1{[#1]}
+\def\concept#1{\emph{#1}}
+\newcommand{\StrongOrder}{\code{strong\_order}\xspace}
 
 \date{2018-01-06}
-\title{Allow user overriding of \code{strong\_order} in p0768}
+\title{Allow user overriding of \StrongOrder in P0768R1}
 \author{Gašper Ažman}
 
 \newcommand{\emailaddressa}{gasper.azman@gmail.com}
@@ -134,18 +137,18 @@
 }
 
 \section{Status of this paper}
-This paper represents a defect-report to a paper that has been voted into the
-working draft. It seeks to highlight an issue with the currently proposed
-\code{strong\_order} algorithm.
+This paper is a defect-report to a paper that has been voted into the working
+draft. It seeks to highlight an issue with the currently proposed
+\StrongOrder algorithm.
 
 The wording for the entire fix is not provided in this paper, and shall be
 written if this paper receives support.
 
 \section{Problem description}
 
-The paper p0768r1\cite{p0768r1} proposes the library extensions for operator
+The paper P0768R1\cite{p0768r1} proposes the library extensions for operator
 \spaceship. Among them is the function \code{strong\_order(const T\& a, const
-T\& b)}, specified in section \emph{cmp.alg}.
+T\& b)}, specified in section \stableref{cmp.alg}.
 
 This is the specification in that paper:
 
@@ -172,34 +175,37 @@ constexpr strong\_ordering strong\_order(const T\& a, const T\& b);}
 \end{enumerate}
 \end{enumerate}
 
-Point 1.1 hints at the potential for \code{strong\_order} to be the elusive
-\emph{default ordering} that Stepanov and McJones require for \emph{Regular}
-types to enable logarithmic searching and algorithms such as
-unique(\cite{EoP}, page 62, section 4.4).
+Point 1.1 hints at the potential for \StrongOrder to be the elusive
+\emph{default ordering}, required by Stepanov and McJones for \concept{Regular}
+types, to enable sorting for the purposes of speeding up further processing such
+as logarithmic searching (\cite{EoP}, page 62, section 4.4). For this purpose,
+\emph{any} strong ordering would do.
 
 Elements of Programming stresses that many types do not have a \emph{natural
 order}; even then, a \emph{default order} (a total order that respects at least
-representational equality) should be provided for all \emph{Regular} types,
+representational equality) should be provided for all \concept{Regular} types,
 because the efficiency gains enabled by sorting are enormous. For types that do
-have a natural total order (possibly only in some of the domain), the
-\emph{default order} should agree with it wherever defined.
+have a natural total order (possibly only in some of the domain), they specify
+the \emph{default order} should agree with it wherever defined.
 
 As an example, the lexicographic ordering of the gaussian integers would be one
-such default order: any two comparable numbers ($1+0j < 2+0j$, $0+1j < 0+2j$)
-still compare correctly, and any two incomparable numbers have a consistent
-default order.
+such default order: any two integers ($1+0j < 2+0j$) still still compare
+according to the natural order on the integers, and any two non-integer
+(incomparable) gaussian integers have a consistent default order.
 
 Unfortunately, the hope of finally having a canonical way of naming the default
-ordering (\code{std::less} was never really that, except for pointers) is
-destroyed by Point 1.3.
+ordering\footnote{\code{std::less} was never really the canonical way of
+referencing the default ordering, except for pointers.} is destroyed by Point
+1.3.
 
-This is because the spaceship operator is explicitly designed\footnote{This is
-clear because of the various orderings that it supports.} to represent the
-\emph{natural ordering} over the values of \code{T}. In the case of floating
-point, iec559 extends this natural order to a total order, thus achieving our
-fabled \emph{default ordering}. However, as per point 1.3, the user is not
-allowed to specify this extension themselves, because the function is specified
-as deleted, which means it still participates in overload resolution.
+Operator \spaceship seems to be explicitly designed\footnote{Because of the
+various orderings that it supports; they map out the semantic gamut of natural
+orderings of value types.} to represent the \emph{natural ordering} over the
+values of \code{T}. In the case of floating point, iec559 extends this natural
+order to a total order, thus providing our fabled \emph{default ordering}.
+However, as per point 1.3, the user is not allowed to specify this extension to
+\StrongOrder themselves, because the function is specified as deleted -- it
+still participates in overload resolution.
 
 \section{Proposal}
 This paper proposes changing point 1.3 to read:
@@ -210,35 +216,59 @@ well-formed,\footnote{Note: point 1.2 already takes care of the case where
 not participate in overload resolution.}
 
 
-After the list, add remark:
+After the list, add a Note:
 
-\emph{This function is the idiomatic way to provide a default strong order for
-your types. This strong order should be consistent with the natural order
-provided by operator \spaceship ($a \spaceship b = \textrm{strong\_order}(a, b)$
-for all $a, b$ where $a \spaceship b \neq 0$).}
-
+\emph{This function is the way to provide a default strong order for
+user-defined types.  This strong order should be consistent with the natural
+order provided by operator \spaceship.
+If operator \spaceship already orders $a$ and $b$, the default order should
+agree. Otherwise (if operator \spaceship deems $a$ and $b$ unordered), the
+default order should order them if they are unequal.}\footnote{An ordering
+weaker than \emph{strong} implies the existence of unequal, unordered
+elements.}\footnote{\emph{unequal} does not refer to \code{operator==}, but to
+the notion of equality exemplified by iec559 for floating point. It's the answer
+to the question "what should \code{unique} do (by default)?".}
+ 
 
 \section{Fixups}
-Intuitively, one would expect that if \code{strong\_order} is available, then so
-are \code{strong\_equal}, \code{weak\_order} and \code{partial\_order} (with
-\code{weak\_equal} and \code{partial\_equal} being consequences of those). The
-current situation seems to provide for that by pure accident, with no reference
-to this fact.
+The algorithms section contains a few other algorithms:\footnote{Not to be
+  confused with the types of their results; those end in \code{-ing}:
+\code{strong\_ordering}, \code{weak\_ordering} etc.}
 
-However, if \code{strong\_order} is the customization point for a default order
+\begin{itemize}
+  \item \code{weak\_order(const T\& a, const T\& b)}
+  \item \code{partial\_order(const T\& a, const T\& b)}
+  \item \code{strong\_equal(const T\& a, const T\& b)}
+  \item \code{weak\_equal(const T\& a, const T\& b)}
+  \item \code{partial\_equal(const T\& a, const T\& b)}
+\end{itemize}
+
+Intuitively, one would expect that if \StrongOrder is available, then so are
+\code{strong\_equal}, \code{weak\_order} and \code{partial\_order} (with
+\code{weak\_equal} and \code{partial\_equal} being consequences of those). The
+current situation seems to provide for that by pure accident\footnote{the rules
+are identical, except for the iec559 exception in strong\_order, and
+floating-point types possess \code{operator<} and \code{operator==}.}, with no
+reference to this fact.
+
+However, if \StrongOrder is the customization point for a default order
 that \emph{may} be stronger than the order on operator \spaceship, then the
-above expectation no longer holds.
+above expectation may longer hold for such types.
 
 The fix-up for each of the sections describing the above primitives would be to
 insert, after point x.1 (which describes the algorithm in terms of \spaceship)
-the automatic fallback to a call to \code{strong\_order}, if it is resolvable 
+the automatic fallback to a call to \StrongOrder, if it is resolvable 
 through an unqualified call (thus enabling argument-dependent lookup).
 
 \section{Alternative}
-If the purpose of \code{strong\_order} is not enabling a default-ordering for
+If the purpose of \StrongOrder is not enabling a default-ordering for
 types, the iec559 exception should be removed from the wording, and a different
 customization point (perhaps called \code{total\_order}) added for the express
 purpose of providing an arbitrary total order on the entire domain of a type.
+
+\section{Acknowledgments} 
+I would like to thank Thomas Köppe for his valuable comments and review, and
+Roger Orr for bringing this to my attention.
 
 \printbibliography
 
