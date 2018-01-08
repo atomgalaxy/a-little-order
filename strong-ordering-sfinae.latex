@@ -192,9 +192,9 @@ because the efficiency gains enabled by sorting are enormous. For types that do
 have a natural total order (possibly only in some of the domain), they specify
 the \emph{default order} should agree with it wherever defined.
 
-As an example, consider the lexicographic ordering of the gaussian integes. This
-forms a total order, and its restriction to the integers (gaussian integers of
-the form $n +0j$ agrees with the natural order on the integers.
+As an example, consider the lexicographic ordering of the gaussian integers.
+This forms a total order, and its restriction to the integers (gaussian integers
+of the form $n +0j$ agrees with the natural order on the integers.
 
 Unfortunately, the hope of finally having a canonical way of naming the default
 ordering\footnote{\code{std::less} was never really the canonical way of
@@ -210,6 +210,94 @@ However, as per point 1.3, the user is not allowed to specify this extension to
 \StrongOrder themselves, because the function is specified as deleted -- it
 still participates in overload resolution.
 
+\section{Code Example}
+Let me illustrate on a trivial example. Say we have a template struct
+representing the gaussian integers, which are comparable only if their imaginary
+part is 0. This constitutes a partial order.
+
+\begin{lstlisting}[language=cpp]
+#include <compare>
+template <typename T>
+struct gaussian {
+  static_assert(std::is_integral_v<T>);
+  T real;
+  T imag;
+};
+\end{lstlisting}
+
+We can now define its \spaceship operator:
+
+\begin{lstlisting}[language=cpp]
+// "natural" ordering on the gaussian integers
+template <typename T>
+std::partial_ordering operator<=>(gaussian<T> const& x, gassian<T> const& y) {
+  if (x.imag != 0 || y.imag != 0) {
+    return std::partial_ordering::unordered;
+  }
+  return x.real <=> y.real;
+}
+\end{lstlisting}
+
+However, since it is extremely useful to still have \emph{some} total order, we
+shall define the \StrongOrder function template:
+\begin{lstlisting}[language=cpp]
+template <typename T>
+std::strong_ordering strong_order(gaussian<T> const& x, gassian<T> const& y) {
+  // compare lexicographically
+  return std::tie(x.real, x.imag) <=> std::tie(y.real, y.imag);
+}
+\end{lstlisting}
+
+Unfortunatley, this definition is ambiguous with \code{std::strong\_order},
+because \code{std::strong\_order} is defined as \emph{deleted}, and not as "does
+not participate in overload resolution".
+
+As an illustration of why having an arbitrary total order available, consider
+the rest of this example.
+
+First, imagine this exists. Has not been proposed yet, but probably should be:
+\begin{lstlisting}[language=cpp]
+struct strong {
+  struct less {
+    template <typename T>
+    bool operator()(T const& x, T const& y) {
+      using std::strong_order; // use ADL
+      return std::is_lt(strong_order(x, y));
+    }
+  };
+  struct equal {
+    template <typename T>
+    bool operator()(T const& x, T const& y) {
+      using std::strong_order; // use ADL
+      return std::is_eq(strong_order(x, y));
+    }
+  };
+  // also greater, ge_eq and less_eq...
+};
+\end{lstlisting}
+
+This allows us to unique a vector of any type whatsoever that provides a
+\StrongOrder, even if the type doesn't even provide a comparison operator (or
+provides a weak or partial one).
+
+\begin{lstlisting}[language=cpp]
+std::vector<gaussian<int>> gaussians = {{1, 0}, {1, 2}, {-1, 2}, {1, 2}};
+std::sort(gaussians.begin(), gaussians.end(), strong::less{}):
+gaussians.erase(std::unique(gaussians.begin(), gaussians.end(), strong::equal{}));
+\end{lstlisting}
+
+It allows us to make a \code{std::set} of these gaussians as well!
+\begin{lstlisting}[language=cpp]
+std::set<gaussian<int>, strong::less> gaussian_set = {{1, 0}, {1, 2}, {-1, 2}, {1, 2}}
+\end{lstlisting}
+
+It should be clear that having a canonical way of shipping an arbitrary total
+order with otherwise unordered, partially ordered or weakly-ordered types is
+extremely useful for writing efficient generic algorithms.
+
+At last, having a customization point that explicitly says "this is a strong
+order on this type" is within reach.
+
 \section{Proposal}
 This paper proposes changing point 1.3 to read:
 
@@ -221,13 +309,12 @@ not participate in overload resolution.}
 
 After the list, add a Note:
 
-\emph{This function is the way to provide a default strong order for
-user-defined types.  This strong order should be consistent with the natural
-order provided by operator \spaceship.
-If operator \spaceship already orders $a$ and $b$, the default order should
-agree. Otherwise (if operator \spaceship deems $a$ and $b$ unordered or
-equivalent), the default order should order them if they are
-unequal.}\footnote{An ordering
+\emph{If operator \spaceship provides an order weaker than strong, this function
+allows the provision of a default strong order for a user-defined type. In that
+case, \StrongOrder should define a strict, total ordering compatible
+with the weaker ordering, that is, if a and b are comparable and compare unequal
+under <=>, \StrongOrder produces the same result (less or greater).}
+\footnote{An ordering
 weaker than \emph{strong} implies the existence of elements that are unequal,
 but are not distinguished (deemed either equivalent or unordered) by \spaceship.}
 \footnote{\emph{unequal} does not refer to \code{operator==}, but to
@@ -272,8 +359,9 @@ customization point (perhaps called \code{total\_order}) added for the express
 purpose of providing an arbitrary total order on the entire domain of a type.
 
 \section{Acknowledgments} 
-I would like to thank Thomas Köppe for his valuable comments and review, and
-Roger Orr for bringing this to my attention.
+I would like to thank Thomas Köppe for his valuable comments, review, and most
+of all some extremely clear and laconic wording; and Roger Orr for bringing this
+to my attention.
 
 \printbibliography
 
