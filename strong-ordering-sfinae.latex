@@ -334,6 +334,7 @@ This allows us to unique a vector of any type whatsoever that provides a
 provides a weak or partial one).
 
 \begin{lstlisting}[language=cpp]
+using namespace user;
 std::vector<gaussian<int>> gaussians = {{1, 0}, {1, 2}, {-1, 2}, {1, 2}};
 std::sort(gaussians.begin(), gaussians.end(), strong::less{}):
 gaussians.erase(std::unique(gaussians.begin(), gaussians.end(), strong::equal{}));
