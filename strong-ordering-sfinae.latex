@@ -216,19 +216,35 @@ representing the gaussian integers, which are comparable only if their imaginary
 part is 0. This constitutes a partial order.
 
 \begin{lstlisting}[language=cpp]
-#include <compare>
+namespace user {
 template <typename T>
 struct gaussian {
   static_assert(std::is_integral_v<T>);
   T real;
   T imag;
+
+  // vector-like
+  size_t size() const { return 2; }
+  T operator[](size_t i) const {
+    assert(i < size());
+    return i?imag:real;
+  }
 };
+
+// our library has this type trait...
+template <typename T>
+struct is_vector_like : std::false_type {};
+template <typename T>
+struct is_vector_like<gaussian<T>> : std::true_type {};
+}
 \end{lstlisting}
 
 We can now define its \spaceship operator:
 
 \begin{lstlisting}[language=cpp]
 // "natural" ordering on the gaussian integers
+#include <compare>
+namespace user {
 template <typename T>
 std::partial_ordering operator<=>(gaussian<T> const& x, gassian<T> const& y) {
   if (x.imag != 0 || y.imag != 0) {
@@ -236,15 +252,51 @@ std::partial_ordering operator<=>(gaussian<T> const& x, gassian<T> const& y) {
   }
   return x.real <=> y.real;
 }
+}
 \end{lstlisting}
 
 However, since it is extremely useful to still have \emph{some} total order, we
 shall define the \StrongOrder function template:
 \begin{lstlisting}[language=cpp]
+namespace user {
 template <typename T>
 std::strong_ordering strong_order(gaussian<T> const& x, gassian<T> const& y) {
   // compare lexicographically
   return std::tie(x.real, x.imag) <=> std::tie(y.real, y.imag);
+}
+}
+\end{lstlisting}
+
+This works, by virtue of the fact that the template is more specialized than the
+\code{std::strong\_order} version.
+
+However, consider overloading on a type trait:
+\begin{lstlisting}[language=cpp]
+namespace user {
+template <typename T>
+using spaceship_type =
+  std::decay_t<decltype(std::declval<T>() <=> std::declval<T>())>;
+
+// trait that will disqualify std::strong_order
+template <typename T>
+using spaceship_is_not_strong =
+  std::bool_constant<!(std::is_convertible_to<spaceship_type<T>,
+                                              std::strong_ordering>)>;
+
+
+// provide a lexicographical order for all vector-like types that define the trait
+template <typename T,
+          std::enable_if_t<(spaceship_is_not_strong<T>::value &&
+                            is_vector_like<T>::value), void*> = nullptr>
+std::strong_ordering strong_order(const T & x, const T & y) {
+  using std::strong_order;
+  assert(x.size() == y.size());
+  for (size_t i = 0, s = x.size(); i < s; ++i) {
+    auto const result = strong_order(x[i], y[i]); // ADL
+    if (!std::is_eq(result)) { return result; }
+  }
+  return std::strong_ordering::equal;
+}
 }
 \end{lstlisting}
 
@@ -255,7 +307,8 @@ not participate in overload resolution".
 As an illustration of why having an arbitrary total order available, consider
 the rest of this example.
 
-First, imagine this exists. Has not been proposed yet, but probably should be:
+Since the standard doesn't yet have an equivalent to \code{std::less} and
+\code{std::equal} for \code{std::strong\_order}, let's roll our own:
 \begin{lstlisting}[language=cpp]
 struct strong {
   struct less {
@@ -360,8 +413,10 @@ purpose of providing an arbitrary total order on the entire domain of a type.
 
 \section{Acknowledgments} 
 I would like to thank Thomas Köppe for his valuable comments, review, and most
-of all some extremely clear and laconic wording; and Roger Orr for bringing this
-to my attention.
+of all some extremely clear and laconic wording; Roger Orr for bringing this
+to my attention; Sam Finch for \emph{thoroughly} breaking my example and great
+substantive comments, and pointing out that the current definition actually
+breaks types that define a partially-ordered set of comparison operators.
 
 \printbibliography
 
