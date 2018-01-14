@@ -300,6 +300,7 @@ be \concept{Regular}.
         using std::abs;
         return abs(re) + abs(im);
       }
+
       friend constexpr std::strong_ordering strong_order(gaussian const& x,
                                                          gaussian const& y) {
         // compare lexicographically
