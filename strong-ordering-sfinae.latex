@@ -161,8 +161,8 @@ and then explores the consequences and a possible fix.
 
 \section{Current Status}
 
-For reference, the current proposal for the \StrongOrder algorithm looks like
-this:
+For reference, the current specification for the \StrongOrder algorithm looks
+like this:
 
 \code{template<class T>\\
 constexpr strong\_ordering strong\_order(const T\& a, const T\& b);}
