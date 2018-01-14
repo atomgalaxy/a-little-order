@@ -293,9 +293,9 @@ be \concept{Regular}.
       }
       constexpr std::weak_ordering operator<=>(gaussian const& other) const {
         return (*this == other) ? std::weak_ordering::equal
-        : (abs(*this) == abs(other))
-        ? std::weak_ordering::equivalent
-        : abs(*this) <=> abs(other);
+                                : (abs(*this) == abs(other))
+                                ? std::weak_ordering::equivalent
+                                : abs(*this) <=> abs(other);
       }
       friend constexpr T abs(gaussian const&) {
         using std::abs;
