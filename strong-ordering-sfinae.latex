@@ -432,7 +432,8 @@ I would like to thank
     code, great substantive comments, and pointing out that the current
     definition actually breaks types that define a partially-ordered set of
     comparison operators;
-  \item[Richard Smith] for further fixing my example in light of Concepts.
+  \item[Richard Smith] for further fixing my example in light of Concepts, and
+    example code.
 \end{description}
 
 Thanks!
