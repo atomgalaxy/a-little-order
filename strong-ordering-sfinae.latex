@@ -1,6 +1,9 @@
 \documentclass[a4paper]{article}
 
 % \usepackage{libertine}%% Only as example for the romans/sans fonts
+\usepackage{biblatex}
+\addbibresource{bibliography.bib}
+
 \usepackage[T1]{fontenc}
 \usepackage[colorlinks, allcolors=blue]{hyperref}
 \usepackage[nottoc]{tocbibind}
@@ -23,8 +26,7 @@
 \newcommand{\takeaway}[1]{\todo[color=yellow,inline]{#1}}
 
 \usepackage[style=iso]{datetime2}
-\usepackage{biblatex}
-\addbibresource{bibliography.bib}
+
 
 % Solarized colour scheme for listings
 \definecolor{solarized@base03}{HTML}{002B36}
