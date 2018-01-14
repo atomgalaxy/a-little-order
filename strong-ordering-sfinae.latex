@@ -337,7 +337,7 @@ Also say we had a type with an implicit conversion to our \code{gaussian}:
 This function now fails to compile, because the chosen \StrongOrder is deleted.
 \begin{lstlisting}[language=cpp]
   bool exists(lazy<gaussian<int>> const& x,
-  std::set<gaussian<int>, strong::less> const& in) {
+              std::set<gaussian<int>, strong::less> const& in) {
     /* imagine this being a template in both parameters - it's pretty normal */
     return in.count(x);
   }
