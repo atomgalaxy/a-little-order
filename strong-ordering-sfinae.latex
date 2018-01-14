@@ -114,7 +114,7 @@
 \def\concept#1{\emph{#1}}
 \newcommand{\StrongOrder}{\code{strong\_order}\xspace}
 
-\date{2018-01-06}
+\date{}
 \title{Allow user overriding of \StrongOrder in P0768R1}
 \author{Gašper Ažman}
 
@@ -127,10 +127,10 @@
 
 \begin{flushright}
   \begin{tabular}{ll}
-  Document \mypound{}: &DxxxxR0\\
-  Date:       &2018-01-06\\
-  Audience:   &Library Working Group\\
-  Reply-to:   &\author{Gašper Ažman}, \emailaddressa\\
+    Document \mypound{}: &DxxxxR0\\
+    Date:       &2018-01-06\\
+    Audience:   &Library Working Group\\
+    Reply-to:   &\author{Gašper Ažman}, \emailaddressa\\
   \end{tabular}
 \end{flushright}
 
@@ -139,20 +139,28 @@
 }
 
 \section{Status of this paper}
-This paper is a defect-report to a paper that has been voted into the working
-draft. It seeks to highlight an issue with the currently proposed
-\StrongOrder algorithm.
+
+This paper is a defect-report to a library extension that has been voted into
+the working draft as part of P0768R1\cite{p0768r1}.
 
 The wording for the entire fix is not provided in this paper, and shall be
-written if this paper receives support.
+written if this paper receives support and further guidance on direction.
 
-\section{Problem description}
 
-The paper P0768R1\cite{p0768r1} proposes the library extensions for operator
-\spaceship. Among them is the function \code{strong\_order(const T\& a, const
-T\& b)}, specified in section \stableref{cmp.alg}.
+\section{Abstract}
 
-This is the specification in that paper:
+Rule 1.1 for \StrongOrder algorithm (an exception for iec559 (floating point)
+types) suggests the algorithm is a customization point, but the rest of the
+rules disallow that.
+
+This paper makes a case for why \StrongOrder should be a customization point,
+and then explores the consequences and a possible fix.
+
+
+\section{Current Status}
+
+For reference, the current proposal for the \StrongOrder algorithm looks like
+this:
 
 \code{template<class T>\\
 constexpr strong\_ordering strong\_order(const T\& a, const T\& b);}
@@ -160,201 +168,206 @@ constexpr strong\_ordering strong\_order(const T\& a, const T\& b);}
 \begin{enumerate}
   \item Effects: Compares two values and produces a result of type \code{strong\_ordering}:
 
-  \begin{enumerate}[label*=\arabic*.]
-    \item If \code{numeric\_limits<T>::is\_iec559} is true, returns a result of
-      type \code{strong\_ordering} that is consistent with the totalOrder
-      operation as specified in ISO/IEC/IEEE 60559.
-    \item Otherwise, returns \code{a \spaceship b} if that expression is
-      well-formed and convertible to \code{strong\_ordering}.
-    \item Otherwise, if the expression \code{a \spaceship b} is well-formed, then
-      the function shall be defined as deleted.
-    \item Otherwise, if the expressions \code{a == b} and \code{a < b} are each
-      well-formed and convertible to \code{bool},\\
-      returns \code{strong\_ordering::equal} when \code{a == b} is
-      \code{true},\\
-      otherwise returns \code{strong\_ordering::less} when \code{a < b} is
-      \code{true},\\
-      and otherwise returns \code{strong\_ordering::greater}.
-    \item Otherwise, the function shall be defined as deleted.
-  \end{enumerate}
+    \begin{enumerate}[label*=\arabic*.]
+      \item If \code{numeric\_limits<T>::is\_iec559} is true, returns a result of
+        type \code{strong\_ordering} that is consistent with the totalOrder
+        operation as specified in ISO/IEC/IEEE 60559.
+      \item Otherwise, returns \code{a \spaceship b} if that expression is
+        well-formed and convertible to \code{strong\_ordering}.
+      \item Otherwise, if the expression \code{a \spaceship b} is well-formed, then
+        the function shall be defined as deleted.
+      \item Otherwise, if the expressions \code{a == b} and \code{a < b} are each
+        well-formed and convertible to \code{bool},\\
+        returns \code{strong\_ordering::equal} when \code{a == b} is
+        \code{true},\\
+        otherwise returns \code{strong\_ordering::less} when \code{a < b} is
+        \code{true},\\
+        and otherwise returns \code{strong\_ordering::greater}.
+      \item Otherwise, the function shall be defined as deleted.
+    \end{enumerate}
 \end{enumerate}
 
-Point 1.1 hints at the potential for \StrongOrder to be the elusive
-\emph{default ordering}, required by Stepanov and McJones for \concept{Regular}
-types, to enable sorting for the purposes of speeding up further processing such
-as logarithmic searching (\cite{EoP}, page 62, section 4.4). For this purpose,
-\emph{any} strong ordering would do.
 
-Elements of Programming stresses that many types do not have a \emph{natural
-order}; even then, a \emph{default order} (a total order that respects at least
-representational equality) should be provided for all \concept{Regular} types,
-because the efficiency gains enabled by sorting are enormous. For types that do
-have a natural total order (possibly only in some of the domain), they specify
-the \emph{default order} should agree with it wherever defined.
+\section{Exposition: The Natural and Default Orderings}
 
-As an example, consider the lexicographic ordering of the gaussian integers.
-This forms a total order, and its restriction to the integers (gaussian integers
-of the form $n +0j$ agrees with the natural order on the integers.
+Obviously, there are many reasons for sorting. However, this paper is chiefly
+concerned with the division between the \emph{natural ordering} and the
+\emph{default total ordering} as required for \concept{Regular}\footnote{The
+Elements of Programming concept, not the ISO C++ Regular, which is weaker.}
+types by Stepanov and McJones in their seminal work Elements of Programming
+(\cite{EoP}, page 62, section 4.4).
 
-Unfortunately, the hope of finally having a canonical way of naming the default
-ordering\footnote{\code{std::less} was never really the canonical way of
-referencing the default ordering, except for pointers.} is destroyed by Point
-1.3.
+The \textbf{natural ordering} is the ordering that makes semantic sense for a
+type. This is the ordering that operator \spaceship and its library extensions
+are tailor-made for: not every type is ordered (or even equality-comparable),
+and when a type supports an ordering, it might be strong, partial, or weak.
 
-Operator \spaceship seems to be explicitly designed\footnote{Because of the
-various orderings that it supports; they map out the semantic gamut of natural
-orderings of value types.} to represent the \emph{natural ordering} over the
-values of \code{T}. In the case of floating point, iec559 extends this natural
-order to a total order, thus providing our fabled \emph{default ordering}.
-However, as per point 1.3, the user is not allowed to specify this extension to
-\StrongOrder themselves, because the function is specified as deleted -- it
-still participates in overload resolution.
+We use these orderings when we need them to make sense - heaps, scheduling tasks
+by topological sorts, various displays for users, etc. Not all value types have
+a natural ordering, because not all types are ordered. The gaussian integers
+are one such type.
+
+The \textbf{default ordering}\footnote{The name comes from Elements of
+Programming} is the strongest ordering that a type admits.
+Its equality is defined by value-substitutability, and unequal elements must be
+ordered; it is always strong and total, and might not make semantic sense.
+
+According to Elements of Programming, every \concept{Regular} type should
+provide a default ordering.
+
+A type with a default ordering is far more useful than one without; ordering
+enables the use of tree-based containers (i.e. \code{map}, \code{set}), and
+algorithms based on sorted data (\code{unique}, the various set algorithms, and
+the various versions of binary search) -- and this is just the tip of the
+iceberg. The only requirement for the above is having \emph{a} total strong
+ordering - what the ordering \emph{means} is utterly irrelevant.
+
+The lexicographic ordering of the gaussian integers is a good example of a
+default ordering.
+
+Another excellent example is \code{float} -- its various \code{NaN}s and
+infinities are not ordered, which is why its natural ordering is not suitable as
+a default ordering. However, iec559 defines a total strong ordering for those
+values, thus enabling the uses outlined above.
+
+
+\subsection{On Compatibility Between the Natural and Default Orderings}
+
+Elements of Programming specifies that for types where the natural and default
+orderings differ, the default ordering should be compatible with the natural
+one: that is, if \code{a} and \code{b} are comparable and compare unequal under
+\spaceship, the default order produces the same result (less or greater).
+
+However, requiring this in the language of the standard library as a mandatory
+semantic constraint seems like a bad idea.
+
+For instance, if one takes the gaussian integers ordered by the
+manhattan-distance to zero (sum of absolute values of the two components), the
+compatible total order (a lexicographic ordering of every equivalence class) is
+far slower to compute than the simple lexicographic one.
+
+Furthermore, if needed, a compatible total order can always be achieved on the
+fly by comparing with the natural order first - if the result is \code{less} or
+\code{greater}, keep the result - otherwise, fall back on the default ordering.
+
+
+\section{Problem Description}
+
+The current C++ standard does not have an explicitly designated customization
+point for providing a default ordering. Elements of Programming uses
+\code{less<T>::operator()}, as does the global order for pointers; but in
+the wake of operator \spaceship, \code{less<T>} is missing features, such as
+computing equality without calling it twice. It has also failed to get adoption
+for this purpose throughout the years.
+
+The wording of point 1.1 of the \StrongOrder algorithm suggests that
+\StrongOrder is finally this missing customization point for specifying a
+default ordering for types whose natural ordering is not strong and total, since
+it does exactly that for the iec559 types.
+
+The issue is that the rest of the points make this function rather unsuitable
+for use as a customization point, since the language explicitly makes it not
+SFINAE-friendly. In the event that it cannot be synthesized, it is marked as
+\emph{deleted}, and not as \emph{"shall not participate in overload
+resolution"}.
+
 
 \section{Code Example}
+
 Let me illustrate on a trivial example. Say we have a template struct
-representing the gaussian integers, which are comparable only if their imaginary
-part is 0. This constitutes a partial order.
+representing the gaussian integers, with a "natural order"\footnote{There is no
+natural order on gaussian integers, but humor this example, please.} defined by
+the manhattan distance from $0+0i$. This struct still defines a \StrongOrder to
+be \concept{Regular}.
 
 \begin{lstlisting}[language=cpp]
-namespace user {
-template <typename T>
-struct gaussian {
-  static_assert(std::is_integral_v<T>);
-  T real;
-  T imag;
-
-  // vector-like
-  size_t size() const { return 2; }
-  T operator[](size_t i) const {
-    assert(i < size());
-    return i?imag:real;
-  }
-};
-
-// our library has this type trait...
-template <typename T>
-struct is_vector_like : std::false_type {};
-template <typename T>
-struct is_vector_like<gaussian<T>> : std::true_type {};
-}
-\end{lstlisting}
-
-We can now define its \spaceship operator:
-
-\begin{lstlisting}[language=cpp]
-// "natural" ordering on the gaussian integers
-#include <compare>
-namespace user {
-template <typename T>
-std::partial_ordering operator<=>(gaussian<T> const& x, gassian<T> const& y) {
-  if (x.imag != 0 || y.imag != 0) {
-    return std::partial_ordering::unordered;
-  }
-  return x.real <=> y.real;
-}
-}
-\end{lstlisting}
-
-However, since it is extremely useful to still have \emph{some} total order, we
-shall define the \StrongOrder function template:
-\begin{lstlisting}[language=cpp]
-namespace user {
-template <typename T>
-std::strong_ordering strong_order(gaussian<T> const& x, gassian<T> const& y) {
-  // compare lexicographically
-  return std::tie(x.real, x.imag) <=> std::tie(y.real, y.imag);
-}
-}
-\end{lstlisting}
-
-This works, by virtue of the fact that the template is more specialized than the
-\code{std::strong\_order} version.
-
-However, consider overloading on a type trait:
-\begin{lstlisting}[language=cpp]
-namespace user {
-template <typename T>
-using spaceship_type =
-  std::decay_t<decltype(std::declval<T>() <=> std::declval<T>())>;
-
-// trait that will disqualify std::strong_order
-template <typename T>
-using spaceship_is_not_strong =
-  std::bool_constant<!(std::is_convertible_to<spaceship_type<T>,
-                                              std::strong_ordering>)>;
-
-
-// provide a lexicographical order for all vector-like types that define the trait
-template <typename T,
-          std::enable_if_t<(spaceship_is_not_strong<T>::value &&
-                            is_vector_like<T>::value), void*> = nullptr>
-std::strong_ordering strong_order(const T & x, const T & y) {
-  using std::strong_order;
-  assert(x.size() == y.size());
-  for (size_t i = 0, s = x.size(); i < s; ++i) {
-    auto const result = strong_order(x[i], y[i]); // ADL
-    if (!std::is_eq(result)) { return result; }
-  }
-  return std::strong_ordering::equal;
-}
-}
-\end{lstlisting}
-
-Unfortunatley, this definition is ambiguous with \code{std::strong\_order},
-because \code{std::strong\_order} is defined as \emph{deleted}, and not as "does
-not participate in overload resolution".
-
-As an illustration of why having an arbitrary total order available, consider
-the rest of this example.
-
-Since the standard doesn't yet have an equivalent to \code{std::less} and
-\code{std::equal} for \code{std::strong\_order}, let's roll our own:
-\begin{lstlisting}[language=cpp]
-struct strong {
-  struct less {
+  namespace user {
     template <typename T>
-    bool operator()(T const& x, T const& y) {
-      using std::strong_order; // use ADL
-      return std::is_lt(strong_order(x, y));
-    }
-  };
-  struct equal {
-    template <typename T>
-    bool operator()(T const& x, T const& y) {
-      using std::strong_order; // use ADL
-      return std::is_eq(strong_order(x, y));
-    }
-  };
-  // also greater, ge_eq and less_eq...
-};
+    struct gaussian {
+      static_assert(std::is_integral_v<T>);
+      T re;
+      T im;
+
+      constexpr std::strong_equality operator==(gassian const& other) const {
+        return re == other.re && im == other.im;
+      }
+      constexpr std::weak_ordering operator<=>(gaussian const& other) const {
+        return (*this == other) ? std::weak_ordering::equal
+        : (abs(*this) == abs(other))
+        ? std::weak_ordering::equivalent
+        : abs(*this) <=> abs(other);
+      }
+      friend constexpr T abs(gaussian const&) {
+        using std::abs;
+        return abs(re) + abs(im);
+      }
+      friend constexpr std::strong_ordering strong_order(gaussian const& x,
+      gaussian const& y) {
+        // compare lexicographically
+        return std::tie(x.re, x.im) <=> std::tie(y.re, y.im);
+      }
+    };
+  }
 \end{lstlisting}
 
-This allows us to unique a vector of any type whatsoever that provides a
-\StrongOrder, even if the type doesn't even provide a comparison operator (or
-provides a weak or partial one).
-
+Consider a transparent ordering operator for \code{map}:
 \begin{lstlisting}[language=cpp]
-using namespace user;
-std::vector<gaussian<int>> gaussians = {{1, 0}, {1, 2}, {-1, 2}, {1, 2}};
-std::sort(gaussians.begin(), gaussians.end(), strong::less{}):
-gaussians.erase(std::unique(gaussians.begin(), gaussians.end(), strong::equal{}));
+  struct strong {
+    struct less {
+      template <typename T, typename U>
+      bool operator()(T const& x, U const& y) {
+        using std::strong_order; // use ADL
+        return strong_order(x, y) < 0;
+      }
+      using is_transparent = std::true_type;
+    };
+    // also equal, greater, ge_eq, less_eq etc.
+  };
 \end{lstlisting}
 
-It allows us to make a \code{std::set} of these gaussians as well!
+Also say we had a type with an implicit conversion to our \code{gaussian}:
 \begin{lstlisting}[language=cpp]
-std::set<gaussian<int>, strong::less> gaussian_set = {{1, 0}, {1, 2}, {-1, 2}, {1, 2}}
+  template <typename T>
+  struct lazy {
+    std::function<T()> make;
+    operator T() const { return make(); }
+  };
 \end{lstlisting}
 
-It should be clear that having a canonical way of shipping an arbitrary total
-order with otherwise unordered, partially ordered or weakly-ordered types is
-extremely useful for writing efficient generic algorithms.
+This function now fails to compile, because the chosen \StrongOrder is deleted.
+\begin{lstlisting}[language=cpp]
+  bool exists(lazy<gaussian<int>> const& x,
+  std::set<gaussian<int>, strong::less> const& in) {
+    /* imagine this being a template in both parameters - it's pretty normal */
+    return in.count(x);
+  }
+\end{lstlisting}
 
-At last, having a customization point that explicitly says "this is a strong
-order on this type" is within reach.
 
 \section{Proposal}
-This paper proposes changing point 1.3 to read:
 
+\subsection{Make \StrongOrder An Explicit Customization Point}
+
+Depending on the final direction of the wording on customization points (either
+the current one, with an emphasis on \emph{shall not participate in overload
+resolution}, or the one outlined in P0551R0\cite{p0551r0}, the wording shall
+differ here.
+
+I am asking LWG for guidance on this subject.
+
+
+\subsection{Remove the iec559 Exception (point 1.1)}
+
+Since this paper adds explicit support for this customization point, the
+exception can now be implemented using whichever mechanism for customization
+points is chosen, and this special case moved to that part of the standard. For
+instance, a "more specialized" template based on a \code{requires} clause and
+the \code{numeric\_limts<T>::is\_iec559} trait can be added to \code{namespace
+std}.
+
+The minimal fix for the current situation would be:
+
+Change point 1.3 to read:
 \emph{Otherwise, if the expression \code{a \spaceship  b} is
 well-formed,\footnote{Note: point 1.2 already takes care of the case where
 \spaceship provides a strong (and thus valid default) order.} the function does
@@ -365,18 +378,10 @@ After the list, add a Note:
 
 \emph{If operator \spaceship provides an order weaker than strong, this function
 allows the provision of a default strong order for a user-defined type. In that
-case, \StrongOrder should define a strict, total ordering compatible
-with the weaker ordering, that is, if a and b are comparable and compare unequal
-under <=>, \StrongOrder produces the same result (less or greater).}
-\footnote{An ordering
-weaker than \emph{strong} implies the existence of elements that are unequal,
-but are not distinguished (deemed either equivalent or unordered) by \spaceship.}
-\footnote{\emph{unequal} does not refer to \code{operator==}, but to
-the notion of equality exemplified by iec559 for floating point. It's the answer
-to the question "what should \code{unique} do (by default)?".}
- 
+case, \StrongOrder should define a strict, total ordering.}
 
-\section{Fixups}
+
+\subsection{Fix The Rules for Synthesis of Weaker Algorithms}
 The algorithms section contains a few other algorithms:\footnote{Not to be
   confused with the types of their results; those end in \code{-ing}:
 \code{strong\_ordering}, \code{weak\_ordering} etc.}
@@ -392,32 +397,45 @@ The algorithms section contains a few other algorithms:\footnote{Not to be
 Intuitively, one would expect that if \StrongOrder is available, then so are
 \code{strong\_equal}, \code{weak\_order} and \code{partial\_order} (with
 \code{weak\_equal} and \code{partial\_equal} being consequences of those). The
-current situation seems to provide for that by pure accident\footnote{the rules
-are identical, except for the iec559 exception in \StrongOrder, while
-floating-point types possess \code{operator<} and \code{operator==}, thus
-enabling the presence of all those primitives.}, with no reference to this fact.
+current situation seems to provide for that by accident\footnote{the rules for
+those algorithms are identical but for the iec559 exception in \StrongOrder;
+since floating-point types possess \code{operator<} and \code{operator==}, they
+enable the synthesis of all those algorithms.}, with no explicit reference to
+this fact.
 
 However, if \StrongOrder is the customization point for a default order
 that \emph{may} be stronger than the order on operator \spaceship, then the
-above expectation may longer hold for such types.
+above expectation may no longer hold for such types (you might have \StrongOrder
+but not \code{weak\_order}, for instance).
 
 The fix-up for each of the sections describing the above primitives would be to
 insert, after point x.1 (which describes the algorithm in terms of \spaceship)
 the automatic fallback to a call to \StrongOrder, if it is resolvable 
 through an unqualified call (thus enabling argument-dependent lookup).
 
-\section{Alternative}
+
+\subsection{Alternative}
 If the purpose of \StrongOrder is not enabling a default-ordering for
 types, the iec559 exception should be removed from the wording, and a different
 customization point (perhaps called \code{total\_order}) added for the express
 purpose of providing an arbitrary total order on the entire domain of a type.
 
+
+
 \section{Acknowledgments} 
-I would like to thank Thomas Köppe for his valuable comments, review, and most
-of all some extremely clear and laconic wording; Roger Orr for bringing this
-to my attention; Sam Finch for \emph{thoroughly} breaking my example and great
-substantive comments, and pointing out that the current definition actually
-breaks types that define a partially-ordered set of comparison operators.
+I would like to thank
+\begin{description}
+  \item[Roger Orr] for bringing this to my attention;
+  \item[Thomas Köppe] for his valuable comments, review, and most of all some
+    extremely clear and laconic wording;
+  \item[Sam Finch] for \emph{thoroughly} breaking my examples, some example
+    code, great substantive comments, and pointing out that the current
+    definition actually breaks types that define a partially-ordered set of
+    comparison operators;
+  \item[Richard Smith] for further fixing my example in light of Concepts.
+\end{description}
+
+Thanks!
 
 \printbibliography
 
