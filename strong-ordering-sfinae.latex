@@ -293,16 +293,15 @@ be \concept{Regular}.
       }
       constexpr std::weak_ordering operator<=>(gaussian const& other) const {
         return (*this == other) ? std::weak_ordering::equal
-                                : (abs(*this) == abs(other))
-                                ? std::weak_ordering::equivalent
-                                : abs(*this) <=> abs(other);
+                                : (abs(*this) == abs(other)) ? std::weak_ordering::equivalent
+                                                             : abs(*this) <=> abs(other);
       }
       friend constexpr T abs(gaussian const&) {
         using std::abs;
         return abs(re) + abs(im);
       }
       friend constexpr std::strong_ordering strong_order(gaussian const& x,
-      gaussian const& y) {
+                                                         gaussian const& y) {
         // compare lexicographically
         return std::tie(x.re, x.im) <=> std::tie(y.re, y.im);
       }
