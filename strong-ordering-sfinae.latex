@@ -130,7 +130,7 @@
 \begin{flushright}
   \begin{tabular}{ll}
     Document \mypound{}: &DxxxxR0\\
-    Date:       &2018-01-06\\
+    Date:       &2018-1-21\\
     Audience:   &Library Working Group\\
     Reply-to:   &\author{Gašper Ažman}, \emailaddressa\\
   \end{tabular}
@@ -148,15 +148,22 @@ the working draft as part of P0768R1\cite{p0768r1}.
 The wording for the entire fix is not provided in this paper, and shall be
 written if this paper receives support and further guidance on direction.
 
+\subsection*{History}
+
+\begin{description}
+  \item[2018-01-21] Herb Sutter and Walter Brown have made it clear that all 5
+    algorithms mentioned in this paper are meant to be customization points.
+    Consequently, the hedging was removed.
+\end{description}
+
 
 \section{Abstract}
 
-Rule 1.1 for \StrongOrder algorithm (an exception for iec559 (floating point)
-types) suggests the algorithm is a customization point, but the rest of the
-rules disallow that.
+This paper makes a case for why \StrongOrder should be a customization point.
 
-This paper makes a case for why \StrongOrder should be a customization point,
-and then explores the consequences and a possible fix.
+It then highlights one problem with the current wording that makes it unsuitable
+for that purpose, and highlights also a slight inelegance with the current
+integration of iec559 types.
 
 
 \section{Current Status}
@@ -415,13 +422,19 @@ insert, after point x.1 (which describes the algorithm in terms of \spaceship)
 the automatic fallback to a call to \StrongOrder, if it is resolvable 
 through an unqualified call (thus enabling argument-dependent lookup).
 
+\subsection{Designate The Rest of the Algorithms to be Customization Points Too}
+
+They were intended to be customization points. There should be a \emph{Note}
+making that clear in every section. However, for the rest of the algorithms,
+their specific intended use is not quite as clear as the usecase for
+\StrongOrder.
+
 
 \subsection{Alternative}
 If the purpose of \StrongOrder is not enabling a default-ordering for
 types, the iec559 exception should be removed from the wording, and a different
 customization point (perhaps called \code{total\_order}) added for the express
 purpose of providing an arbitrary total order on the entire domain of a type.
-
 
 
 \section{Acknowledgments} 
@@ -436,6 +449,8 @@ I would like to thank
     comparison operators;
   \item[Richard Smith] for further fixing my example in light of Concepts, and
     example code.
+  \item[Herb Sutter and Walter Brown] for providing guidance on customization
+    points.
 \end{description}
 
 Thanks!
