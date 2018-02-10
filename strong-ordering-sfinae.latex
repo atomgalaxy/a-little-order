@@ -117,7 +117,7 @@
 \newcommand{\StrongOrder}{\code{strong\_order}\xspace}
 
 \date{}
-\title{Allow user overriding of \StrongOrder in P0768R1}
+\title{Let \StrongOrder Truly Be a Customization Point!}
 \author{Gašper Ažman}
 
 \newcommand{\emailaddressa}{gasper.azman@gmail.com}
@@ -130,7 +130,7 @@
 \begin{flushright}
   \begin{tabular}{ll}
     Document \mypound{}: &P0891R0\\
-    Date:       &2018-2-07\\
+    Date:       &2018-02-10\\
     Audience:   &Library Working Group\\
     Reply-to:   &\author{Gašper Ažman}, \emailaddressa\\
   \end{tabular}
