@@ -70,7 +70,7 @@
   frame=single,
   rulecolor=\color{solarized@base2},
   rulesepcolor=\color{solarized@base2},
-  showstringspaces=false,
+  showstringspaceb=false,
 }
 
 \lstdefinelanguage{diff}{
@@ -129,8 +129,8 @@
 
 \begin{flushright}
   \begin{tabular}{ll}
-    Document \mypound{}: &DxxxxR0\\
-    Date:       &2018-1-21\\
+    Document \mypound{}: &P0891R0\\
+    Date:       &2018-2-07\\
     Audience:   &Library Working Group\\
     Reply-to:   &\author{Gašper Ažman}, \emailaddressa\\
   \end{tabular}
@@ -140,30 +140,53 @@
   \tableofcontents
 }
 
-\section{Status of this paper}
-
-This paper is a defect-report to a library extension that has been voted into
-the working draft as part of P0768R1\cite{p0768r1}.
-
-The wording for the entire fix is not provided in this paper, and shall be
-written if this paper receives support and further guidance on direction.
-
-\subsection*{History}
-
-\begin{description}
-  \item[2018-01-21] Herb Sutter and Walter Brown have made it clear that all 5
-    algorithms mentioned in this paper are meant to be customization points.
-    Consequently, the hedging was removed.
-\end{description}
 
 
 \section{Abstract}
 
-This paper makes a case for why \StrongOrder should be a customization point.
+This paper is a defect-report to a library extension that has been voted into
+the working draft as part of P0768R1\cite{p0768r1}.
+
+In communication with Herb Sutter and Walter Brown, it was made clear that all 5
+algorithms mentioned in this paper are meant to be customization points.
+
+The first part of this paper is a defect report. The sencond part of the paper
+is an elucidation of what the semantics of the \StrongOrder customization point
+should be.
+
+
+\section{Status of this paper}
+
+The wording for the entire fix is not provided in this paper, and shall be
+written if this paper receives support and further guidance on direction of how
+we want to handle customization points.
 
 It then highlights one problem with the current wording that makes it unsuitable
 for that purpose, and highlights also a slight inelegance with the current
 integration of iec559 types.
+
+
+\section{Problem Description}
+
+The current C++ standard does not have an explicitly designated customization
+point for providing a \emph{default ordering}\footnote{See the Exposition
+section for the definitions and discussion of orderings}. Elements of
+Programming uses \code{less<T>::operator()} for this purpose, as does the global
+order for pointers; but in the wake of operator \spaceship, \code{less<T>} is
+missing features, such as computing equality without calling it twice. It has
+also failed to get adoption for this purpose throughout the years, perhaps
+exactly due to the missing features.
+
+The wording of point 1.1 of the \StrongOrder algorithm suggests that
+\StrongOrder is finally this missing customization point for specifying a
+default ordering for types whose natural ordering is not strong and total, since
+it does exactly that for the iec559 types.
+
+The issue is that the rest of the points make this function rather unsuitable
+for use as a customization point, since the language explicitly makes it not
+SFINAE-friendly. In the event that it cannot be synthesized, it is marked as
+\emph{deleted}, and not as \emph{"shall not participate in overload
+resolution"}.
 
 
 \section{Current Status}
@@ -197,97 +220,14 @@ constexpr strong\_ordering strong\_order(const T\& a, const T\& b);}
 \end{enumerate}
 
 
-\section{Exposition: The Natural and Default Orderings}
-
-Obviously, there are many reasons for sorting. However, this paper is chiefly
-concerned with the division between the \emph{natural ordering} and the
-\emph{default total ordering} as required for \concept{Regular}\footnote{The
-Elements of Programming concept, not the ISO C++ Regular, which is weaker.}
-types by Stepanov and McJones in their seminal work Elements of Programming
-(\cite{EoP}, page 62, section 4.4).
-
-The \textbf{natural ordering} is the ordering that makes semantic sense for a
-type. This is the ordering that operator \spaceship and its library extensions
-are tailor-made for: not every type is ordered (or even equality-comparable),
-and when a type supports an ordering, it might be strong, partial, or weak.
-
-We use these orderings when we need them to make sense - heaps, scheduling tasks
-by topological sorts, various displays for users, etc. Not all value types have
-a natural ordering, because not all types are ordered. The gaussian integers
-are one such type.
-
-The \textbf{default ordering}\footnote{The name comes from Elements of
-Programming} is the strongest ordering that a type admits.
-Its equality is defined by value-substitutability, and unequal elements must be
-ordered; it is always strong and total, and might not make semantic sense.
-
-According to Elements of Programming, every \concept{Regular} type should
-provide a default ordering.
-
-A type with a default ordering is far more useful than one without; ordering
-enables the use of tree-based containers (i.e. \code{map}, \code{set}), and
-algorithms based on sorted data (\code{unique}, the various set algorithms, and
-the various versions of binary search) -- and this is just the tip of the
-iceberg. The only requirement for the above is having \emph{a} total strong
-ordering - what the ordering \emph{means} is utterly irrelevant.
-
-The lexicographic ordering of the gaussian integers is a good example of a
-default ordering.
-
-Another excellent example is \code{float} -- its various \code{NaN}s and
-infinities are not ordered, which is why its natural ordering is not suitable as
-a default ordering. However, iec559 defines a total strong ordering for those
-values, thus enabling the uses outlined above.
-
-
-\subsection{On Compatibility Between the Natural and Default Orderings}
-
-Elements of Programming specifies that for types where the natural and default
-orderings differ, the default ordering should be compatible with the natural
-one: that is, if \code{a} and \code{b} are comparable and compare unequal under
-\spaceship, the default order produces the same result (less or greater).
-
-However, requiring this in the language of the standard library as a mandatory
-semantic constraint seems like a bad idea.
-
-For instance, if one takes the gaussian integers ordered by the
-manhattan-distance to zero (sum of absolute values of the two components), the
-compatible total order (a lexicographic ordering of every equivalence class) is
-far slower to compute than the simple lexicographic one.
-
-Furthermore, if needed, a compatible total order can always be achieved on the
-fly by comparing with the natural order first - if the result is \code{less} or
-\code{greater}, keep the result - otherwise, fall back on the default ordering.
-
-
-\section{Problem Description}
-
-The current C++ standard does not have an explicitly designated customization
-point for providing a default ordering. Elements of Programming uses
-\code{less<T>::operator()}, as does the global order for pointers; but in
-the wake of operator \spaceship, \code{less<T>} is missing features, such as
-computing equality without calling it twice. It has also failed to get adoption
-for this purpose throughout the years.
-
-The wording of point 1.1 of the \StrongOrder algorithm suggests that
-\StrongOrder is finally this missing customization point for specifying a
-default ordering for types whose natural ordering is not strong and total, since
-it does exactly that for the iec559 types.
-
-The issue is that the rest of the points make this function rather unsuitable
-for use as a customization point, since the language explicitly makes it not
-SFINAE-friendly. In the event that it cannot be synthesized, it is marked as
-\emph{deleted}, and not as \emph{"shall not participate in overload
-resolution"}.
-
-
 \section{Code Example}
 
 Let me illustrate on a trivial example. Say we have a template struct
-representing the gaussian integers, with a "natural order"\footnote{There is no
-natural order on gaussian integers, but humor this example, please.} defined by
-the manhattan distance from $0+0i$. This struct still defines a \StrongOrder to
-be \concept{Regular}.
+representing the gaussian integers, with a "\emph{natural order}"\footnote{There
+is no natural order on gaussian integers, but humor this example, please.}
+defined by the manhattan distance from $0+0i$. This struct still defines a
+\StrongOrder to model \concept{Regular}\footnote{The \emph{Elements of
+Programming} concept, not the ISO C++ \concept{Regular}, which is weaker.}.
 
 \begin{lstlisting}[language=cpp]
   namespace user {
@@ -321,16 +261,13 @@ be \concept{Regular}.
 
 Consider a transparent ordering operator for \code{map}:
 \begin{lstlisting}[language=cpp]
-  struct strong {
-    struct less {
-      template <typename T, typename U>
-      bool operator()(T const& x, U const& y) {
-        using std::strong_order; // use ADL
-        return strong_order(x, y) < 0;
-      }
-      using is_transparent = std::true_type;
-    };
-    // also equal, greater, ge_eq, less_eq etc.
+  struct strong_less
+    template <typename T, typename U>
+    bool operator()(T const& x, U const& y) {
+      using std::strong_order;  // use ADL
+      return strong_order(x, y) < 0;
+    }
+    using is_transparent = std::true_type;
   };
 \end{lstlisting}
 
@@ -346,11 +283,19 @@ Also say we had a type with an implicit conversion to our \code{gaussian}:
 This function now fails to compile, because the chosen \StrongOrder is deleted.
 \begin{lstlisting}[language=cpp]
   bool exists(lazy<gaussian<int>> const& x,
-              std::set<gaussian<int>, strong::less> const& in) {
+              std::set<gaussian<int>, strong_less> const& in) {
     /* imagine this being a template in both parameters - it's pretty normal */
     return in.count(x);
   }
 \end{lstlisting}
+
+The std-provided \StrongOrder is deleted because it cannot be synthesized from
+gaussian's operator \spaceship. The reason it is chosen over the friend
+function, however, is because the standard template matches better than the
+friend which would require an implicit conversion.
+
+If the std-provided \StrongOrder did not participate in overload resolution,
+however, this example would work just fine.
 
 
 \section{Proposal}
@@ -424,17 +369,79 @@ through an unqualified call (thus enabling argument-dependent lookup).
 
 \subsection{Designate The Rest of the Algorithms to be Customization Points Too}
 
-They were intended to be customization points. There should be a \emph{Note}
+They were intended to be customization points. There should be a \emph{Remark}
 making that clear in every section. However, for the rest of the algorithms,
 their specific intended use is not quite as clear as the usecase for
 \StrongOrder.
 
 
 \subsection{Alternative}
-If the purpose of \StrongOrder is not enabling a default-ordering for
+If the purpose of \StrongOrder is not to provide a \eph{default ordering} for
 types, the iec559 exception should be removed from the wording, and a different
 customization point (perhaps called \code{total\_order}) added for the express
 purpose of providing an arbitrary total order on the entire domain of a type.
+
+
+\section{Exposition: The Natural and Default Orderings}
+
+Obviously, there are many reasons for sorting. However, this paper is chiefly
+concerned with the division between the \emph{natural ordering} and the
+\emph{default total ordering} as required for \concept{Regular}
+types by Stepanov and McJones in their seminal work Elements of Programming
+(\cite{EoP}, page 62, section 4.4).
+
+The \textbf{natural ordering} is the ordering that makes semantic sense for a
+type. This is the ordering that operator \spaceship and its library extensions
+are tailor-made for: not every type is ordered (or even equality-comparable),
+and when a type supports an ordering, it might be strong, partial, or weak.
+
+We use these orderings when we need them to make sense - heaps, scheduling tasks
+by topological sorts, various displays for users, etc. Not all value types have
+a natural ordering, because not all types are ordered. The gaussian integers
+are one such type.
+
+The \textbf{default ordering}\footnote{The name comes from Elements of
+Programming} is the strongest ordering that a type admits.
+Its equality is defined by value-substitutability, and unequal elements must be
+ordered; it is always strong and total, and might not make semantic sense.
+
+According to Elements of Programming, every \concept{Regular} type should
+provide a default ordering.
+
+A type with a default ordering is far more useful than one without; ordering
+enables the use of tree-based containers (i.e. \code{map}, \code{set}), and
+algorithms based on sorted data (\code{unique}, the various set algorithms, and
+the various versions of binary search) -- and this is just the tip of the
+iceberg. The only requirement for the above is having \emph{a} total strong
+ordering - what the ordering \emph{means} is utterly irrelevant.
+
+The lexicographic ordering of the gaussian integers is a good example of a
+default ordering.
+
+Another excellent example is \code{float} -- its various \code{NaN}s and
+infinities are not ordered, which is why its natural ordering is not suitable as
+a default ordering. However, iec559 defines a total strong ordering for those
+values, thus enabling the uses outlined above.
+
+
+\subsection{On Compatibility Between the Natural and Default Orderings}
+
+Elements of Programming specifies that for types where the natural and default
+orderings differ, the default ordering should be compatible with the natural
+one: that is, if \code{a} and \code{b} are comparable and compare unequal under
+\spaceship, the default order produces the same result (less or greater).
+
+However, requiring this in the language of the standard library as a mandatory
+semantic constraint seems like a bad idea.
+
+For instance, if one takes the gaussian integers ordered by the
+manhattan-distance to zero (sum of absolute values of the two components), the
+compatible total order (a lexicographic ordering of every equivalence class) is
+far slower to compute than the simple lexicographic one.
+
+Furthermore, if needed, a compatible total order can always be achieved on the
+fly by comparing with the natural order first - if the result is \code{less} or
+\code{greater}, keep the result - otherwise, fall back on the default ordering.
 
 
 \section{Acknowledgments} 
@@ -451,6 +458,8 @@ I would like to thank
     example code.
   \item[Herb Sutter and Walter Brown] for providing guidance on customization
     points.
+  \item[Louis Dionne] for great comments on the structure of the paper and how
+    to bring the focus where it needs to be.
 \end{description}
 
 Thanks!
