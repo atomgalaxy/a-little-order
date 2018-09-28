@@ -1,0 +1,294 @@
+<pre class='metadata'>
+Title: Everyone Deserves a Little Order
+Status: P
+Audience: LEWG
+Editor: Gašper Ažman <gasper.azman@gmail.com>
+Shortname: P0891
+Abstract: The ordering algorithms at the end of [[P0768R1]] are specified in a way that prevents them from being customization point. This paper fixes that.
+Group: WG21
+Date: 2018-10-27
+Markup Shorthands: markdown yes
+Revision: 1
+ED: https://github.com/atomgalaxy/isocpp-strong-order-sfinae/strong-ordering.bs
+</pre>
+
+<style>
+.ins, ins, ins *, span.ins, span.ins * {
+  background-color: rgb(200, 250, 200);
+  color: rgb(0, 136, 0);
+  text-decoration: none;
+}
+
+.del, del, del *, span.del, span.del * {
+  background-color: rgb(250, 200, 200);
+  color: rgb(255, 0, 0);
+  text-decoration: line-through;
+  text-decoration-color: rgb(255, 0, 0);
+}
+</style>
+
+Revision History {#history}
+===========================
+
+- r1: Incorporated feedback from EWG meeting in Rappersville.
+
+The feedback was:
+- Remove the floating point exception (bullet 1.1) as R0 recommended, since Unicode strings, etc., are a possible rationale.
+- Do not propose propose making existing `*_order` functions "customization points" (as used in [[D0551R3]]).
+- Add the new `total_order`, along with a bikeshedding section on its actual name, with the behaviour:
+  - It has the IEC 559 behavior from bullet 1.1 of `strong_order`
+  - It is defined for all (other) floating-point types; it is implementation-defined whether it is consistent with the partial order from the comparison operators. (Implementations should do this.)
+  - It is a customization point (à la [[D0551R3]]).
+- Investigate the possibility of adding Lawrence's weak order (from [[P0100R2]]) for floating-point numbers (which did not make it in with spaceship).
+
+
+Status of this paper {#sup}
+===========================
+
+This paper has been seen by LEWG, provided feedback, and reworked. It is ready to be seen again by LEWG.
+
+
+Problem Description {#problem}
+==============================
+
+This paper is a proposal to amend a library extension that has been voted into the working draft as part of [[P0768R1]].
+
+This paper proposes a new ordering customization point for possibly non-semantic strong orderings, which *should* be equal to `std::strong_order` for strongly-ordered types, and can be customized to represent an arbitrary total order for types that do not have a semantic ordering.
+
+The current C++ standard does not have an explicitly designated customization point for providing a *default ordering*. *Elements of Programming* uses `less<T>::operator()` for this purpose, as does the global order for pointers; but with the introduction of `operator<=>`, `less<T>` is missing features, such as computing equality without calling it twice. It has also failed to get adoption for this purpose throughout the years, perhaps exactly due to the missing features.
+
+Note: see [[#exposition]] for the definitions and discussion of orderings.
+
+The wording of point 1.1 of the `std::strong_order` algorithm suggests that `std::strong_order` is finally this missing customization point for specifying a default ordering for types whose natural ordering is not strong and total, since it does exactly that for the iec559 types.
+
+The issue is that the rest of the points make this function rather unsuitable for use as a customization point, since the language explicitly makes it not SFINAE-friendly. In the event that it cannot be synthesized, it is marked as *deleted*, and not as *"shall not participate in overload resolution"*.
+
+LEWG has expressed a strong preference to introducing a new customization point for such non-semantic strong orderings, and clarified that `std::strong_order` should not be a customization point.
+
+
+Status Quo {#status}
+====================
+
+For reference, the current specification for the `std::strong_order` algorithm is as follows:
+
+```cpp
+template<class T>
+constexpr strong_ordering strong_order(const T& a, const T& b);
+```
+
+1. Effects: Compares two values and produces a result of type `strong_ordering`:
+    1. If `numeric_limits<T>::is_iec559` is true, returns a result of type `strong_ordering` that is consistent with the `totalOrder` operation as specified in ISO/IEC/IEEE 60559.
+    2. Otherwise, returns `a <=> b` if that expression is well-formed and convertible to `strong_ordering`.
+    3. Otherwise, if the expression `a <=> b` is well-formed, then the function shall be defined as deleted.
+    4. Otherwise, if the expressions `a == b` and `a < b` are each well-formed and convertible to `bool`, returns `strong_ordering::equal` when `a == b` is `true`, otherwise returns `strong_ordering::less` when `a < b` is `true`, and otherwise returns `strong_ordering::greater`.
+    5. Otherwise, the function shall be defined as deleted.
+
+
+Proposal {#proposal}
+====================
+
+## Introduce a new customization point for an arbitrary total ordering {#new-customization-point}
+
+Introduce a new algorithm, with the name `std::arbitrary_order` (also see [[#name-bikeshed]]), with the following semantics:
+1. `template <typename T> std::strong_ordering std::arbitrary_order(T const&, T const&)` shall return a `std::strong_ordering`, if defined for a `T`.
+2. If `std::strong_order` is defined (and not deleted) for a type, `std::arbitrary_order` shall have the same result as `std::strong_order` with the same arguments, if `std::arbitrary_order` is not explicitly provided for the type. (Note: this means that `std::arbitrary_order` defaults to `std::strong_order` if it exists for the type. -- end note.)
+3. `std::arbitrary_order` is a customization point, as defined by [[D0551R3]].
+
+
+## Remove the iec559 Exception (point 1.1) {#noexcept}
+
+Since this paper adds explicit support for this customization point, the exception can now be implemented using whichever mechanism for customization points is chosen, and this special case moved to that part of the standard. For instance, a more specialized template based on a `requires` clause and the `numeric_limts<T>::is_iec559` trait can be added to `namespace std`.
+
+The minimal fix for the current situation would be:
+
+Change point 1.3 to read:<br>
+*Otherwise, if the expression `a <=>  b` is well-formed, the function does not participate in overload resolution.*
+
+Note: point 1.2 already takes care of the case where `<=>` provides a strong (and thus valid default) order.
+
+After the list, add a Note:
+
+*If `operator<=>` provides an order weaker than strong, this function allows the provision of a default strong order for a user-defined type. In that case, `std::strong_order` should define a strict, total ordering.*
+
+
+## Fix The Rules for Synthesis of Weaker Algorithms {#synthesis}
+The algorithms section contains a few other algorithms:
+
+- `weak_order(const T& a, const T& b)`
+- `partial_order(const T& a, const T& b)`
+- `strong_equal(const T& a, const T& b)`
+- `weak_equal(const T& a, const T& b)`
+- `partial_equal(const T& a, const T& b)`
+
+Intuitively, one would expect that if `std::strong_order` is available, then so are `strong_equal`, `weak_order` and `partial_order` (with `weak_equal` and `partial_equal` being consequences of those). The current situation seems to provide for that by accident, with no explicit reference to this fact. Adding a normative reference to this fact would, in this author's opinion, be advisable.
+
+Note: the rules for those algorithms are identical but for the iec559 exception in `std::strong_order`; since floating-point types possess `operator<` and `operator==`, they enable the synthesis of all those algorithms.
+
+
+Name of The Arbitrary Order Algorithm {#name-bikeshed}
+======================================================
+
+The new customization point that exposes an arbitrary order for any type that cares to provide one needs a name. This paper suggest a 5-way poll to LEWG on the following options:
+
+
+`total_order` {#name-total-order}
+---------------------------------
+
+- Pros: Calling it `total_order` makes sense becuase it is *always* a total strong order, if it exists. Also, iec559 calls it `totalOrder`.
+- Cons: There isn't really anything to distinguish it from `strong_order`, and nothing calling out the fact that it might not make semantic sense.
+
+
+`arbitrary_order` {#name-arbitrary-order}
+-----------------------------------------
+
+- Pros: communicates clearly that it might not be a semantic ordering.
+- Cons: perhaps too vague. Arbitrary order does not communicate that it is total.
+
+
+`default_order` {#name-default-order}
+-------------------------------------
+
+- Pros: that is what *Elements of Programmming* calls it.
+- Cons: the fact it is arbitrary is not clear.
+
+
+`arbitrary_default_order` {#arbitrary-default-order}
+----------------------------------------------------
+
+- Pros: clear, roughly in line with *EoP*.
+- Cons: long name is long. 
+
+
+`arbitrary_total_order` {#arbitrary-total-order}
+------------------------------------------------
+
+- Pros: clear, roughly in line with iec559.
+- Cons: long name is long. 
+
+
+Exposition: The Natural and Default Orderings {#exposition}
+===========================================================
+
+There are obviously many reasons for sorting. However, this paper is chiefly concerned with the division between the *natural ordering* and the *default total ordering* as required for **Regular** types by Stepanov and McJones in their seminal work *Elements of Programming* (page 62, section 4.4).
+
+The **natural ordering** is the ordering that makes semantic sense for a type. This is the ordering that `operator<=>` and its library extensions are tailor-made for: not every type is ordered (or even equality-comparable), and when a type supports an ordering, it might be strong, partial, or weak.
+
+We use these orderings when we need them to make sense - heaps, scheduling tasks by topological sorts, various displays for users, etc. Not all value types have a natural ordering, because not all types are ordered. The gaussian integers are one such type.
+
+The **default ordering**, from *Elements of Programming* is the strongest ordering that a type admits. Its equality is defined by value-substitutability, and unequal elements must be ordered; it is always strong and total, and might not make semantic sense.
+
+According to *Elements of Programming*, every **Regular** type should provide a default ordering.
+
+A type with a default ordering is far more useful than one without; ordering enables the use of tree-based containers (i.e. `map`, `set`), and algorithms based on sorted data (`unique`, the various set algorithms, merge, and the various versions of binary search) -- and this is just the tip of the iceberg. The only requirement for the above is having *a* total strong ordering - what the ordering *means* is utterly irrelevant, we only require a transitive antireflexive global relation.
+
+The lexicographic ordering of the gaussian integers is a good example of a default ordering.
+
+Another excellent example is `float` -- its various `NaN`s and infinities are not ordered, which is the reason its natural ordering is not suitable as a default ordering. However, iec559 defines a total strong ordering for those values, thus enabling the uses outlined above.
+
+
+On Compatibility Between the Natural and Default Orderings {#compat}
+====================================================================
+
+*Elements of Programming* specifies that for types where the natural and default orderings differ, the default ordering should be compatible with the natural one: that is, if `a` and `b` are comparable and compare unequal under `<=>`, the default order produces the same result (less or greater).
+
+However, requiring this in the language of the standard library as a mandatory semantic constraint seems like a bad idea.
+
+For instance, if one takes the gaussian integers ordered by the manhattan-distance to zero (sum of absolute values of the two components), the compatible total order (a lexicographic ordering of every equivalence class) is far slower to compute than the simple lexicographic one.
+
+Furthermore, if needed, a compatible total order can always be achieved on the fly by comparing with the natural order first - if the result is `less` or `greater`, keep the result - otherwise, fall back on the default ordering.
+
+
+Acknowledgments {#ack}
+===============
+I would like to thank
+  - **Roger Orr** for bringing this to my attention;
+  - **Thomas Köppe** for his valuable comments, review, and most of all some extremely clear and laconic wording;
+  - **Sam Finch** for *thoroughly* breaking my examples, some example code, great substantive comments, and pointing out that the current definition actually breaks types that define a partially-ordered set of comparison operators;
+  - **Richard Smith** for further fixing my example in light of Concepts, and example code.
+  - **Herb Sutter and Walter Brown** for providing guidance on customization points.
+  - **Louis Dionne** for great comments on the structure of the paper and how to bring the focus where it needs to be;
+  - **Walter Brown** for representing the paper at committee meetings when I could not make it in person, and guidance with direction;
+  - **Herb Sutter** for his comments and support for getting ordering right.
+
+And, _again_, a special thank-you to Walter Brown, who, with his final lightning talk in Bellevue, reminded me to remember whose shoulders I'm standing on.
+
+Thank you all!
+
+
+Appendix A: Code Example of Problem with `strong_order` as customization point {#example-cust-point}
+----------------------------------------------------------------------------------------------------
+
+Let us illustrate on a trivial example. Say we have a template struct representing the gaussian integers, with a *natural order* defined by the manhattan distance from `0+0i`. This struct still defines a `std::strong_order` to model **Regular**.
+
+Note: The **Regular** above refers to the *Elements of Programming* concept, not the ISO C++ **Regular**, which is weaker.
+
+Note: There is no natural order on gaussian integers, but humor this example, please.
+
+```cpp
+namespace user {
+  template <typename T>
+  struct gaussian {
+    static_assert(std::is_integral_v<T>);
+    T re;
+    T im;
+
+    constexpr std::strong_equality operator==(gassian const& other) const {
+      return re == other.re && im == other.im;
+    }
+    constexpr std::weak_ordering operator<=>(gaussian const& other) const {
+      return (*this == other) ? std::weak_ordering::equal
+                              : (abs(*this) == abs(other)) ? std::weak_ordering::equivalent
+                                                           : abs(*this) <=> abs(other);
+    }
+    friend constexpr T abs(gaussian const&) {
+      using std::abs;
+      return abs(re) + abs(im);
+    }
+
+    friend constexpr std::strong_ordering strong_order(gaussian const& x,
+                                                       gaussian const& y) {
+      // compare lexicographically
+      return std::tie(x.re, x.im) <=> std::tie(y.re, y.im);
+    }
+  };
+}
+```
+
+Consider a transparent ordering operator for `map`:
+```cpp
+struct strong_less
+  template <typename T, typename U>
+  bool operator()(T const& x, U const& y) {
+    using std::strong_order;  // use ADL
+    return strong_order(x, y) < 0;
+  }
+  using is_transparent = std::true_type;
+};
+```
+
+Also say we had a type with an implicit conversion to our `gaussian`:
+```cpp
+template <typename T>
+struct lazy {
+  std::function<T()> make;
+  operator T() const { return make(); }
+};
+```
+
+This function now fails to compile, because the chosen `std::strong_order` is deleted.
+```cpp
+bool exists(lazy<gaussian<int>> const& x,
+            std::set<gaussian<int>, strong_less> const& in) {
+  /* imagine this being a template in both parameters - it's pretty normal */
+  return in.count(x);
+}
+```
+
+The std-provided `std::strong_order` is deleted because it cannot be synthesized from gaussian's `operator<=>`. The reason it is chosen over the friend function, however, is because the standard template matches better than the friend which would require an implicit conversion.
+
+If the std-provided `std::strong_order` did not participate in overload resolution, however, this example would work just fine.
+
+
+<!--
+ vim: ft=markdown wrap linebreak nolist textwidth=0 wrapmargin=0
+-->
