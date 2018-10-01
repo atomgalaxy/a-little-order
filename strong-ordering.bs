@@ -9,7 +9,7 @@ Group: WG21
 Date: 2018-10-27
 Markup Shorthands: markdown yes
 Revision: 1
-ED: https://github.com/atomgalaxy/isocpp-strong-order-sfinae/strong-ordering.bs
+ED: https://github.com/atomgalaxy/a-little-order/strong-ordering.bs
 </pre>
 
 <style>
@@ -73,7 +73,7 @@ There are obviously many reasons for sorting. However, this paper is chiefly con
 
 The **natural ordering** is the ordering that makes semantic sense for a type. This is the ordering that `operator<=>` and its library extensions are tailor-made for: not every type is ordered (or even equality-comparable), and when a type supports an ordering, it might be strong, partial, or weak.
 
-We use these orderings when we need them to make sense - heaps, scheduling tasks by topological sorts, various displays for users, etc. Not all value types have a natural ordering, because not all types are ordered. The gaussian integers are one such type.
+We use these orderings when we need them to make sense - heaps, scheduling tasks by topological sorts, various displays for users, etc. Not all value types have a natural ordering, because not all types are ordered. The Gaussian integers are one such type.
 
 The **default ordering**, from *Elements of Programming* is the finest ordering (transitive antisymmetric antireflexive relation) that a type admits, with its equality is defined by value-substitutability (unequal elements must be ordered); it is always strong and total, and might not make semantic sense.
 
@@ -81,7 +81,7 @@ According to *Elements of Programming*, every **Regular** type should provide a 
 
 A type with a default ordering is far more useful than one without; ordering enables the use of tree-based containers (i.e. `map`, `set`), and algorithms based on sorted data (`unique`, the various set algorithms, `merge`, and the various versions of binary search) -- and this is just the tip of the iceberg. The only requirement for the above is having *a* total strong ordering - what the ordering *means* is utterly irrelevant, we only require a global order relation.
 
-The lexicographic ordering of the gaussian integers is a good example of a default ordering.
+The lexicographic ordering of the Gaussian integers is a good example of a default ordering.
 
 Another excellent example is `float` -- its various `NaN`s and infinities are not ordered, which is the reason its natural ordering is not suitable as a default ordering. However, iec559 defines a total strong ordering for those values, thus enabling the uses outlined above.
 
@@ -119,7 +119,7 @@ Let `T` be a type, and `a` and `b` be values of type `T` (as if `a` and `b` were
 4. If not explicitly specialized for a type `T` and `strong_order(a, b)` is well-formed, the expression `default_order(a, b)` shall return the result of the expression `strong_order(a, b)`. (Note: this means that `default_order` defaults to `strong_order` if available for the type. -- end note.)
 
 
-Move the iec559 Exception (point 1.1) from `strong_order` to `default_order` {#noexcept}
+Move the iec559 treatment (point 1.1) from `strong_order` to `default_order` {#noexcept}
 ----------------------------------------------------------------------------------------
 
 Since this paper adds an explicit customization point for a non-semantic total order on any type, the exception for iec559 floating-point types can now be implemented by explicitly providing an implementation for the `default_order` customization point for those types.
@@ -135,7 +135,7 @@ Remark: libraries are encouraged to provide implementations of this customizatio
 Name of The Default Order Algorithm {#name-bikeshed}
 ====================================================
 
-The new customization point that exposes an arbitrary order for any type that cares to provide one needs a name. This paper suggest a 5-way poll to LEWG on the following options:
+The new customization point that exposes an arbitrary order for any type that cares to provide one needs a name. This paper suggests a 5-way poll to LEWG on the following options:
 
 `default_order` {#name-default-order}
 -------------------------------------
@@ -203,16 +203,13 @@ On Compatibility Between the Natural and Default Orderings {#compat}
 
 It is the opinion of the author that requiring this in the language of the standard library as a mandatory semantic constraint seems like a bad idea.
 
-For instance, if one takes the gaussian integers ordered by the manhattan-distance to zero (sum of absolute values of the two components), the compatible total order (a lexicographic ordering of every equivalence class) is far slower to compute than the simple lexicographic one.
+For instance, if one takes the Gaussian integers ordered by the Manhattan distance to zero (sum of absolute values of the two components), the compatible total order (a lexicographic ordering of every equivalence class) is far slower to compute than the simple lexicographic one.
 
-Furthermore, if needed, a *finer* compatible total order can always be achieved on the fly by comparing with the natural order first - if the result is `less` or `greater`, keep the result - otherwise, fall back on the default ordering.
+Furthermore, if needed, a *finer* compatible total order can always be achieved on the fly by comparing with the natural order first: if the result is `less` or `greater`, keep the result; otherwise, fall back on the default ordering.
 
 
-Frequently Asked Questions {#faq}
-=================================
-
-Why not just make `strong_order` a customization point {#why-not}
------------------------------------------------------------------
+Why not just make `strong_order` a customization point? {#why-not}
+==================================================================
 
 Main reasons:
     1. it would inhibit providing both a natural (`<=>`, `strong_order`) (and possibly slow) and a default (fast) order for a type
@@ -222,8 +219,8 @@ Main reasons:
 It is notable that this was the direction suggested by the orginal paper, but the committee rejected it.
 
 
-Wording {#wording}
-==================
+Proposed Wording {#wording}
+===========================
 
 From section 24.x.4, Comparison Algorithms [cmp.alg], under `strong_order`:
 <div class='del'>
@@ -245,7 +242,9 @@ After 24.x.4 paragraph 3, `weak_order`, add:
     *Effects:*
     1. returns `strong_order(a, b)` if that expression is well-formed and convertible to `strong_ordering`
     2. Otherwise, this function shall not participate in overload resolution.
-    3. This function is a designated customization point.
+
+*Remarks:*<br/>
+     This function is a designated customization point.
 
 Note: this function is the designated customization point for types that do not have a semantically meaningful strong ordering to nevertheless provide a default total ordering which is useful for algorithms and containers which operate on sorted data, such as `merge`, `unique`, `lower_bound`, `map`, and `set`. &mdash; end note.
 
@@ -261,6 +260,7 @@ Note: this function implements the `totalOrder` operation for `iec559` floating-
 
 Acknowledgments {#ack}
 ======================
+
 I would like to thank
   - **Roger Orr** for bringing this to my attention;
   - **Thomas Köppe** for his valuable comments, review, and most of all some extremely clear and laconic wording;
@@ -279,12 +279,11 @@ Thank you all!
 Appendix A: Proof `strong_order` is not a valid customization point {#example-cust-point}
 =========================================================================================
 
-
-Let us illustrate on a trivial example. Say we have a template struct representing the gaussian integers, with a *natural order* defined by the manhattan distance from `0+0i`. This struct still defines a `std::strong_order` to model **Regular**.
+Say we have a template struct representing the Gaussian integers, with a *natural order* defined by the manhattan distance from `0+0i`. This struct still defines a `std::strong_order` to model **Regular**.
 
 Note: The **Regular** above refers to the *Elements of Programming* concept, not the ISO C++ **Regular**, which is weaker.
 
-Note: There is no natural order on gaussian integers, but humor this example, please.
+Note: There is no natural order on Gaussian integers, but humor this example, please.
 
 ```cpp
 namespace user {
@@ -346,7 +345,7 @@ bool exists(lazy<gaussian<int>> const& x,
 }
 ```
 
-The std-provided `std::strong_order` is deleted because it cannot be synthesized from gaussian's `operator<=>`. The reason it is chosen over the friend function, however, is because the standard template matches better than the friend which would require an implicit conversion.
+The std-provided `std::strong_order` is deleted because it cannot be synthesized from `gaussian`'s `operator<=>`. The reason it is chosen over the friend function, however, is because the standard template matches better than the friend which would require an implicit conversion.
 
 If the std-provided `std::strong_order` did not participate in overload resolution, however, this example would work just fine.
 

@@ -1192,8 +1192,8 @@ Possible extra rowspan handling
     }
   </style>
   <meta content="Bikeshed version 650c7f090a7031056e48b2cf26f91e72b5c14a32" name="generator">
-  <link href="https://github.com/atomgalaxy/isocpp-strong-order-sfinae/strong-ordering.bs" rel="canonical">
-  <meta content="927b9cf4ec2db33ccdb09b7ffa5d8edaa099e56d" name="document-revision">
+  <link href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs" rel="canonical">
+  <meta content="543c743bfcec56f93b9cd56ddcb585c873a2b984" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1421,7 +1421,7 @@ pre .property::before, pre .property::after {
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
-     <dd><a class="u-url" href="https://github.com/atomgalaxy/isocpp-strong-order-sfinae/strong-ordering.bs">https://github.com/atomgalaxy/isocpp-strong-order-sfinae/strong-ordering.bs</a>
+     <dd><a class="u-url" href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs">https://github.com/atomgalaxy/a-little-order/strong-ordering.bs</a>
      <dt>Author:
      <dd>
       <dd class="editor p-author h-card vcard"><span class="p-name fn">Gašper Ažman &lt;gasper.azman@gmail.com></span>
@@ -1450,7 +1450,7 @@ pre .property::before, pre .property::after {
      <a href="#proposal"><span class="secno">6</span> <span class="content">Proposal</span></a>
      <ol class="toc">
       <li><a href="#new-customization-point"><span class="secno">6.1</span> <span class="content">Introduce a new customization point for an arbitrary total ordering</span></a>
-      <li><a href="#noexcept"><span class="secno">6.2</span> <span class="content">Move the iec559 Exception (point 1.1) from <code class="highlight"><span class="n">strong_order</span></code> to <code class="highlight"><span class="n">default_order</span></code></span></a>
+      <li><a href="#noexcept"><span class="secno">6.2</span> <span class="content">Move the iec559 treatment (point 1.1) from <code class="highlight"><span class="n">strong_order</span></code> to <code class="highlight"><span class="n">default_order</span></code></span></a>
      </ol>
     <li>
      <a href="#name-bikeshed"><span class="secno">7</span> <span class="content">Name of The Default Order Algorithm</span></a>
@@ -1462,12 +1462,8 @@ pre .property::before, pre .property::after {
       <li><a href="#default-total-order"><span class="secno">7.5</span> <span class="content"><code class="highlight"><span class="n">default_total_order</span></code></span></a>
      </ol>
     <li><a href="#compat"><span class="secno">8</span> <span class="content">On Compatibility Between the Natural and Default Orderings</span></a>
-    <li>
-     <a href="#faq"><span class="secno">9</span> <span class="content">Frequently Asked Questions</span></a>
-     <ol class="toc">
-      <li><a href="#why-not"><span class="secno">9.1</span> <span class="content">Why not just make <code class="highlight"><span class="n">strong_order</span></code> a customization point</span></a>
-     </ol>
-    <li><a href="#wording"><span class="secno">10</span> <span class="content">Wording</span></a>
+    <li><a href="#why-not"><span class="secno">9</span> <span class="content">Why not just make <code class="highlight"><span class="n">strong_order</span></code> a customization point?</span></a>
+    <li><a href="#wording"><span class="secno">10</span> <span class="content">Proposed Wording</span></a>
     <li><a href="#ack"><span class="secno">11</span> <span class="content">Acknowledgments</span></a>
     <li><a href="#example-cust-point"><span class="secno"></span> <span class="content">Appendix A: Proof <code class="highlight"><span class="n">strong_order</span></code> is not a valid customization point</span></a>
     <li>
@@ -1515,11 +1511,11 @@ pre .property::before, pre .property::after {
    <h2 class="heading settled" data-level="4" id="exposition"><span class="secno">4. </span><span class="content">Exposition: On Natural and Default Orderings</span><a class="self-link" href="#exposition"></a></h2>
    <p>There are obviously many reasons for sorting. However, this paper is chiefly concerned with the division between the <em>natural ordering</em> and the <em>default total ordering</em> as required for <strong>Regular</strong> types by Stepanov and McJones in their seminal work <em>Elements of Programming</em> (page 62, section 4.4).</p>
    <p>The <strong>natural ordering</strong> is the ordering that makes semantic sense for a type. This is the ordering that <code class="highlight"><span class="k">operator</span><span class="o">&lt;=></span></code> and its library extensions are tailor-made for: not every type is ordered (or even equality-comparable), and when a type supports an ordering, it might be strong, partial, or weak.</p>
-   <p>We use these orderings when we need them to make sense - heaps, scheduling tasks by topological sorts, various displays for users, etc. Not all value types have a natural ordering, because not all types are ordered. The gaussian integers are one such type.</p>
+   <p>We use these orderings when we need them to make sense - heaps, scheduling tasks by topological sorts, various displays for users, etc. Not all value types have a natural ordering, because not all types are ordered. The Gaussian integers are one such type.</p>
    <p>The <strong>default ordering</strong>, from <em>Elements of Programming</em> is the finest ordering (transitive antisymmetric antireflexive relation) that a type admits, with its equality is defined by value-substitutability (unequal elements must be ordered); it is always strong and total, and might not make semantic sense.</p>
    <p>According to <em>Elements of Programming</em>, every <strong>Regular</strong> type should provide a default ordering.</p>
    <p>A type with a default ordering is far more useful than one without; ordering enables the use of tree-based containers (i.e. <code class="highlight"><span class="n">map</span></code>, <code class="highlight"><span class="n">set</span></code>), and algorithms based on sorted data (<code class="highlight"><span class="n">unique</span></code>, the various set algorithms, <code class="highlight"><span class="n">merge</span></code>, and the various versions of binary search) -- and this is just the tip of the iceberg. The only requirement for the above is having <em>a</em> total strong ordering - what the ordering <em>means</em> is utterly irrelevant, we only require a global order relation.</p>
-   <p>The lexicographic ordering of the gaussian integers is a good example of a default ordering.</p>
+   <p>The lexicographic ordering of the Gaussian integers is a good example of a default ordering.</p>
    <p>Another excellent example is <code class="highlight"><span class="kt">float</span></code> -- its various <code class="highlight"><span class="n">NaN</span></code>s and infinities are not ordered, which is the reason its natural ordering is not suitable as a default ordering. However, iec559 defines a total strong ordering for those values, thus enabling the uses outlined above.</p>
    <h2 class="heading settled" data-level="5" id="status"><span class="secno">5. </span><span class="content">Status Quo</span><a class="self-link" href="#status"></a></h2>
    <p>For reference, the current specification for the <code class="highlight"><span class="n">std</span><span class="o">::</span><span class="n">strong_order</span></code> algorithm is as follows:</p>
@@ -1556,7 +1552,7 @@ pre .property::before, pre .property::after {
     <li data-md="">
      <p>If not explicitly specialized for a type <code class="highlight"><span class="n">T</span></code> and <code class="highlight"><span class="n">strong_order</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span></code> is well-formed, the expression <code class="highlight"><span class="n">default_order</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span></code> shall return the result of the expression <code class="highlight"><span class="n">strong_order</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span></code>. (Note: this means that <code class="highlight"><span class="n">default_order</span></code> defaults to <code class="highlight"><span class="n">strong_order</span></code> if available for the type. -- end note.)</p>
    </ol>
-   <h3 class="heading settled" data-level="6.2" id="noexcept"><span class="secno">6.2. </span><span class="content">Move the iec559 Exception (point 1.1) from <code class="highlight"><span class="n">strong_order</span></code> to <code class="highlight"><span class="n">default_order</span></code></span><a class="self-link" href="#noexcept"></a></h3>
+   <h3 class="heading settled" data-level="6.2" id="noexcept"><span class="secno">6.2. </span><span class="content">Move the iec559 treatment (point 1.1) from <code class="highlight"><span class="n">strong_order</span></code> to <code class="highlight"><span class="n">default_order</span></code></span><a class="self-link" href="#noexcept"></a></h3>
    <p>Since this paper adds an explicit customization point for a non-semantic total order on any type, the exception for iec559 floating-point types can now be implemented by explicitly providing an implementation for the <code class="highlight"><span class="n">default_order</span></code> customization point for those types.</p>
    <p>The concrete proposal is as follows:</p>
    <ol>
@@ -1571,7 +1567,7 @@ pre .property::before, pre .property::after {
    </ol>
    <p>Remark: libraries are encouraged to provide implementations of this customization point for their user-defined types, especially if the <code class="highlight"><span class="k">operator</span><span class="o">&lt;=></span></code> for the type does not provide a <code class="highlight"><span class="n">strong_ordering</span></code>, to enable possibly non-semantic total orderings over their entire domain. The use of implementations of this customization point that do not define a strict total order render the program ill-formed (no diagnostic required).</p>
    <h2 class="heading settled" data-level="7" id="name-bikeshed"><span class="secno">7. </span><span class="content">Name of The Default Order Algorithm</span><a class="self-link" href="#name-bikeshed"></a></h2>
-   <p>The new customization point that exposes an arbitrary order for any type that cares to provide one needs a name. This paper suggest a 5-way poll to LEWG on the following options:</p>
+   <p>The new customization point that exposes an arbitrary order for any type that cares to provide one needs a name. This paper suggests a 5-way poll to LEWG on the following options:</p>
    <h3 class="heading settled" data-level="7.1" id="name-default-order"><span class="secno">7.1. </span><span class="content"><code class="highlight"><span class="n">default_order</span></code></span><a class="self-link" href="#name-default-order"></a></h3>
    <ul>
     <li data-md="">
@@ -1675,10 +1671,9 @@ pre .property::before, pre .property::after {
    <h2 class="heading settled" data-level="8" id="compat"><span class="secno">8. </span><span class="content">On Compatibility Between the Natural and Default Orderings</span><a class="self-link" href="#compat"></a></h2>
    <p><em>Elements of Programming</em> specifies that for types where the natural and default orderings differ, the default ordering should be <em>finer</em> than the natural one: that is, if <code class="highlight"><span class="n">a</span></code> and <code class="highlight"><span class="n">b</span></code> are <em>comparable</em> and compare unequal under <code class="highlight"><span class="o">&lt;=></span></code>, the default order produces the same result (less or greater).</p>
    <p>It is the opinion of the author that requiring this in the language of the standard library as a mandatory semantic constraint seems like a bad idea.</p>
-   <p>For instance, if one takes the gaussian integers ordered by the manhattan-distance to zero (sum of absolute values of the two components), the compatible total order (a lexicographic ordering of every equivalence class) is far slower to compute than the simple lexicographic one.</p>
-   <p>Furthermore, if needed, a <em>finer</em> compatible total order can always be achieved on the fly by comparing with the natural order first - if the result is <code class="highlight"><span class="n">less</span></code> or <code class="highlight"><span class="n">greater</span></code>, keep the result - otherwise, fall back on the default ordering.</p>
-   <h2 class="heading settled" data-level="9" id="faq"><span class="secno">9. </span><span class="content">Frequently Asked Questions</span><a class="self-link" href="#faq"></a></h2>
-   <h3 class="heading settled" data-level="9.1" id="why-not"><span class="secno">9.1. </span><span class="content">Why not just make <code class="highlight"><span class="n">strong_order</span></code> a customization point</span><a class="self-link" href="#why-not"></a></h3>
+   <p>For instance, if one takes the Gaussian integers ordered by the Manhattan distance to zero (sum of absolute values of the two components), the compatible total order (a lexicographic ordering of every equivalence class) is far slower to compute than the simple lexicographic one.</p>
+   <p>Furthermore, if needed, a <em>finer</em> compatible total order can always be achieved on the fly by comparing with the natural order first: if the result is <code class="highlight"><span class="n">less</span></code> or <code class="highlight"><span class="n">greater</span></code>, keep the result; otherwise, fall back on the default ordering.</p>
+   <h2 class="heading settled" data-level="9" id="why-not"><span class="secno">9. </span><span class="content">Why not just make <code class="highlight"><span class="n">strong_order</span></code> a customization point?</span><a class="self-link" href="#why-not"></a></h2>
    <p>Main reasons:</p>
    <ol>
     <li data-md="">
@@ -1689,7 +1684,7 @@ pre .property::before, pre .property::after {
      <p>it is less surprising if the order algorithms that are related to order types by name (<code class="highlight"><span class="n">weak_order</span></code> - <code class="highlight"><span class="n">weak_ordering</span></code>, <code class="highlight"><span class="n">partial_order</span></code> - <code class="highlight"><span class="n">partial_ordering</span></code>, <code class="highlight"><span class="n">strong_order</span></code> - <code class="highlight"><span class="n">strong_ordering</span></code>) had the same specification, while a fourth customization point that isn’t related by any of them by name serves as the customization point for default order.</p>
    </ol>
    <p>It is notable that this was the direction suggested by the orginal paper, but the committee rejected it.</p>
-   <h2 class="heading settled" data-level="10" id="wording"><span class="secno">10. </span><span class="content">Wording</span><a class="self-link" href="#wording"></a></h2>
+   <h2 class="heading settled" data-level="10" id="wording"><span class="secno">10. </span><span class="content">Proposed Wording</span><a class="self-link" href="#wording"></a></h2>
    <p>From section 24.x.4, Comparison Algorithms [cmp.alg], under <code class="highlight"><span class="n">strong_order</span></code>:</p>
    <div class="del">
      (1.1)  If <code class="highlight"><span class="n">numeric_limits</span><span class="o">&lt;</span><span class="n">T</span><span class="o">>::</span><span class="n">is_iec559</span></code> is true, returns a result of type <code class="highlight"><span class="n">strong_ordering</span></code> that is consistent with the <code class="highlight"><span class="n">totalOrder</span></code> operation as specified in ISO/IEC/IEEE 60559. 
@@ -1706,10 +1701,9 @@ pre .property::before, pre .property::after {
         <p>returns <code class="highlight"><span class="n">strong_order</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span></code> if that expression is well-formed and convertible to <code class="highlight"><span class="n">strong_ordering</span></code></p>
        <li data-md="">
         <p>Otherwise, this function shall not participate in overload resolution.</p>
-       <li data-md="">
-        <p>This function is a designated customization point.</p>
       </ol>
     </ol>
+    <p><em>Remarks:</em><br> This function is a designated customization point.</p>
     <p class="note" role="note"><span>Note:</span> this function is the designated customization point for types that do not have a semantically meaningful strong ordering to nevertheless provide a default total ordering which is useful for algorithms and containers which operate on sorted data, such as <code class="highlight"><span class="n">merge</span></code>, <code class="highlight"><span class="n">unique</span></code>, <code class="highlight"><span class="n">lower_bound</span></code>, <code class="highlight"><span class="n">map</span></code>, and <code class="highlight"><span class="n">set</span></code>. — end note.</p>
     <ol start="5">
      <li data-md="">
@@ -1724,7 +1718,7 @@ pre .property::before, pre .property::after {
     <p class="note" role="note"><span>Note:</span> this function implements the <code class="highlight"><span class="n">totalOrder</span></code> operation for <code class="highlight"><span class="n">iec559</span></code> floating-point types. For such types, it is more-specialized than the unconstrained template from point 4. — end note.</p>
    </div>
    <h2 class="heading settled" data-level="11" id="ack"><span class="secno">11. </span><span class="content">Acknowledgments</span><a class="self-link" href="#ack"></a></h2>
-    I would like to thank 
+   <p>I would like to thank</p>
    <ul>
     <li data-md="">
      <p><strong>Roger Orr</strong> for bringing this to my attention;</p>
@@ -1746,9 +1740,9 @@ pre .property::before, pre .property::after {
    <p>And, <em>again</em>, a special thank-you to Walter Brown, who, with his final lightning talk in Bellevue, reminded me to remember whose shoulders I’m standing on.</p>
    <p>Thank you all!</p>
    <h2 class="heading settled" id="example-cust-point"><span class="content">Appendix A: Proof <code class="highlight"><span class="n">strong_order</span></code> is not a valid customization point</span><a class="self-link" href="#example-cust-point"></a></h2>
-   <p>Let us illustrate on a trivial example. Say we have a template struct representing the gaussian integers, with a <em>natural order</em> defined by the manhattan distance from <code class="highlight"><span class="mi">0</span><span class="o">+</span><span class="mi">0</span><span class="n">i</span></code>. This struct still defines a <code class="highlight"><span class="n">std</span><span class="o">::</span><span class="n">strong_order</span></code> to model <strong>Regular</strong>.</p>
+   <p>Say we have a template struct representing the Gaussian integers, with a <em>natural order</em> defined by the manhattan distance from <code class="highlight"><span class="mi">0</span><span class="o">+</span><span class="mi">0</span><span class="n">i</span></code>. This struct still defines a <code class="highlight"><span class="n">std</span><span class="o">::</span><span class="n">strong_order</span></code> to model <strong>Regular</strong>.</p>
    <p class="note" role="note"><span>Note:</span> The <strong>Regular</strong> above refers to the <em>Elements of Programming</em> concept, not the ISO C++ <strong>Regular</strong>, which is weaker.</p>
-   <p class="note" role="note"><span>Note:</span> There is no natural order on gaussian integers, but humor this example, please.</p>
+   <p class="note" role="note"><span>Note:</span> There is no natural order on Gaussian integers, but humor this example, please.</p>
 <pre class="language-cpp highlight"><span class="k">namespace</span> <span class="n">user</span> <span class="p">{</span>
   <span class="k">template</span> <span class="o">&lt;</span><span class="k">typename</span> <span class="n">T</span><span class="o">></span>
   <span class="k">struct</span> <span class="n">gaussian</span> <span class="p">{</span>
@@ -1801,7 +1795,7 @@ pre .property::before, pre .property::after {
   <span class="k">return</span> <span class="n">in</span><span class="p">.</span><span class="n">count</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
 <span class="p">}</span>
 </pre>
-   <p>The std-provided <code class="highlight"><span class="n">std</span><span class="o">::</span><span class="n">strong_order</span></code> is deleted because it cannot be synthesized from gaussian’s <code class="highlight"><span class="k">operator</span><span class="o">&lt;=></span></code>. The reason it is chosen over the friend function, however, is because the standard template matches better than the friend which would require an implicit conversion.</p>
+   <p>The std-provided <code class="highlight"><span class="n">std</span><span class="o">::</span><span class="n">strong_order</span></code> is deleted because it cannot be synthesized from <code class="highlight"><span class="n">gaussian</span></code>'s <code class="highlight"><span class="k">operator</span><span class="o">&lt;=></span></code>. The reason it is chosen over the friend function, however, is because the standard template matches better than the friend which would require an implicit conversion.</p>
    <p>If the std-provided <code class="highlight"><span class="n">std</span><span class="o">::</span><span class="n">strong_order</span></code> did not participate in overload resolution, however, this example would work just fine.</p>
   </main>
 <script>
