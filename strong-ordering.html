@@ -1230,7 +1230,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version dff342f4b23fb230b71436fb31b55f5f169715bd" name="generator">
   <link href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="4bd085015728b226adba2ee063c8b7837c3ddbf8" name="document-revision">
+  <meta content="356f8b2ea464426b9a9d303f971b20840a2d870f" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1463,7 +1463,7 @@ pre .property::before, pre .property::after {
      <dd>
       <dd class="editor p-author h-card vcard"><span class="p-name fn">Gašper Ažman &lt;gasper.azman@gmail.com></span>
      <dt>Audience:
-     <dd>LEWG
+     <dd>LEWG, LWG
      <dt>Project:
      <dd>ISO/IEC JTC1/SC22/WG21 14882: Programming Language — C++
     </dl>
@@ -1627,7 +1627,7 @@ pre .property::before, pre .property::after {
        <p>it implies neither that it is total, nor that it is strong, despite the requirement it be both.</p>
      </ul>
    </ul>
-   <p><code class="highlight"><c- n>default_order</c-></code> is the favorite of the paper author, as well as the most of the reviewers of this paper.</p>
+   <p><code class="highlight"><c- n>default_order</c-></code> is the favorite of the paper author, as well as most of the reviewers of this paper.</p>
    <h3 class="heading settled" data-level="7.2" id="name-total-order"><span class="secno">7.2. </span><span class="content"><code class="highlight"><c- n>total_order</c-></code></span><a class="self-link" href="#name-total-order"></a></h3>
    <ul>
     <li data-md>
@@ -1731,16 +1731,16 @@ pre .property::before, pre .property::after {
    <div class="ins"> (1.2) Returns </div>
    <p>After 24.x.4 paragraph 3, <code class="highlight"><c- n>weak_order</c-></code>, add:</p>
    <div class="ins">
-    <ul style="list-style-type: none">
+    <ul style="list-style-type: none; padding-left: 0px;">
      <li>
-      (4.) <code class="highlight"><c- k>template</c-><c- o>&lt;</c-><c- k>class</c-> <c- nc>T</c-><c- o>></c-> <c- k>constexpr</c-> <c- n>strong_ordering</c-> <c- n>default_order</c-><c- p>(</c-><c- k>const</c-> <c- n>T</c-><c- o>&amp;</c-> <c- n>a</c-><c- p>,</c-> <c- k>const</c-> <c- n>T</c-><c- o>&amp;</c-> <c- n>b</c-><c- p>);</c-></code> <br> <em>Effects:</em> 
+      <code class="highlight"><c- k>template</c-><c- o>&lt;</c-><c- k>class</c-> <c- nc>T</c-><c- o>></c-> <c- k>constexpr</c-> <c- n>strong_ordering</c-> <c- n>default_order</c-><c- p>(</c-><c- k>const</c-> <c- n>T</c-><c- o>&amp;</c-> <c- n>a</c-><c- p>,</c-> <c- k>const</c-> <c- n>T</c-><c- o>&amp;</c-> <c- n>b</c-><c- p>);</c-></code><br>4. <em>Effects:</em> 
       <ul style="list-style-type: none">
        <li>(4.1) if <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>numeric_limits</c-><c- o>&lt;</c-><c- n>T</c-><c- o>>::</c-><c- n>is_iec559</c-></code> is true, returns a result of type <code class="highlight"><c- n>strong_ordering</c-></code> that is consistent with the <code class="highlight"><c- n>totalOrder</c-></code> operation as specified in ISO/IEC/IEEE 60559.
        <li>(4.2) Otherwise, returns <code class="highlight"><c- n>strong_order</c-><c- p>(</c-><c- n>a</c-><c- p>,</c-> <c- n>b</c-><c- p>)</c-></code> if that expression is well-formed and convertible to <code class="highlight"><c- n>strong_ordering</c-></code>
        <li>(4.3) Otherwise, this function shall not participate in overload resolution.
       </ul>
+     <li>5. <em>Remarks</em>: this function is a designated customization point ([namespace.std]).
     </ul>
-     <em>Remarks</em>: this function is a designated customization point. 
    </div>
    <p>Under <code class="highlight"><c- p>[</c-><c- n>cmp</c-><c- p>.</c-><c- n>syn</c-><c- p>]</c-></code> -> <code class="highlight"><c- p>[</c-><c- n>cmp</c-><c- p>.</c-><c- n>alg</c-><c- p>]</c-></code>, insert declaration:</p>
    <div class="ins"> <code class="highlight"><c- k>template</c-> <c- o>&lt;</c-><c- k>class</c-> <c- nc>T</c-><c- o>></c-> <c- k>constexpr</c-> <c- n>strong_ordering</c-> <c- n>default_order</c-><c- p>(</c-><c- k>const</c-> <c- n>T</c-><c- o>&amp;</c-> <c- n>a</c-><c- p>,</c-> <c- k>const</c-> <c- n>T</c-><c- o>&amp;</c-> <c- n>b</c-><c- p>);</c-></code> </div>
@@ -1767,7 +1767,7 @@ pre .property::before, pre .property::after {
    <p>And, <em>again</em>, a special thank-you to Walter Brown, who, with his final lightning talk in Bellevue, reminded me to remember whose shoulders I’m standing on.</p>
    <p>Thank you all!</p>
    <h2 class="heading settled" id="example-cust-point"><span class="content">Appendix A: Proof <code class="highlight"><c- n>strong_order</c-></code> is not a valid customization point</span><a class="self-link" href="#example-cust-point"></a></h2>
-   <p>Say we have a template struct representing the Gaussian integers, with a <em>natural order</em> defined by the manhattan distance from <code class="highlight"><c- mi>0</c-><c- o>+</c-><c- mi>0</c-><c- n>i</c-></code>. This struct still defines a <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_order</c-></code> to model <strong>Regular</strong>.</p>
+   <p>Say we have a template struct representing the Gaussian integers, with a <em>natural order</em> defined by the Manhattan distance from <code class="highlight"><c- mi>0</c-><c- o>+</c-><c- mi>0</c-><c- n>i</c-></code>. This struct still defines a <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_order</c-></code> to model <strong>Regular</strong>.</p>
    <p class="note" role="note"><span>Note:</span> The <strong>Regular</strong> above refers to the <em>Elements of Programming</em> concept, not the ISO C++ <strong>Regular</strong>, which is weaker.</p>
    <p class="note" role="note"><span>Note:</span> There is no natural order on Gaussian integers, but humor this example, please.</p>
 <pre class="language-cpp highlight"><c- k>namespace</c-> <c- n>user</c-> <c- p>{</c->

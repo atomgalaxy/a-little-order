@@ -1,7 +1,7 @@
 <pre class='metadata'>
 Title: Everyone Deserves a Little Order
 Status: P
-Audience: LEWG
+Audience: LEWG, LWG
 Editor: Gašper Ažman <gasper.azman@gmail.com>
 Shortname: P0891
 Abstract: The specification of ordering algorithms at the end of [[P0768R1]] does not provide the ability to provide a default order for user-defined types (since they are specified in such a way that they are not intended to be customization points), and yet mixes in such a customization for iec559 floating point types. This paper suggests splitting that capability out into a separate customization point.
@@ -148,7 +148,7 @@ The new customization point that exposes an arbitrary order for any type that ca
 - Cons: 
     - it implies neither that it is total, nor that it is strong, despite the requirement it be both.
 
-`default_order` is the favorite of the paper author, as well as the most of the reviewers of this paper.
+`default_order` is the favorite of the paper author, as well as most of the reviewers of this paper.
 
 
 `total_order` {#name-total-order}
@@ -238,17 +238,16 @@ that is consistent with the `totalOrder` operation as specified in ISO/IEC/IEEE 
 After 24.x.4 paragraph 3, `weak_order`, add:
 
 <div class='ins'>
-<ul style='list-style-type: none'>
-<li>(4.) `template<class T> constexpr strong_ordering default_order(const T& a, const T& b);` <br/>
-    *Effects:*
+<ul style='list-style-type: none; padding-left: 0px;'>
+<li>`template<class T> constexpr strong_ordering default_order(const T& a, const T& b);`<br/>4. *Effects:*
 <ul style='list-style-type: none'>
 <li>(4.1) if `std::numeric_limits<T>::is_iec559` is true, returns a result of type `strong_ordering` that is consistent with the `totalOrder` operation as specified in ISO/IEC/IEEE 60559.</li>
 <li>(4.2) Otherwise, returns `strong_order(a, b)` if that expression is well-formed and convertible to `strong_ordering`</li>
 <li>(4.3) Otherwise, this function shall not participate in overload resolution.</li>
 </ul>
 </li>
+<li>5. *Remarks*: this function is a designated customization point ([namespace.std]).</li>
 </ul>
-*Remarks*: this function is a designated customization point.
 
 </div>
 
@@ -280,7 +279,7 @@ Thank you all!
 Appendix A: Proof `strong_order` is not a valid customization point {#example-cust-point}
 =========================================================================================
 
-Say we have a template struct representing the Gaussian integers, with a *natural order* defined by the manhattan distance from `0+0i`. This struct still defines a `std::strong_order` to model **Regular**.
+Say we have a template struct representing the Gaussian integers, with a *natural order* defined by the Manhattan distance from `0+0i`. This struct still defines a `std::strong_order` to model **Regular**.
 
 Note: The **Regular** above refers to the *Elements of Programming* concept, not the ISO C++ **Regular**, which is weaker.
 
