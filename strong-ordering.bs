@@ -34,11 +34,11 @@ Revision History {#history}
 
 The feedback was:
 - Remove the floating point exception (bullet 1.1) as R0 recommended, since Unicode strings, etc., are a possible rationale.
-- Do not propose propose making existing `*_order` functions "customization points" (as used in [[!WG21-P0551R3]]).
+- Do not propose propose making existing `*_order` functions "customization points" (as used in [[!P0551R3]]).
 - Add a new `default_order` customization point, along with a bikeshedding section on its actual name, with the behaviour:
     - It has the IEC 559 behavior from bullet 1.1 of `strong_order`
     - It is defined for all (other) floating-point types; it is implementation-defined whether it is consistent with the partial order from the comparison operators. (Implementations should do this.)
-    - It is a customization point (à la [[!WG21-P0551R3]]).
+    - It is a customization point (à la [[!P0551R3]]).
 - Investigate the possibility of adding Lawrence's weak order (from [[P0100R2]]) for floating-point numbers (which did not make it in with spaceship).
 
 
@@ -114,7 +114,7 @@ Introduce a new algorithm, with the name `std::default_order` (but see [[#name-b
 
 Let `T` be a type, and `a` and `b` be values of type `T` (as if `a` and `b` were `declval<T>()`):
 1. If well-formed, the expression `default_order(a, b)` shall return an object convertible to `strong_ordering`.
-3. `default_order` shall be a designated customization point in the sense of [[!WG21-P0551R3]].
+3. `default_order` shall be a designated customization point in the sense of [[!P0551R3]].
 2. If the expression `strong_order(a, b)` is well-formed, then the expression `default_order(a, b)` is well-formed.
 4. If not explicitly specialized for a type `T` and `strong_order(a, b)` is well-formed, the expression `default_order(a, b)` shall return the result of the expression `strong_order(a, b)`. (Note: this means that `default_order` defaults to `strong_order` if available for the type. -- end note.)
 

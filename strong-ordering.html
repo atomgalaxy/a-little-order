@@ -1230,7 +1230,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version dff342f4b23fb230b71436fb31b55f5f169715bd" name="generator">
   <link href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="a9fcf46000d2f30e62a8e151dffb4af4234bac2a" name="document-revision">
+  <meta content="4bd085015728b226adba2ee063c8b7837c3ddbf8" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1522,7 +1522,7 @@ pre .property::before, pre .property::after {
     <li data-md>
      <p>Remove the floating point exception (bullet 1.1) as R0 recommended, since Unicode strings, etc., are a possible rationale.</p>
     <li data-md>
-     <p>Do not propose propose making existing <code class="highlight"><c- o>*</c-><c- n>_order</c-></code> functions "customization points" (as used in <a data-link-type="biblio" href="#biblio-wg21-p0551r3">[WG21-P0551R3]</a>).</p>
+     <p>Do not propose propose making existing <code class="highlight"><c- o>*</c-><c- n>_order</c-></code> functions "customization points" (as used in <a data-link-type="biblio" href="#biblio-p0551r3">[P0551R3]</a>).</p>
     <li data-md>
      <p>Add a new <code class="highlight"><c- n>default_order</c-></code> customization point, along with a bikeshedding section on its actual name, with the behaviour:</p>
      <ul>
@@ -1531,7 +1531,7 @@ pre .property::before, pre .property::after {
       <li data-md>
        <p>It is defined for all (other) floating-point types; it is implementation-defined whether it is consistent with the partial order from the comparison operators. (Implementations should do this.)</p>
       <li data-md>
-       <p>It is a customization point (à la <a data-link-type="biblio" href="#biblio-wg21-p0551r3">[WG21-P0551R3]</a>).</p>
+       <p>It is a customization point (à la <a data-link-type="biblio" href="#biblio-p0551r3">[P0551R3]</a>).</p>
      </ul>
     <li data-md>
      <p>Investigate the possibility of adding Lawrence’s weak order (from <a data-link-type="biblio" href="#biblio-p0100r2">[P0100R2]</a>) for floating-point numbers (which did not make it in with spaceship).</p>
@@ -1584,7 +1584,7 @@ pre .property::before, pre .property::after {
     <li data-md>
      <p>If well-formed, the expression <code class="highlight"><c- n>default_order</c-><c- p>(</c-><c- n>a</c-><c- p>,</c-> <c- n>b</c-><c- p>)</c-></code> shall return an object convertible to <code class="highlight"><c- n>strong_ordering</c-></code>.</p>
     <li data-md>
-     <p><code class="highlight"><c- n>default_order</c-></code> shall be a designated customization point in the sense of <a data-link-type="biblio" href="#biblio-wg21-p0551r3">[WG21-P0551R3]</a>.</p>
+     <p><code class="highlight"><c- n>default_order</c-></code> shall be a designated customization point in the sense of <a data-link-type="biblio" href="#biblio-p0551r3">[P0551R3]</a>.</p>
     <li data-md>
      <p>If the expression <code class="highlight"><c- n>strong_order</c-><c- p>(</c-><c- n>a</c-><c- p>,</c-> <c- n>b</c-><c- p>)</c-></code> is well-formed, then the expression <code class="highlight"><c- n>default_order</c-><c- p>(</c-><c- n>a</c-><c- p>,</c-> <c- n>b</c-><c- p>)</c-></code> is well-formed.</p>
     <li data-md>
@@ -1957,7 +1957,7 @@ pre .property::before, pre .property::after {
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
   <dl>
-   <dt id="biblio-wg21-p0551r3">[WG21-P0551R3]
+   <dt id="biblio-p0551r3">[P0551R3]
    <dd>Walter E. Brown. <a href="https://wg21.link/p0551r3">Thou Shalt Not Specialize std Function Templates!</a>. 16 March 2018. URL: <a href="https://wg21.link/p0551r3">https://wg21.link/p0551r3</a>
   </dl>
   <h3 class="no-num no-ref heading settled" id="informative"><span class="content">Informative References</span><a class="self-link" href="#informative"></a></h3>
