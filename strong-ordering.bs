@@ -144,7 +144,7 @@ The new customization point that exposes an arbitrary order for any type that ca
     - it is what *Elements of Programmming* calls it, a-priori giving it wide recognition
     - it is reasonably short
     - the name is semantically netural.
-    - does not imply that the order has meaning past *strong* and *total*
+    - does not imply that the order has any meaning past *strong* and *total* (eg. "lexicographic")
 - Cons: 
     - it implies neither that it is total, nor that it is strong, despite the requirement it be both.
 
@@ -160,7 +160,7 @@ The new customization point that exposes an arbitrary order for any type that ca
     - it is reasonably short
 - Cons:
     - does not imply it is a strong order
-    - at least to the author's mind, vaguely implies semantics past *strong* and *total*
+    - at least to the author's mind, vaguely implies semantics past *strong* and *total*, which might not be the case.
 
 
 `arbitrary_order` {#name-arbitrary-order}
