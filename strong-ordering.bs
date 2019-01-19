@@ -71,7 +71,7 @@ As worded, `strong_order` provides:
 
 In the standard, we need to provide both of these capabilities. This paper presents the case that they are fundamentally incompatible, and need to be split.
 
-R0 and R1 of this paper presented substantial cases for why we need both of the above capabilities in the standard. This paper moves them to the appendix and presents them in short.
+[[P0891R0]] and [[P0891R1]] of this paper presented substantial cases for why we need both of the above capabilities in the standard. This paper only summarizes the currently relevant bits of that discussion. For wider context, the reader should refer to the previous revisions, as well as to [[P0863R1]].
 
 
 Design Rationale
