@@ -213,6 +213,18 @@ For the functions `strong_order`, `weak_order`, `partial_order`,
 - Remove the fallbacks to `==` and `<`
 - Have the functions not participate in overload resolution (instead of being defined as deleted) if there is no strong order available.
 
+Remove the `strong_equal` and `weak_equal` comparison algorithms {#remove-equal}
+--------------------------------------------------------------------------------
+
+
+If we accept [[P1185R0]]'s rationale for not calling `<=>` when the user only
+needs equality (as EWG did in San Diego), we should also avoid doing so in the
+library. However, without making assumptions about the behaviour of `==`, there
+is no way to implement `strong_equal` and `weak_equal` without calling `<=>`.
+
+Therefore, we propose removing the `strong_equal` and `weak_equal`
+customisation points.
+
 
 Replace the iec559 rule in `strong_order` with separate overloads {#propose-iec559}
 -----------------------------------------------------------------------------------
@@ -233,74 +245,45 @@ These overloads should implement the `totalOrder` operation as specified in
 ISO/IEC/IEEE 60559, and should not participate in overload resolution if
 `numeric_limts<T>::is_iec559` is false for the type of their arguments.
 
+Make the weaker customization points call stronger customizatoin points {#propose-weakening}
+--------------------------------------------------------------------------------------------
+
+To handle cases such as where a type provides a `partial_ordering` from `<=>`
+and a `strong_order` overload, if a customization point cannot get an
+appropriate result from calling `<=>`, it should try to call a customization
+point for an order stronger than its own. Specifically:
+
+- `weak_order` should fall back to calling `strong_order`
+- `partial_order` should fall back to calling `weak_order`
 
 Add fallback functions {#proposal-fallback}
 -------------------------------------------
 
+To avoid losing the functionality of the existing comparison algorithms, we
+propose to keep them under new names, with the following changes to their
+behaviour:
 
-Name of The Default Order Algorithm {#name-bikeshed}
-====================================================
+- They will, in preference to anything else, return the
+    result of calling the corresponding customization point.
+- They will not attempt to call `<=>` directly, as this is called by the
+    customisation point.
+- They will fall back to `==` and `<` using the language mechanism proposed by
+    [[!D1186R1]] instead of calling `==` and `<` directly.
 
-The new customization point that exposes an arbitrary order for any type that cares to provide one needs a name. This paper suggests a 5-way poll to LEWG on the following options:
+As per the original comparison algorithms, they will be defined as deleted if
+neither the corresponding customization point nor the `==` and `<` operators
+are available.
 
-`default_order` {#name-default-order}
--------------------------------------
+Following the same reasoning as in [[#remove-equal]], there will be no fallback
+functions for `strong_equality` and `weak_equality`.
 
-- Pros:
-    - it is what *Elements of Programmming* calls it, a-priori giving it wide recognition
-    - it is reasonably short
-    - the name is semantically netural.
-    - does not imply that the order has any meaning past *strong* and *total* (eg. "lexicographic")
-- Cons: 
-    - it implies neither that it is total, nor that it is strong, despite the requirement it be both.
+We propose naming the fallback functions `strong_order_assume`, `weak_order_assume` and `partial_order_assume`.
 
-`default_order` is the favorite of the paper author, as well as most of the reviewers of this paper.
-
-
-`total_order` {#name-total-order}
----------------------------------
-
-- Pros:
-    - communicates the totality of the order
-    - `totalOrder` is the name `ISO/IEC/IEEE 60559` chose for the order over floating point types that implement these semantics
-    - it is reasonably short
-- Cons:
-    - does not imply it is a strong order
-    - at least to the author's mind, vaguely implies semantics past *strong* and *total*, which might not be the case.
-
-
-`arbitrary_order` {#name-arbitrary-order}
------------------------------------------
-
-- Pros:
-    - clearly implies it might not be anything past *strong* and *total*
-- Cons:
-    - implies neither that it is total, nor that it is strong
-    - very vague
-    - sounds slightly derogatory for a facility that is to be used mostly by critical algorithms and data structuers
-
-
-`default_strong_order` {#default-strong-order}
-----------------------------------------------
-
-- Pros:
-    - clear
-    - roughly in line with *Elements of Programming*
-- Cons:
-    - very long for a facitlity that will be used for in-line calls to `sort` and `unique`
-    - still not clear it is total
-
-
-`default_total_order` {#default-total-order}
---------------------------------------------
-
-- Pros:
-    - clear
-    - roughly in line with iec559 and *Elements of Programming*
-- Cons:
-    - very long for a facitlity that will be used for in-line calls to `sort` and `unique`
-    - still not clear it is strong
-
+Other options to consider:
+ - `X_order_assume`
+ - `assume_X_order`
+ - `fallback_X_order`
+ - `X_order_fallback`
 
 On Compatibility Between the Natural and Default Orderings {#compat}
 ====================================================================
