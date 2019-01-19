@@ -2,7 +2,7 @@
  <head>
   <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
-  <title>P0891R1: Everyone Deserves a Little Order</title>
+  <title>P0891R2: Everyone Deserves a Little Order</title>
 <style data-fill-with="stylesheet">/******************************************************************************
  *                   Style sheet for the W3C specifications                   *
  *
@@ -1230,7 +1230,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version 04b354547d55896d854a81cffb3965bd6f8758ec" name="generator">
   <link href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="39e8b71f45de1428399293b91905a86073c926e7" name="document-revision">
+  <meta content="035babb9a74e96471c5cf2413aff6b5d8057ef63" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1490,8 +1490,8 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
  <body class="h-entry">
   <div class="head">
    <p data-fill-with="logo"></p>
-   <h1 class="p-name no-ref" id="title">P0891R1<br>Everyone Deserves a Little Order</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Published Proposal, <time class="dt-updated" datetime="2018-10-27">2018-10-27</time></span></h2>
+   <h1 class="p-name no-ref" id="title">P0891R2<br>Everyone Deserves a Little Order</h1>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Published Proposal, <time class="dt-updated" datetime="2019-01-20">2019-01-20</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1512,7 +1512,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   </div>
   <div class="p-summary" data-fill-with="abstract">
    <h2 class="no-num no-toc no-ref heading settled" id="abstract"><span class="content">Abstract</span></h2>
-   <p>The specification of ordering algorithms at the end of <a data-link-type="biblio" href="#biblio-p0768r1">[P0768R1]</a> does not provide the ability to provide a default order for user-defined types (since they are specified in such a way that they are not intended to be customization points), and yet mixes in such a customization for iec559 floating point types. This paper suggests splitting that capability out into a separate customization point.</p>
+   <p>The specification of ordering algorithms at the end of <a data-link-type="biblio" href="#biblio-p0768r1">[P0768R1]</a> does not provide the ability to provide a default order for user-defined types (since they are specified in such a way that they are not intended to be customization points), and yet mixes in such a customization for iec559 floating point types. This paper suggests providing the functionality of both in a composable and principled way.</p>
   </div>
   <nav data-fill-with="table-of-contents" id="toc">
    <h2 class="no-num no-toc no-ref" id="contents">Table of Contents</h2>

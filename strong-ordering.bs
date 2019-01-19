@@ -5,11 +5,11 @@ Audience: LEWG, LWG
 Editor: Gašper Ažman <gasper.azman@gmail.com>
 Editor: Jeff Snyder <jeff-isocpp@caffeinated.me.uk>
 Shortname: P0891
-Abstract: The specification of ordering algorithms at the end of [[P0768R1]] does not provide the ability to provide a default order for user-defined types (since they are specified in such a way that they are not intended to be customization points), and yet mixes in such a customization for iec559 floating point types. This paper suggests splitting that capability out into a separate customization point.
+Abstract: The specification of ordering algorithms at the end of [[P0768R1]] does not provide the ability to provide a default order for user-defined types (since they are specified in such a way that they are not intended to be customization points), and yet mixes in such a customization for iec559 floating point types. This paper suggests providing the functionality of both in a composable and principled way.
 Group: WG21
-Date: 2018-10-27
+Date: 2019-01-20
 Markup Shorthands: markdown yes
-Revision: 1
+Revision: 2
 ED: https://github.com/atomgalaxy/a-little-order/strong-ordering.bs
 </pre>
 
