@@ -1227,10 +1227,10 @@ Possible extra rowspan handling
       text-align: center;
     }
   </style>
-  <meta content="Bikeshed version 9c6ae748322940994300e90a77c34437364b40a6" name="generator">
+  <meta content="Bikeshed version 04b354547d55896d854a81cffb3965bd6f8758ec" name="generator">
   <link href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="0e7263552defae30348dddb666e5bf2b8a8bc7aa" name="document-revision">
+  <meta content="237539195fc1074221bbcf489fed1a4bceb10ba3" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1708,7 +1708,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p>Given that any customization point we designate has to potentially be overloaded for all the generic wrappers in the standard library, is it even worth the effort defining them?</p>
    <p>This paper does not propose any such wrappers, because the standard library doesn’t even have <code class="highlight"><c- o>&lt;=></c-></code> yet, but the authors only mean to propose <code class="highlight"><c- n>strong_order</c-></code> be implemented, as that is the only one they’ve ever needed.</p>
    <h4 class="heading settled" data-level="6.1.3" id="faq-teaching"><span class="secno">6.1.3. </span><span class="content">How can I teach this?</span><a class="self-link" href="#faq-teaching"></a></h4>
-   <p>For types that endeavour to be <em>Regular</em> or something like it (as in, have sane value semantics):</p>
+   <p>For types that endeavour to be <em>Regular</em> or something like it (as in, have sane value semantics), do the following.</p>
    <h5 class="heading settled" data-level="6.1.3.1" id="wrinting-new"><span class="secno">6.1.3.1. </span><span class="content">Writing new types:</span><a class="self-link" href="#wrinting-new"></a></h5>
    <ul>
     <li data-md>
@@ -1734,15 +1734,23 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p>The arguments on whether we need to provide the fallback functions for legacy types center around:</p>
    <ul>
     <li data-md>
-     <p>how do we make it easy is it to define <code class="highlight"><c- o>&lt;=></c-></code> in terms of <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code> of a legacy type?</p>
-     <ul>
-      <li data-md>
-       <p><a data-link-type="biblio" href="#biblio-d1186r1">[D1186R1]</a> makes that trivial, without any fallbacks needed.</p>
-     </ul>
+     <p>How do we make it easy is it to define <code class="highlight"><c- o>&lt;=></c-></code> in terms of <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code> of a legacy type?</p>
+   </ul>
+   <p><a data-link-type="biblio" href="#biblio-d1186r1">[D1186R1]</a> makes that trivial, without any fallbacks needed. In fact, fallbacks must be defined in terms of the <code class="highlight"><c- mi>3</c-><c- n>WAY</c-><c- p>(</c-><c- n>X</c-><c- p>,</c-> <c- n>Y</c-><c- p>)</c-></code> expression it introduces.</p>
+   <ul>
     <li data-md>
-     <p>how do we work with types that may or may not define <code class="highlight"><c- o>&lt;=></c-></code> in generic contexts, but we know we have the requisite preconditions on <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code>?</p>
+     <p>How do we work with types that may or may not define <code class="highlight"><c- o>&lt;=></c-></code> in generic contexts, but we know we have the requisite preconditions on <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code>? {#generic-contexts}</p>
+   </ul>
+   <p>The authors can’t think of a generic context where those assumptions hold reliably. <code class="highlight"><c- mi>3</c-><c- n>WAY</c-><c- p>(</c-><c- n>X</c-><c- p>,</c-> <c- n>Y</c-><c- p>)</c-></code> and the fallbacks defined with it are useful in this scenario. However, the authors can’t really think of an actual scenario where you are both in a generic context and you know the preconditions on all the possible types you might want to use there.</p>
+   <ul>
     <li data-md>
      <p>In a context where we need to pass an ordering type as a parameter to a function, but we need to obtain it from a legacy type, how do we do that?</p>
+   </ul>
+   <p>The <code class="highlight"><c- mi>3</c-><c- n>WAY</c-><c- p>(</c-><c- n>X</c-><c- p>,</c-> <c- n>Y</c-><c- p>)</c-></code>-derived fallback functions do that too.</p>
+   <p>Basically, we need fallbacks for the reasons listed above. However, one should remember:</p>
+   <ul>
+    <li data-md>
+     <p>in generic contexts, we usually do not know the preconditions. We should use the <code class="highlight"><c- n>weak_order</c-></code> customization point.</p>
    </ul>
    <h2 class="heading settled" data-level="7" id="status"><span class="secno">7. </span><span class="content">Status Quo</span><a class="self-link" href="#status"></a></h2>
    <p>For reference, the current specification for the <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_order</c-></code> algorithm is as follows:</p>
