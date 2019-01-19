@@ -1227,10 +1227,10 @@ Possible extra rowspan handling
       text-align: center;
     }
   </style>
-  <meta content="Bikeshed version 9c6ae748322940994300e90a77c34437364b40a6" name="generator">
+  <meta content="Bikeshed version 04b354547d55896d854a81cffb3965bd6f8758ec" name="generator">
   <link href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="482d38c8bc92788f2afe51744edc957c0542659d" name="document-revision">
+  <meta content="0f9821639746493e010f156e3928a2d59bfe0d32" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1533,13 +1533,13 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
       <li>
        <a href="#discussion-poll-1"><span class="secno">6.1</span> <span class="content">Poll 1</span></a>
        <ol class="toc">
-        <li><a href="#but-is-it-legal-ill-make-it-legal"><span class="secno">6.1.1</span> <span class="content">Is it useful {#but-is-it-legal-ill-make-it-legal}</span></a>
-        <li><a href="#impl-effort"><span class="secno">6.1.2</span> <span class="content">Given that it is viral, is it worth the implementation effort? {#impl-effort}</span></a>
+        <li><a href="#but-is-it-legal-ill-make-it-legal"><span class="secno">6.1.1</span> <span class="content">Is it useful</span></a>
+        <li><a href="#impl-effort"><span class="secno">6.1.2</span> <span class="content">Given that it is viral, is it worth the implementation effort?</span></a>
         <li>
-         <a href="#faq-teaching"><span class="secno">6.1.3</span> <span class="content">How can I teach this? {#faq-teaching}</span></a>
+         <a href="#faq-teaching"><span class="secno">6.1.3</span> <span class="content">How can I teach this?</span></a>
          <ol class="toc">
-          <li><a href="#wrinting-new"><span class="secno">6.1.3.1</span> <span class="content">Writing new types: {#wrinting-new}</span></a>
-          <li><a href="#using-orderings"><span class="secno">6.1.3.2</span> <span class="content">Using orderings: {#using-orderings}</span></a>
+          <li><a href="#wrinting-new"><span class="secno">6.1.3.1</span> <span class="content">Writing new types:</span></a>
+          <li><a href="#using-orderings"><span class="secno">6.1.3.2</span> <span class="content">Using orderings:</span></a>
          </ol>
        </ol>
      </ol>
@@ -1694,7 +1694,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p>How can I teach this?</p>
    </ul>
-   <h4 class="heading settled" data-level="6.1.1" id="but-is-it-legal-ill-make-it-legal"><span class="secno">6.1.1. </span><span class="content">Is it useful {#but-is-it-legal-ill-make-it-legal}</span><a class="self-link" href="#but-is-it-legal-ill-make-it-legal"></a></h4>
+   <h4 class="heading settled" data-level="6.1.1" id="but-is-it-legal-ill-make-it-legal"><span class="secno">6.1.1. </span><span class="content">Is it useful</span><a class="self-link" href="#but-is-it-legal-ill-make-it-legal"></a></h4>
    <p>It’s useful enough that SG6 pushed for the iec559 exception until they got it. The issue is that any time one would want to put an iec559 exception into a container, say, optional or a tuple, they would have to define <code class="highlight"><c- n>strong_order</c-></code> for it. The current wording disallows that completely, however. The current wording is not composable. As an example, it is impossible to define <code class="highlight"><c- n>strong_order</c-></code> for <code class="highlight"><c- n>complex</c-><c- o>&lt;</c-><c- b>float</c-><c- o>></c-></code> as, for instance, a lexicographic ordering, with current wording, even though that’s what it should be for speed. There should not be a <code class="highlight"><c- o>&lt;</c-></code> that works on complex, though.</p>
    <p>It’s useful for any type that provides a less-than-strong <code class="highlight"><c- o>&lt;=></c-></code> that wants to enable its users to use <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>unique</c-></code> on it (they don’t care about the order, they only care about <code class="highlight"><c- o>==</c-></code>, but the function that establishes  the precondition to <code class="highlight"><c- n>unique</c-></code>, <code class="highlight"><c- n>sort</c-></code>, <em>does</em> care about an order that’s compatible with <code class="highlight"><c- o>==</c-></code>, which is <code class="highlight"><c- n>strong_order</c-></code>, and by premise, not <code class="highlight"><c- o>&lt;=></c-></code>. Same goes for putting it in a <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>set</c-></code> or <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>map</c-></code> where defining <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>hash</c-></code> is not an obvious exercise and consequently the unordered containers are not an option.</p>
    <p>It’s useful enough for <em>Stepanov</em> and <em>Mc Jones</em> to include it in <em>Regular</em> in <i>Elements of Programming</i>.</p>
@@ -1706,12 +1706,12 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p>set/map</p>
    </ul>
-   <h4 class="heading settled" data-level="6.1.2" id="impl-effort"><span class="secno">6.1.2. </span><span class="content">Given that it is viral, is it worth the implementation effort? {#impl-effort}</span><a class="self-link" href="#impl-effort"></a></h4>
+   <h4 class="heading settled" data-level="6.1.2" id="impl-effort"><span class="secno">6.1.2. </span><span class="content">Given that it is viral, is it worth the implementation effort?</span><a class="self-link" href="#impl-effort"></a></h4>
    <p>Given that any customization point we designate has to potentially be overloaded for all the generic wrappers in the standard library, is it even worth the effort defining them?</p>
    <p>This paper does not propose any such wrappers, because the standard library doesn’t even have <code class="highlight"><c- o>&lt;=></c-></code> yet, but the authors only mean to propose <code class="highlight"><c- n>strong_order</c-></code> be implemented, as that is the only one they’ve ever needed.</p>
-   <h4 class="heading settled" data-level="6.1.3" id="faq-teaching"><span class="secno">6.1.3. </span><span class="content">How can I teach this? {#faq-teaching}</span><a class="self-link" href="#faq-teaching"></a></h4>
+   <h4 class="heading settled" data-level="6.1.3" id="faq-teaching"><span class="secno">6.1.3. </span><span class="content">How can I teach this?</span><a class="self-link" href="#faq-teaching"></a></h4>
    <p>For types that endeavour to be <em>Regular</em> or something like it (as in, have sane value semantics):</p>
-   <h5 class="heading settled" data-level="6.1.3.1" id="wrinting-new"><span class="secno">6.1.3.1. </span><span class="content">Writing new types: {#wrinting-new}</span><a class="self-link" href="#wrinting-new"></a></h5>
+   <h5 class="heading settled" data-level="6.1.3.1" id="wrinting-new"><span class="secno">6.1.3.1. </span><span class="content">Writing new types:</span><a class="self-link" href="#wrinting-new"></a></h5>
    <ul>
     <li data-md>
      <p><code class="highlight"><c- k>operator</c-><c- o>==</c-></code> defines what "strong equality" means. This is because copies must compare equal, and <code class="highlight"><c- o>==</c-></code> should be the finest relation that observes this rule.</p>
@@ -1729,7 +1729,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
         <c- p>}</c->
 </pre>
    or, hopefully, when we get reflection, be able to generate it. 
-   <h5 class="heading settled" data-level="6.1.3.2" id="using-orderings"><span class="secno">6.1.3.2. </span><span class="content">Using orderings: {#using-orderings}</span><a class="self-link" href="#using-orderings"></a></h5>
+   <h5 class="heading settled" data-level="6.1.3.2" id="using-orderings"><span class="secno">6.1.3.2. </span><span class="content">Using orderings:</span><a class="self-link" href="#using-orderings"></a></h5>
     Generic algorithms in general should require and call <code class="highlight"><c- n>weak_order</c-><c- p>(</c-><c- n>x</c-><c- p>,</c-> <c- n>y</c-><c- p>)</c-></code>. It will either use the default (weak) ordering on <code class="highlight"><c- o>&lt;=></c-></code>, so there are no surprises, or fall back on <code class="highlight"><c- n>strong_order</c-></code>, which will call <code class="highlight"><c- o>&lt;=></c-></code> if it is strong, so no suprises, and if <code class="highlight"><c- o>&lt;=></c-></code> does not exist, the type will hopefully have an overload for <code class="highlight"><c- n>strong_order</c-></code> specifically, which is, again, no surprises. It always does the right thing. 
    <p>Data structures that require a weak order should default to it as well.</p>
    <h2 class="heading settled" data-level="7" id="status"><span class="secno">7. </span><span class="content">Status Quo</span><a class="self-link" href="#status"></a></h2>
