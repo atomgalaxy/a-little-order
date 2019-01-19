@@ -1230,7 +1230,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version 9c6ae748322940994300e90a77c34437364b40a6" name="generator">
   <link href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="a846300f61187f226d26d1a0f16bdc4aa5258726" name="document-revision">
+  <meta content="0e7263552defae30348dddb666e5bf2b8a8bc7aa" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1531,7 +1531,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <a href="#discussion"><span class="secno">6</span> <span class="content">Discussion</span></a>
      <ol class="toc">
       <li>
-       <a href="#discussion-poll-1"><span class="secno">6.1</span> <span class="content">Poll 1</span></a>
+       <a href="#discussion-poll-1"><span class="secno">6.1</span> <span class="content">Discussion of <span>Question: consensus</span></span></a>
        <ol class="toc">
         <li><a href="#but-is-it-legal-ill-make-it-legal"><span class="secno">6.1.1</span> <span class="content">Is it useful</span></a>
         <li><a href="#impl-effort"><span class="secno">6.1.2</span> <span class="content">Given that it is viral, is it worth the implementation effort?</span></a>
@@ -1542,6 +1542,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
           <li><a href="#using-orderings"><span class="secno">6.1.3.2</span> <span class="content">Using orderings:</span></a>
          </ol>
        </ol>
+      <li><a href="#discussion-fallbacks"><span class="secno">6.2</span> <span class="content">Discussion of <span>Question: fallbacks</span></span></a>
      </ol>
     <li><a href="#status"><span class="secno">7</span> <span class="content">Status Quo</span></a>
     <li>
@@ -1623,39 +1624,39 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p>To arrive at the final design of this paper, we used the following principles:</p>
    <ul>
     <li data-md>
-     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="consistency">consistency</dfn>: <code class="highlight"><c- o>*</c-><c- n>_order</c-></code> algorithms should behave consistently with <code class="highlight"><c- o>&lt;=></c-></code> by default.</p>
+     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="consistency">Consistency</dfn>: <code class="highlight"><c- o>*</c-><c- n>_order</c-></code> algorithms should behave consistently with <code class="highlight"><c- o>&lt;=></c-></code> by default.</p>
     <li data-md>
-     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="weakening">weakening</dfn>: If a type has a given order, than it also has all weaker orders.</p>
+     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="weakening">Weakening</dfn>: If a type has a given order, than it also has all weaker orders.</p>
     <li data-md>
-     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="ambiguity-of-legacy">ambiguity of legacy</dfn>: The ordering category provided by the legacy comparison operators is ambiguous. The standard currently expects merely that <code class="highlight"><c- o>&lt;</c-></code> provides a weak ordering.</p>
+     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="ambiguity-of-legacy">Ambiguity of Legacy</dfn>: The ordering category provided by the legacy comparison operators is ambiguous. The standard currently expects merely that <code class="highlight"><c- o>&lt;</c-></code> provides a weak ordering.</p>
     <li data-md>
-     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="customization">customization</dfn>: As <code class="highlight"><c- o>&lt;=></c-></code> is a customization point for the natural ordering on a type, so <code class="highlight"><c- n>strong_order</c-></code> is a customization point for an arbitrary strong order on that type.</p>
+     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="customization">Customization</dfn>: As <code class="highlight"><c- o>&lt;=></c-></code> is a customization point for the natural ordering on a type, so <code class="highlight"><c- n>strong_order</c-></code> is a customization point for an arbitrary strong order on that type.</p>
     <li data-md>
-     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="fallback">fallback</dfn>: We need convenient functions to get <code class="highlight"><c- o>*</c-><c- n>_ordering</c-></code> types from legacy comparison operators.</p>
+     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="fallback">Fallback</dfn>: We need convenient functions to get <code class="highlight"><c- o>*</c-><c- n>_ordering</c-></code> types from legacy comparison operators.</p>
    </ul>
    <p>From these principles, these corollaries follow:</p>
    <ul>
     <li data-md>
-     <p><dfn data-dfn-type="dfn" data-noexport id="corrolary-1">Corrolary 1<a class="self-link" href="#corrolary-1"></a></dfn>: from <a data-link-type="dfn" href="#consistency" id="ref-for-consistency">consistency</a> it follows that, if <code class="highlight"><c- o>&lt;=></c-></code> provides a given order <code class="highlight"><c- n>X</c-></code>, then the default implementation of <code class="highlight"><c- n>X_order</c-></code> should use it.</p>
+     <p><dfn data-dfn-type="dfn" data-noexport id="corollary-1">Corollary 1<a class="self-link" href="#corollary-1"></a></dfn>: from <a data-link-type="dfn" href="#consistency" id="ref-for-consistency">Consistency</a> it follows that, if <code class="highlight"><c- o>&lt;=></c-></code> provides a given order <code class="highlight"><c- n>X</c-></code>, then the default implementation of <code class="highlight"><c- n>X_order</c-></code> should use it.</p>
     <li data-md>
-     <p><dfn data-dfn-type="dfn" data-noexport id="corrolary-2">Corrolary 2<a class="self-link" href="#corrolary-2"></a></dfn>: from <a data-link-type="dfn" href="#consistency" id="ref-for-consistency①">consistency</a>, <a data-link-type="dfn" href="#weakening" id="ref-for-weakening">weakening</a> and <a data-link-type="dfn" href="#customization" id="ref-for-customization">customization</a>, it follows that:</p>
+     <p><dfn data-dfn-type="dfn" data-noexport id="corollary-2">Corollary 2<a class="self-link" href="#corollary-2"></a></dfn>: from <a data-link-type="dfn" href="#consistency" id="ref-for-consistency①">Consistency</a>, <a data-link-type="dfn" href="#weakening" id="ref-for-weakening">Weakening</a> and <a data-link-type="dfn" href="#customization" id="ref-for-customization">Customization</a>, it follows that:</p>
      <ul>
       <li data-md>
        <p>if <code class="highlight"><c- o>&lt;=></c-></code> does not provide a strong enough order, but a stronger ordering function (e.g. <code class="highlight"><c- n>strong_order</c-></code> for <code class="highlight"><c- n>weak_order</c-></code>, <code class="highlight"><c- n>weak_order</c-></code> for <code class="highlight"><c- n>partial_order</c-></code>) is available, then the weaker ordering function must fall back on it (this works recursively, so if <code class="highlight"><c- n>strong_order</c-></code> is defined, so is <code class="highlight"><c- n>partial_order</c-></code>).</p>
      </ul>
     <li data-md>
-     <p><dfn data-dfn-type="dfn" data-noexport id="corrolary-3">Corrolary 3<a class="self-link" href="#corrolary-3"></a></dfn>: from <a data-link-type="dfn" href="#consistency" id="ref-for-consistency②">consistency</a> and <a data-link-type="dfn" href="#fallback" id="ref-for-fallback">fallback</a>, it follows that if <code class="highlight"><c- o>&lt;=></c-></code> exists, the fallback function should use it in preference of legacy comparison operators.</p>
+     <p><dfn data-dfn-type="dfn" data-noexport id="corollary-3">Corollary 3<a class="self-link" href="#corollary-3"></a></dfn>: from <a data-link-type="dfn" href="#consistency" id="ref-for-consistency②">Consistency</a> and <a data-link-type="dfn" href="#fallback" id="ref-for-fallback">Fallback</a>, it follows that if <code class="highlight"><c- o>&lt;=></c-></code> exists, the fallback function should use it in preference of legacy comparison operators.</p>
     <li data-md>
-     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="corrolary-4">Corrolary 4</dfn>: From <a data-link-type="dfn" href="#fallback" id="ref-for-fallback①">fallback</a> and <a data-link-type="dfn" href="#ambiguity-of-legacy" id="ref-for-ambiguity-of-legacy">ambiguity of legacy</a>, it follows that by using a fallback function, the user is asserting that <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code> implement the corresponding ordering.</p>
+     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="corollary-4">Corollary 4</dfn>: From <a data-link-type="dfn" href="#fallback" id="ref-for-fallback①">Fallback</a> and <a data-link-type="dfn" href="#ambiguity-of-legacy" id="ref-for-ambiguity-of-legacy">Ambiguity of Legacy</a>, it follows that by using a fallback function, the user is asserting that <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code> implement the corresponding ordering.</p>
     <li data-md>
-     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="corrolary-5">Corrolary 5</dfn>: From <a data-link-type="dfn" href="#customization" id="ref-for-customization①">customization</a> and the definition of <em>customization point</em>, it follows that <code class="highlight"><c- o>*</c-><c- n>_order</c-></code> functions must be specified as <i>does not participate in overload resolution</i> when they cannot be synthesized according to the above rules.</p>
+     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="corollary-5">Corollary 5</dfn>: From <a data-link-type="dfn" href="#customization" id="ref-for-customization①">Customization</a> and the definition of <em>customization point</em>, it follows that <code class="highlight"><c- o>*</c-><c- n>_order</c-></code> functions must be specified as <i>does not participate in overload resolution</i> when they cannot be synthesized according to the above rules.</p>
     <li data-md>
-     <p><dfn data-dfn-type="dfn" data-noexport id="corrolary-6">Corrolary 6<a class="self-link" href="#corrolary-6"></a></dfn>: From <a data-link-type="dfn" href="#corrolary-4" id="ref-for-corrolary-4">Corrolary 4</a> and <a data-link-type="dfn" href="#corrolary-5" id="ref-for-corrolary-5">Corrolary 5</a> it follows that the fallbacks and the customization points cannot be the same functions, as their roles are fundamentally incompatible. To illustrate: the fallback function for synthesizing <code class="highlight"><c- n>strong_ordering</c-></code> must exist whenever <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code> do, but the <code class="highlight"><c- n>strong_order</c-></code> customization point must not be synthesized purely from those.</p>
+     <p><dfn data-dfn-type="dfn" data-noexport id="corollary-6">Corollary 6<a class="self-link" href="#corollary-6"></a></dfn>: From <a data-link-type="dfn" href="#corollary-4" id="ref-for-corollary-4">Corollary 4</a> and <a data-link-type="dfn" href="#corollary-5" id="ref-for-corollary-5">Corollary 5</a> it follows that the fallbacks and the customization points cannot be the same functions, as their roles are fundamentally incompatible. To illustrate: the fallback function for synthesizing <code class="highlight"><c- n>strong_ordering</c-></code> must exist whenever <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code> do, but the <code class="highlight"><c- n>strong_order</c-></code> customization point must not be synthesized purely from those.</p>
    </ul>
    <p>In addition, we have made the following observations:</p>
    <ul>
     <li data-md>
-     <p>Given <a data-link-type="biblio" href="#biblio-d1185r1">[D1185R1]</a> provides a method of generating a <code class="highlight"><c- o>&lt;=></c-></code> operator from <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code>, we should (due to <a data-link-type="dfn" href="#consistency" id="ref-for-consistency③">consistency</a>) defer to that method for synthesizing the fallback functions.</p>
+     <p>Given <a data-link-type="biblio" href="#biblio-d1185r1">[D1185R1]</a> provides a method of generating a <code class="highlight"><c- o>&lt;=></c-></code> operator from <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code>, we should (due to <a data-link-type="dfn" href="#consistency" id="ref-for-consistency③">Consistency</a>) defer to that method for synthesizing the fallback functions.</p>
     <li data-md>
      <p>If <code class="highlight"><c- n>strong_order</c-></code> is a customization point for providing a stronger order than <code class="highlight"><c- o>&lt;=></c-></code> does, data structures that recurse to their contents for <code class="highlight"><c- o>&lt;=></c-></code> should also recurse for <code class="highlight"><c- n>strong_order</c-></code>.</p>
     <li data-md>
@@ -1664,24 +1665,22 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <h2 class="heading settled" data-level="5" id="lewg-questions"><span class="secno">5. </span><span class="content">Questions for LEWG:</span><a class="self-link" href="#lewg-questions"></a></h2>
    <ol>
     <li data-md>
-     <p>Is there consensus that the <a data-link-type="dfn" href="#customization" id="ref-for-customization②">customization</a> premise (as above) is correct and should be adopted?</p>
+     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="question-consensus">Question: consensus</dfn>: Is there consensus that the <a data-link-type="dfn" href="#customization" id="ref-for-customization②">Customization</a> premise (as above) is correct and should be adopted?</p>
      <ul>
       <li data-md>
        <p>If not, then should the iec559 exception bullet in the current working draft be removed?</p>
      </ul>
     <li data-md>
-     <p>Is there consensus that the <a data-link-type="dfn" href="#fallback" id="ref-for-fallback②">fallback</a> premise (as above) is correct and should be adopted?</p>
+     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="question-fallbacks">Question: fallbacks</dfn>:Is there consensus that the <a data-link-type="dfn" href="#fallback" id="ref-for-fallback②">Fallback</a> premise (as above) is correct and should be adopted?</p>
      <ul>
       <li data-md>
        <p>Rejecting this means that we are rejecting the rationale for their inclusion in the current working draft and that they should be removed.</p>
      </ul>
    </ol>
-   <p>(The <a data-link-type="dfn" href="#consistency" id="ref-for-consistency④">consistency</a>, <a data-link-type="dfn" href="#weakening" id="ref-for-weakening①">weakening</a> and <a data-link-type="dfn" href="#ambiguity-of-legacy" id="ref-for-ambiguity-of-legacy①">ambiguity of legacy</a> are true from a good design, mathematical, and empirical point of view, respectively, so they are not subject to poll).</p>
+   <p>(The <a data-link-type="dfn" href="#consistency" id="ref-for-consistency④">Consistency</a>, <a data-link-type="dfn" href="#weakening" id="ref-for-weakening①">Weakening</a> and <a data-link-type="dfn" href="#ambiguity-of-legacy" id="ref-for-ambiguity-of-legacy①">Ambiguity of Legacy</a> are true from a good design, mathematical, and empirical point of view, respectively, so they are not subject to poll).</p>
    <p>If the answers to both of those questions are yes, then this paper follows in its entirety.</p>
    <h2 class="heading settled" data-level="6" id="discussion"><span class="secno">6. </span><span class="content">Discussion</span><a class="self-link" href="#discussion"></a></h2>
-   <h3 class="heading settled" data-level="6.1" id="discussion-poll-1"><span class="secno">6.1. </span><span class="content">Poll 1</span><a class="self-link" href="#discussion-poll-1"></a></h3>
-    Q: Is there consensus that the <em>customization</em> premise (as above) is correct and should be adopted? 
-   <p>(for reference: <em>customization</em>: As <code class="highlight"><c- o>&lt;=></c-></code> is a customization point for the natural ordering on a type, so <code class="highlight"><c- n>strong_order</c-></code> is a customization point for an arbitrary strong order on that type.)</p>
+   <h3 class="heading settled" data-level="6.1" id="discussion-poll-1"><span class="secno">6.1. </span><span class="content">Discussion of <a data-link-type="dfn" href="#question-consensus" id="ref-for-question-consensus">Question: consensus</a></span><a class="self-link" href="#discussion-poll-1"></a></h3>
    <p>The arguments around whether <code class="highlight"><c- n>strong_order</c-></code> should be a customization point have centered around the following issues. We summarize the discussion below.</p>
    <ul>
     <li data-md>
@@ -1723,14 +1722,28 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p>if writing a generic wrapper, or your constituent types have an overloaded <code class="highlight"><c- n>strong_order</c-></code>, you must then also define <code class="highlight"><c- n>strong_order</c-></code> to be:</p>
    </ul>
-<pre class="highlight">        <c- n>strong_ordering</c-> <c- nf>strong_order</c-><c- p>(</c-><c- n>T</c-> <c- n>x</c-><c- p>,</c-> <c- n>T</c-> <c- n>y</c-><c- p>)</c-> <c- p>{</c->
-          <c- k>return</c-> <c- n>strong_order</c-><c- p>(</c-><c- n>tie</c-><c- p>(</c-><c- n>x</c-><c- p>.</c-><c- n>m1</c-><c- p>,</c-> <c- n>x</c-><c- p>.</c-><c- n>m2</c-><c- p>,</c-> <c- p>...),</c-> <c- n>tie</c-><c- p>(</c-><c- n>y</c-><c- p>.</c-><c- n>m1</c-><c- p>,</c-> <c- n>y</c-><c- p>.</c-><c- n>m2</c-><c- p>,</c-> <c- p>...));</c->
-        <c- p>}</c->
+<pre class="highlight"><c- n>strong_ordering</c-> <c- nf>strong_order</c-><c- p>(</c-><c- n>T</c-> <c- n>x</c-><c- p>,</c-> <c- n>T</c-> <c- n>y</c-><c- p>)</c-> <c- p>{</c->
+  <c- k>return</c-> <c- n>strong_order</c-><c- p>(</c-><c- n>tie</c-><c- p>(</c-><c- n>x</c-><c- p>.</c-><c- n>m1</c-><c- p>,</c-> <c- n>x</c-><c- p>.</c-><c- n>m2</c-><c- p>,</c-> <c- p>...),</c-> <c- n>tie</c-><c- p>(</c-><c- n>y</c-><c- p>.</c-><c- n>m1</c-><c- p>,</c-> <c- n>y</c-><c- p>.</c-><c- n>m2</c-><c- p>,</c-> <c- p>...));</c->
+<c- p>}</c->
 </pre>
    or, hopefully, when we get reflection, be able to generate it. 
    <h5 class="heading settled" data-level="6.1.3.2" id="using-orderings"><span class="secno">6.1.3.2. </span><span class="content">Using orderings:</span><a class="self-link" href="#using-orderings"></a></h5>
     Generic algorithms in general should require and call <code class="highlight"><c- n>weak_order</c-><c- p>(</c-><c- n>x</c-><c- p>,</c-> <c- n>y</c-><c- p>)</c-></code>. It will either use the default (weak) ordering on <code class="highlight"><c- o>&lt;=></c-></code>, so there are no surprises, or fall back on <code class="highlight"><c- n>strong_order</c-></code>, which will call <code class="highlight"><c- o>&lt;=></c-></code> if it is strong, so no suprises, and if <code class="highlight"><c- o>&lt;=></c-></code> does not exist, the type will hopefully have an overload for <code class="highlight"><c- n>strong_order</c-></code> specifically, which is, again, no surprises. It always does the right thing. 
    <p>Data structures that require a weak order should default to it as well.</p>
+   <h3 class="heading settled" data-level="6.2" id="discussion-fallbacks"><span class="secno">6.2. </span><span class="content">Discussion of <a data-link-type="dfn" href="#question-fallbacks" id="ref-for-question-fallbacks">Question: fallbacks</a></span><a class="self-link" href="#discussion-fallbacks"></a></h3>
+   <p>The arguments on whether we need to provide the fallback functions for legacy types center around:</p>
+   <ul>
+    <li data-md>
+     <p>how do we make it easy is it to define <code class="highlight"><c- o>&lt;=></c-></code> in terms of <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code> of a legacy type?</p>
+     <ul>
+      <li data-md>
+       <p><a data-link-type="biblio" href="#biblio-d1186r1">[D1186R1]</a> makes that trivial, without any fallbacks needed.</p>
+     </ul>
+    <li data-md>
+     <p>how do we work with types that may or may not define <code class="highlight"><c- o>&lt;=></c-></code> in generic contexts, but we know we have the requisite preconditions on <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code>?</p>
+    <li data-md>
+     <p>In a context where we need to pass an ordering type as a parameter to a function, but we need to obtain it from a legacy type, how do we do that?</p>
+   </ul>
    <h2 class="heading settled" data-level="7" id="status"><span class="secno">7. </span><span class="content">Status Quo</span><a class="self-link" href="#status"></a></h2>
    <p>For reference, the current specification for the <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_order</c-></code> algorithm is as follows:</p>
 <pre class="language-cpp highlight"><c- k>template</c-><c- o>&lt;</c-><c- k>class</c-> <c- nc>T</c-><c- o>></c->
@@ -2074,17 +2087,19 @@ functions for <code class="highlight"><c- n>strong_equality</c-></code> and <cod
   <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
   <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
   <ul class="index">
-   <li><a href="#ambiguity-of-legacy">ambiguity of legacy</a><span>, in §4</span>
-   <li><a href="#consistency">consistency</a><span>, in §4</span>
-   <li><a href="#corrolary-1">Corrolary 1</a><span>, in §4</span>
-   <li><a href="#corrolary-2">Corrolary 2</a><span>, in §4</span>
-   <li><a href="#corrolary-3">Corrolary 3</a><span>, in §4</span>
-   <li><a href="#corrolary-4">Corrolary 4</a><span>, in §4</span>
-   <li><a href="#corrolary-5">Corrolary 5</a><span>, in §4</span>
-   <li><a href="#corrolary-6">Corrolary 6</a><span>, in §4</span>
-   <li><a href="#customization">customization</a><span>, in §4</span>
-   <li><a href="#fallback">fallback</a><span>, in §4</span>
-   <li><a href="#weakening">weakening</a><span>, in §4</span>
+   <li><a href="#ambiguity-of-legacy">Ambiguity of Legacy</a><span>, in §4</span>
+   <li><a href="#consistency">Consistency</a><span>, in §4</span>
+   <li><a href="#corollary-1">Corollary 1</a><span>, in §4</span>
+   <li><a href="#corollary-2">Corollary 2</a><span>, in §4</span>
+   <li><a href="#corollary-3">Corollary 3</a><span>, in §4</span>
+   <li><a href="#corollary-4">Corollary 4</a><span>, in §4</span>
+   <li><a href="#corollary-5">Corollary 5</a><span>, in §4</span>
+   <li><a href="#corollary-6">Corollary 6</a><span>, in §4</span>
+   <li><a href="#customization">Customization</a><span>, in §4</span>
+   <li><a href="#fallback">Fallback</a><span>, in §4</span>
+   <li><a href="#question-consensus">Question: consensus</a><span>, in §5</span>
+   <li><a href="#question-fallbacks">Question: fallbacks</a><span>, in §5</span>
+   <li><a href="#weakening">Weakening</a><span>, in §4</span>
   </ul>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
@@ -2150,16 +2165,28 @@ functions for <code class="highlight"><c- n>strong_equality</c-></code> and <cod
     <li><a href="#ref-for-fallback②">5. Questions for LEWG:</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="corrolary-4">
-   <b><a href="#corrolary-4">#corrolary-4</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="corollary-4">
+   <b><a href="#corollary-4">#corollary-4</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-corrolary-4">4. Principles</a>
+    <li><a href="#ref-for-corollary-4">4. Principles</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="corrolary-5">
-   <b><a href="#corrolary-5">#corrolary-5</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="corollary-5">
+   <b><a href="#corollary-5">#corollary-5</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-corrolary-5">4. Principles</a>
+    <li><a href="#ref-for-corollary-5">4. Principles</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="question-consensus">
+   <b><a href="#question-consensus">#question-consensus</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-question-consensus">6.1. Discussion of Question: consensus</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="question-fallbacks">
+   <b><a href="#question-fallbacks">#question-fallbacks</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-question-fallbacks">6.2. Discussion of Question: fallbacks</a>
    </ul>
   </aside>
 <script>/* script-dfn-panel */
