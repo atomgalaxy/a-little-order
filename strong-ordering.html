@@ -1230,7 +1230,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version 9c6ae748322940994300e90a77c34437364b40a6" name="generator">
   <link href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="f222da88db29cea9335d6798f48799e3523e68a2" name="document-revision">
+  <meta content="2a81ec61f758fe353ac238dd2f931584084f2c77" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1530,7 +1530,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <a href="#discussion"><span class="secno">5</span> <span class="content">Discussion</span></a>
      <ol class="toc">
       <li>
-       <a href="#discussion-customization"><span class="secno">5.1</span> <span class="content">Discussion of <span>Customization</span> principle</span></a>
+       <a href="#discussion-customization"><span class="secno">5.1</span> <span class="content">Discussion of the <span>Customization</span> principle</span></a>
        <ol class="toc">
         <li><a href="#but-is-it-legal-ill-make-it-legal"><span class="secno">5.1.1</span> <span class="content">Is it useful</span></a>
         <li><a href="#impl-effort"><span class="secno">5.1.2</span> <span class="content">Given that it is viral, is it worth the implementation effort?</span></a>
@@ -1541,7 +1541,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
           <li><a href="#using-orderings"><span class="secno">5.1.3.2</span> <span class="content">Using orderings:</span></a>
          </ol>
        </ol>
-      <li><a href="#discussion-fallback"><span class="secno">5.2</span> <span class="content">Discussion of <span>Fallback</span> principle</span></a>
+      <li><a href="#discussion-fallback"><span class="secno">5.2</span> <span class="content">Discussion of the <span>Fallback</span> principle</span></a>
      </ol>
     <li><a href="#lewg-questions"><span class="secno">6</span> <span class="content">Questions for LEWG:</span></a>
     <li>
@@ -1662,7 +1662,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <p>Given that the '&lt;=>' operator is not being provided for any of the types in the standard library C++20, we are deferring proposing this until such time as <code class="highlight"><c- o>&lt;=></c-></code> is proposed for them as well.</p>
    </ul>
    <h2 class="heading settled" data-level="5" id="discussion"><span class="secno">5. </span><span class="content">Discussion</span><a class="self-link" href="#discussion"></a></h2>
-   <h3 class="heading settled" data-level="5.1" id="discussion-customization"><span class="secno">5.1. </span><span class="content">Discussion of <a data-link-type="dfn" href="#customization" id="ref-for-customization②">Customization</a> principle</span><a class="self-link" href="#discussion-customization"></a></h3>
+   <h3 class="heading settled" data-level="5.1" id="discussion-customization"><span class="secno">5.1. </span><span class="content">Discussion of the <a data-link-type="dfn" href="#customization" id="ref-for-customization②">Customization</a> principle</span><a class="self-link" href="#discussion-customization"></a></h3>
    <p>The arguments around whether <code class="highlight"><c- n>strong_order</c-></code> should be a customization point have centered around the following issues. We summarize the discussion below.</p>
    <ul>
     <li data-md>
@@ -1690,7 +1690,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p>Given that any customization point we designate has to potentially be overloaded for all the generic wrappers in the standard library, is it even worth the effort defining them?</p>
    <p>This paper does not propose any such wrappers, because the standard library doesn’t even have <code class="highlight"><c- o>&lt;=></c-></code> yet, but the authors only mean to propose <code class="highlight"><c- n>strong_order</c-></code> be implemented, as that is the only one they’ve ever needed.</p>
    <h4 class="heading settled" data-level="5.1.3" id="faq-teaching"><span class="secno">5.1.3. </span><span class="content">How can I teach this?</span><a class="self-link" href="#faq-teaching"></a></h4>
-   <p>For types that endeavour to be <em>Regular</em> or something like it (as in, have sane value semantics):</p>
+   <p>For types that endeavour to be <em>Regular</em> or something like it (as in, have sane value semantics), do the following.</p>
    <h5 class="heading settled" data-level="5.1.3.1" id="wrinting-new"><span class="secno">5.1.3.1. </span><span class="content">Writing new types:</span><a class="self-link" href="#wrinting-new"></a></h5>
    <ul>
     <li data-md>
@@ -1712,19 +1712,27 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <h5 class="heading settled" data-level="5.1.3.2" id="using-orderings"><span class="secno">5.1.3.2. </span><span class="content">Using orderings:</span><a class="self-link" href="#using-orderings"></a></h5>
     Generic algorithms in general should require and call <code class="highlight"><c- n>weak_order</c-><c- p>(</c-><c- n>x</c-><c- p>,</c-> <c- n>y</c-><c- p>)</c-></code>. It will either use the default (weak) ordering on <code class="highlight"><c- o>&lt;=></c-></code>, so there are no surprises, or fall back on <code class="highlight"><c- n>strong_order</c-></code>, which will call <code class="highlight"><c- o>&lt;=></c-></code> if it is strong, so no suprises, and if <code class="highlight"><c- o>&lt;=></c-></code> does not exist, the type will hopefully have an overload for <code class="highlight"><c- n>strong_order</c-></code> specifically, which is, again, no surprises. It always does the right thing. 
    <p>Data structures that require a weak order should default to it as well.</p>
-   <h3 class="heading settled" data-level="5.2" id="discussion-fallback"><span class="secno">5.2. </span><span class="content">Discussion of <a data-link-type="dfn" href="#fallback" id="ref-for-fallback②">Fallback</a> principle</span><a class="self-link" href="#discussion-fallback"></a></h3>
+   <h3 class="heading settled" data-level="5.2" id="discussion-fallback"><span class="secno">5.2. </span><span class="content">Discussion of the <a data-link-type="dfn" href="#fallback" id="ref-for-fallback②">Fallback</a> principle</span><a class="self-link" href="#discussion-fallback"></a></h3>
    <p>The arguments on whether we need to provide the fallback functions for legacy types center around:</p>
    <ul>
     <li data-md>
-     <p>how do we make it easy is it to define <code class="highlight"><c- o>&lt;=></c-></code> in terms of <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code> of a legacy type?</p>
-     <ul>
-      <li data-md>
-       <p><a data-link-type="biblio" href="#biblio-d1186r1">[D1186R1]</a> makes that trivial, without any fallbacks needed.</p>
-     </ul>
+     <p>How do we make it easy is it to define <code class="highlight"><c- o>&lt;=></c-></code> in terms of <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code> of a legacy type?</p>
+   </ul>
+   <p><a data-link-type="biblio" href="#biblio-d1186r1">[D1186R1]</a> makes that trivial, without any fallbacks needed. In fact, fallbacks must be defined in terms of the <code class="highlight"><c- mi>3</c-><c- n>WAY</c-><c- p>(</c-><c- n>X</c-><c- p>,</c-> <c- n>Y</c-><c- p>)</c-></code> expression it introduces.</p>
+   <ul>
     <li data-md>
-     <p>how do we work with types that may or may not define <code class="highlight"><c- o>&lt;=></c-></code> in generic contexts, but we know we have the requisite preconditions on <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code>?</p>
+     <p>How do we work with types that may or may not define <code class="highlight"><c- o>&lt;=></c-></code> in generic contexts, but we know we have the requisite preconditions on <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code>? {#generic-contexts}</p>
+   </ul>
+   <p>The authors can’t think of a generic context where those assumptions hold reliably. <code class="highlight"><c- mi>3</c-><c- n>WAY</c-><c- p>(</c-><c- n>X</c-><c- p>,</c-> <c- n>Y</c-><c- p>)</c-></code> and the fallbacks defined with it are useful in this scenario. However, the authors can’t really think of an actual scenario where you are both in a generic context and you know the preconditions on all the possible types you might want to use there.</p>
+   <ul>
     <li data-md>
      <p>In a context where we need to pass an ordering type as a parameter to a function, but we need to obtain it from a legacy type, how do we do that?</p>
+   </ul>
+   <p>The <code class="highlight"><c- mi>3</c-><c- n>WAY</c-><c- p>(</c-><c- n>X</c-><c- p>,</c-> <c- n>Y</c-><c- p>)</c-></code>-derived fallback functions do that too.</p>
+   <p>Basically, we need fallbacks for the reasons listed above. However, one should remember:</p>
+   <ul>
+    <li data-md>
+     <p>in generic contexts, we usually do not know the preconditions. We should use the <code class="highlight"><c- n>weak_order</c-></code> customization point.</p>
    </ul>
    <h2 class="heading settled" data-level="6" id="lewg-questions"><span class="secno">6. </span><span class="content">Questions for LEWG:</span><a class="self-link" href="#lewg-questions"></a></h2>
    <ol>
@@ -2131,7 +2139,7 @@ functions for <code class="highlight"><c- n>strong_equality</c-></code> and <cod
    <b><a href="#customization">#customization</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-customization">4. Principles</a> <a href="#ref-for-customization①">(2)</a>
-    <li><a href="#ref-for-customization②">5.1. Discussion of Customization principle</a>
+    <li><a href="#ref-for-customization②">5.1. Discussion of the Customization principle</a>
     <li><a href="#ref-for-customization③">6. Questions for LEWG:</a>
    </ul>
   </aside>
@@ -2139,7 +2147,7 @@ functions for <code class="highlight"><c- n>strong_equality</c-></code> and <cod
    <b><a href="#fallback">#fallback</a></b><b>Referenced in:</b>
    <ul>
     <li><a href="#ref-for-fallback">4. Principles</a> <a href="#ref-for-fallback①">(2)</a>
-    <li><a href="#ref-for-fallback②">5.2. Discussion of Fallback principle</a>
+    <li><a href="#ref-for-fallback②">5.2. Discussion of the Fallback principle</a>
     <li><a href="#ref-for-fallback③">6. Questions for LEWG:</a>
    </ul>
   </aside>

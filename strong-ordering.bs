@@ -127,25 +127,25 @@ Discussion of the [=Customization=] principle {#discussion-customization}
 
   It's useful for any type that provides a less-than-strong `<=>` that wants to enable its users to use `std::unique` on it (they don't care about the order, they only care about `==`, but the function that establishes  the precondition to `unique`, `sort`, *does* care about an order that's compatible with `==`, which is `strong_order`, and by premise, not `<=>`. Same goes for putting it in a `std::set` or `std::map` where defining `std::hash` is not an obvious exercise and consequently the unordered containers are not an option.
 
-      It's useful enough for *Stepanov* and *Mc Jones* to include it in *Regular* in <i>Elements of Programming</i>.
+It's useful enough for *Stepanov* and *Mc Jones* to include it in *Regular* in <i>Elements of Programming</i>.
 
-      Tony van Eerd: "Every place I go the first thing I write is sorted vector."
+Tony van Eerd: "Every place I go the first thing I write is sorted vector."
 
-      This is a short list of the most obvious algorithms that require any order to work:
-      - unique (via sort)
-      - set/map
+This is a short list of the most obvious algorithms that require any order to work:
+- unique (via sort)
+- set/map
 
 
 ### Given that it is viral, is it worth the implementation effort? ### {#impl-effort}
 
-      Given that any customization point we designate has to potentially be overloaded for all the generic wrappers in the standard library, is it even worth the effort defining them?
+Given that any customization point we designate has to potentially be overloaded for all the generic wrappers in the standard library, is it even worth the effort defining them?
 
-      This paper does not propose any such wrappers, because the standard library doesn't even have `<=>` yet, but the authors only mean to propose `strong_order` be implemented, as that is the only one they've ever needed.
+This paper does not propose any such wrappers, because the standard library doesn't even have `<=>` yet, but the authors only mean to propose `strong_order` be implemented, as that is the only one they've ever needed.
 
 
 ### How can I teach this? ### {#faq-teaching}
 
-      For types that endeavour to be *Regular* or something like it (as in, have sane value semantics):
+For types that endeavour to be *Regular* or something like it (as in, have sane value semantics), do the following.
 
 
 #### Writing new types: #### {#wrinting-new}
@@ -173,11 +173,23 @@ Discussion of the [=Fallback=] principle {#discussion-fallback}
 ---------------------------------------------------------------
 
 The arguments on whether we need to provide the fallback functions for legacy types center around:
-- how do we make it easy is it to define `<=>` in terms of `<` and `==` of a legacy type?
-    - [[D1186R1]] makes that trivial, without any fallbacks needed.
-- how do we work with types that may or may not define `<=>` in generic contexts, but we know we have the requisite preconditions on `<` and `==`?
+
+- How do we make it easy is it to define `<=>` in terms of `<` and `==` of a legacy type?
+
+[[D1186R1]] makes that trivial, without any fallbacks needed. In fact, fallbacks must be defined in terms of the `3WAY(X, Y)` expression it introduces.
+
+
+- How do we work with types that may or may not define `<=>` in generic contexts, but we know we have the requisite preconditions on `<` and `==`? {#generic-contexts}
+
+The authors can't think of a generic context where those assumptions hold reliably. `3WAY(X, Y)` and the fallbacks defined with it are useful in this scenario. However, the authors can't really think of an actual scenario where you are both in a generic context and you know the preconditions on all the possible types you might want to use there.
+
+
 - In a context where we need to pass an ordering type as a parameter to a function, but we need to obtain it from a legacy type, how do we do that?
 
+The `3WAY(X, Y)`-derived fallback functions do that too.
+
+Basically, we need fallbacks for the reasons listed above. However, one should remember:
+- in generic contexts, we usually do not know the preconditions. We should use the `weak_order` customization point.
 
 Questions for LEWG: {#lewg-questions}
 =====================================
