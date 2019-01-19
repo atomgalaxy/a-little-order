@@ -82,6 +82,7 @@ TODO:
 
 - take wording for fallbacks from Jeff's p0863
 - integrate with Barry's ordering fallback
+
 ```cpp
 template <typename T>
 struct __XXX_ordering_wrapper /* exposition only */ {
@@ -100,6 +101,31 @@ New papers:
 - all library <=> (now separable section of this paper), also look 
 - NO: synthesize `strong_order` iff members have it
   - provide magic library function that uses reflection to do this.
+
+Propose common ordering objects:
+
+```
+namespace std {
+  struct strong {
+    static constexpr auto less_v = [](auto const& x, auto const& y) {
+        return is_lt(strong_order(x, y));
+    };
+    using less = decltype(less_v);
+
+    struct less {
+      template <typename T, typename U> bool operator()(T c& x, U c& y) {
+      }
+    };
+    struct greater { template <typename T> bool op(T c&, T c&); };
+    struct equal { template <typename T> bool op(T c&, T c&); };
+    struct neq { template <typename T> bool op(T c&, T c&); };
+    struct cmp { ... <=>; }
+  };
+}
+
+std::set<T, std::strong::less>
+
+```
 
 Revision History {#history}
 ===========================
@@ -132,10 +158,34 @@ Status of this paper {#sup}
 
 R2 of this paper is a merge of its R1 and Jeff Snyder's [[P0873R1]], and is synchronized with Barry Revzin's [[D1186R1]]. It incorporates all feedback for R0 and R1, and presents a coherent design for the library components of `<=>`.
 
+
 Problem Description {#problem}
 ==============================
 
-This paper is a proposal to amend a library extension that has been voted into the working draft as part of [[P0768R1]].
+This paper is a proposal to amend a library extension that has been voted into the working draft as part of [[P0768R1]]. The working draft wording of the `*_order` functions does not present a coherent design that delivers both functions that it is meant to serve.
+
+As worded, `strong_order` provides:
+- a strong ordering for some types that do not have it provided by `<=>` (iec559 floating point types),
+- serves as a non-customizable fallback function otherwise.
+
+In the standard, we need to provide both of these capabilities. This paper presents the case that they are fundamentally incompatible, and need to be split.
+
+R0 and R1 of this paper presented substantial cases for why we need both of the above capabilities in the standard. This paper moves them to the appendix and presents them in short.
+
+
+Design Principles
+=================
+
+To arrive at the final design of this paper, we used the following principles:
+
+- _P-consistency_: `*_order` algorithms must behave consistently with `<=>` when that is possible.
+- _P-weakening_: If a type has a given order, than it also has all weaker orders.
+- _P-customization_: As `<=>` is a customization point for the natural ordering on a type, so `strong_order` is a customization point for an arbitrary strong order on that type.
+- _P-fallback_: We need convenient functions to get `*_ordering` types from legacy comparison operators.
+
+
+_Corrolary 1_:  if `<=>` provides a given order `X`, then the default implementation of `X_order` should use it.
+
 
 This paper proposes a new ordering customization point for possibly non-semantic strong orderings, which *should* be equal to `std::strong_order` for strongly-ordered types, and can be customized to represent an arbitrary total order for types that do not have a semantic ordering.
 
