@@ -113,9 +113,9 @@ Questions for LEWG: {#lewg-questions}
 =====================================
 
 1. Is there consensus that the [=customization=] premise (as above) is correct and should be adopted?
-    - Corrolary: if not, then the iec559 exception bullet in the current working draft has no sensible home, and should be removed.
+    - If not, then should the iec559 exception bullet in the current working draft be removed?
 2. Is there consensus that the [=fallback=] premise (as above) is correct and should be adopted?
-    - Rejecting this means that we are rejecting the rationale for their inclusion in the current working draft and they should be removed.
+    - Rejecting this means that we are rejecting the rationale for their inclusion in the current working draft and that they should be removed.
 
 (The [=consistency=], [=weakening=] and [=ambiguity of legacy=] are true from a good design, mathematical, and empirical point of view, respectively, so they are not subject to poll).
 
