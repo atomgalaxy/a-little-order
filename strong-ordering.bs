@@ -245,14 +245,13 @@ needs equality (as EWG did in San Diego), we should also avoid doing so in the
 library. However, without making assumptions about the behaviour of `==`, there
 is no way to implement `strong_equal` and `weak_equal` without calling `<=>`.
 
-Therefore, we propose removing the `strong_equal` and `weak_equal`
-customisation points.
+Therefore, we propose removing the `strong_equal` and `weak_equal` algorithms.
 
 
 Replace the iec559 rule in `strong_order` with separate overloads {#propose-iec559}
 -----------------------------------------------------------------------------------
 
-Since `strong_order` as a customiation point, the strong order for floating
+Since `strong_order` as a customisation point, the strong order for floating
 point types should be provided as overloads of `strong_order` rather than being
 baked into the generic `strong_order` function.
 
@@ -268,6 +267,7 @@ These overloads should implement the `totalOrder` operation as specified in
 ISO/IEC/IEEE 60559, and should not participate in overload resolution if
 `numeric_limts<T>::is_iec559` is false for the type of their arguments.
 
+
 Make the weaker customization points call stronger customizatoin points {#propose-weakening}
 --------------------------------------------------------------------------------------------
 
@@ -278,6 +278,7 @@ point for an order stronger than its own. Specifically:
 
 - `weak_order` should fall back to calling `strong_order`
 - `partial_order` should fall back to calling `weak_order`
+
 
 Add fallback functions {#proposal-fallback}
 -------------------------------------------
@@ -308,27 +309,17 @@ Other options to consider:
  - `fallback_X_order`
  - `X_order_fallback`
 
+
 On Compatibility Between the Natural and Default Orderings {#compat}
 ====================================================================
 
 *Elements of Programming* specifies that for types where the natural and default orderings differ, the default ordering should be *finer* than the natural one: that is, if `a` and `b` are *comparable* and compare unequal under `<=>`, the default order produces the same result (less or greater).
 
-It is the opinion of the author that requiring this in the language of the standard library as a mandatory semantic constraint seems like a bad idea.
+It is the opinion of the authors that requiring this in the language of the standard library as a mandatory semantic constraint seems like a bad idea.
 
 For instance, if one takes the Gaussian integers ordered by the Manhattan distance to zero (sum of absolute values of the two components), the compatible total order (a lexicographic ordering of every equivalence class) is far slower to compute than the simple lexicographic one.
 
 Furthermore, if needed, a *finer* compatible total order can always be achieved on the fly by comparing with the natural order first: if the result is `less` or `greater`, keep the result; otherwise, fall back on the default ordering.
-
-
-Why not just make `strong_order` a customization point? {#why-not}
-==================================================================
-
-Main reasons:
-    1. it would inhibit providing both a natural (`<=>`, `strong_order`) (and possibly slow) and a default (fast) order for a type
-    2. the committee guidance strongly preferred this option, as it keeps the meaning of `strong_order` fixed (since it is not a customization point)
-    3. it is less surprising if the order algorithms that are related to order types by name (`weak_order` - `weak_ordering`, `partial_order` - `partial_ordering`, `strong_order` - `strong_ordering`) had the same specification, while a fourth customization point that isn't related by any of them by name serves as the customization point for default order.
-
-It is notable that this was the direction suggested by the orginal paper, but the committee rejected it.
 
 
 Proposed Wording {#wording}
@@ -373,17 +364,18 @@ Under `[cmp.syn]` -> `[cmp.alg]`, insert declaration:
 Acknowledgments {#ack}
 ======================
 
-I would like to thank
-  - **Roger Orr** for bringing this to my attention;
+We would like to thank
+  - **Roger Orr** for bringing this to our attention;
   - **Thomas Köppe** for his valuable comments, review, and most of all some extremely clear and laconic wording;
-  - **Sam Finch** for *thoroughly* breaking my examples, some example code, great substantive comments, and pointing out that the current definition actually breaks types that define a partially-ordered set of comparison operators;
+  - **Sam Finch** for *thoroughly* breaking the original examples, some example code, great substantive comments, and pointing out that the current definition actually breaks types that define a partially-ordered set of comparison operators;
   - **Richard Smith** for further fixing my example in light of Concepts, and example code.
-  - **Herb Sutter and Walter Brown** for providing guidance on customization points.
+  - **Herb Sutter and Walter Brown** for providing (mutually opposing) guidance on customization points.
   - **Louis Dionne** for great comments on the structure of the paper and how to bring the focus where it needs to be;
-  - **Walter Brown** for representing the paper at committee meetings when I could not make it in person, and guidance with direction;
+  - **Walter Brown** for representing the paper at a committee meeting when Gašper could not make it in person, and guidance with direction;
+  - **Barry Revzin** for representing the paper at a committee meeting when Gašper could not make it in person, and his various papers that touch ours;
   - **Herb Sutter** for his comments and support for getting ordering right.
 
-And, *again*, a special thank-you to Walter Brown, who, with his final lightning talk in Bellevue, reminded me to remember whose shoulders I'm standing on.
+And, *again*, a special thank-you to Walter Brown, who, with his final lightning talk in Bellevue, reminded us to remember whose shoulders we are standing on.
 
 Thank you all!
 
