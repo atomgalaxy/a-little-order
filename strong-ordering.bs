@@ -48,6 +48,7 @@ R2: Incorporated feedback from LEWG meeting in San Diego, merged with [[P0863R1]
 ---------------------------------------------------------------------------------
 
 Feedback in San Diego was:
+
 - We want to solve `std::set<T>` for not obviously comparable `T` (0/6/4/1/1). [in scope]
 - We want to solve `std::unordered_set<T>` for not obviously hasheable `T` (out of scope)
 - We need to adress the fact that containers need to provide specializations of `strong_order` if it is a customization point.
@@ -66,6 +67,7 @@ Problem Description {#problem}
 This paper is a proposal to amend a library extension that has been voted into the working draft as part of [[P0768R1]]. The working draft wording of the `*_order` functions does not present a coherent design that delivers both functions that it is meant to serve.
 
 As worded, `strong_order` provides:
+
 - a strong ordering for some types that do not have it provided by `<=>` (iec559 floating point types),
 - serves as a non-customizable fallback function otherwise.
 
@@ -74,8 +76,8 @@ In the standard, we need to provide both of these capabilities. This paper prese
 [[P0891R0]] and [[P0891R1]] of this paper presented substantial cases for why we need both of the above capabilities in the standard. This paper only summarizes the currently relevant bits of that discussion. For wider context, the reader should refer to the previous revisions, as well as to [[P0863R1]].
 
 
-Design Rationale
-================
+Design Rationale {#design-rationale}
+====================================
 
 To arrive at the final design of this paper, we used the following principles:
 
@@ -86,6 +88,8 @@ To arrive at the final design of this paper, we used the following principles:
 - *fallback*: We need convenient functions to get `*_ordering` types from legacy comparison operators.
 
 
+From these principles, the following corrolaries follow:
+
 - *Corrolary 1*: from *consistency* it follows that, if `<=>` provides a given order `X`, then the default implementation of `X_order` should use it.
 - *Corrolary 2*: from *consistency*, *weakening* and *customization*, it follows that:
   - if `<=>` does not provide a strong enough order, but a stronger ordering function (e.g. `strong_order` for `weak_order`, `weak_order` for `partial_order`) is available, then the weaker ordering function must fall back on it (this works recursively, so if `strong_order` is defined, so is `partial_order`).
@@ -95,14 +99,17 @@ To arrive at the final design of this paper, we used the following principles:
 - *Corrolary 6*: From *Corrolaries 4 and 5* it follows that the fallbacks and the customization points cannot be the same functions, as their roles are fundamentally incompatible. To illustrate: the fallback function for synthesizing `strong_ordering` must exist whenever `<` and `==` do, but the `strong_order` customization point cannot be synthesized purely from those.
 
 
+In addition, we have observed the following useful facts.
+
 - *Observation 1*: Given [[D1185R1]] provides a method of generating a `<=>` operator from `<` and `==`, we can defer to that method for synthesizing the fallback functions.
 - *Observation 2*: If `strong_order` is a customization point for providing a stronger order than `<=>` does, data structures that recurse to their contents for `<=>` must also recurse for `strong_order`.
     - Given that none of the types in the standard library are getting `<=>` in `C++20`, we are deferring proposing this until such time as `<=>` is proposed for them as well.
 
 If one agrees with the premises, then all the corrolaries follow.
 
-Questions for LEWG:
-===================
+Questions for LEWG: {#lewg-questions}
+=====================================
+
 1. Is there consensus that the *customization* premise (as above) is correct and should be adopted?
     - Corrolary: if not, then the iec559 exception bullet in the current working draft has no sensible home, and should be removed.
 2. Is there consensus that the *fallback* premise (as above) is correct and should be adopted?
@@ -112,6 +119,47 @@ Questions for LEWG:
 
 If the answers to both of those questions are yes, then this paper follows in its entirety.
 
+
+Discussion {#discussion}
+========================
+
+Poll 1 {#discussion-poll-1}
+---------------------------
+Q: Is there consensus that the *customization* premise (as above) is correct and should be adopted?
+
+(for reference: *customization*: As `<=>` is a customization point for the natural ordering on a type, so `strong_order` is a customization point for an arbitrary strong order on that type.)
+
+The arguments around whether `strong_order` should be a customization point have centered around the following issues. We summarize the discussion below.
+
+- Is it even useful?
+- Given that it is viral, is it worth the implementation effort?
+- Should all of them be customization points?
+- How can I teach this?
+
+
+### Is it useful {#but-is-it-legal-ill-make-it-legal}
+
+It's useful enough that SG6 pushed for the iec559 exception until they got it. The issue is that any time one would want to put an iec559 exception into a container, say, optional or a tuple, they would have to define `strong_order` for it. The current wording disallows that completely, however. The current wording is not composable. As an example, it is impossible to define `strong_order` for `complex<float>` as, for instance, a lexicographic ordering, with current wording, even though that's what it should be for speed. There should not be a `<` that works on complex, though.
+
+It's useful for any type that provides a less-than-strong `<=>` that wants to enable its users to use `std::unique` on it (they don't care about the order, they only care about `==`, but the function that establishes  the precondition to `unique`, `sort`, *does* care about an order that's compatible with `==`, which is `strong_order`, and by premise, not `<=>`. Same goes for putting it in a `std::set` or `std::map` where defining `std::hash` is not an obvious exercise and consequently the unordered containers are not an option.
+
+It's useful enough for *Stepanov* and *Mc Jones* to include it in *Regular* in <i>Elements of Programming</i>.
+
+Tony van Eerd: "Every place I go the first thing I write is sorted vector."
+
+This is a short list of the most obvious algorithms that require any order to work:
+- unique (via sort)
+- set/map
+
+
+### Given that it is viral, is it worth the implementation effort?
+
+Given that any customization point we designate has to potentially be overloaded for all the generic wrappers in the standard library, is it even worth the effort defining them?
+
+This paper does not propose any such wrappers, because the standard library doesn't even have `<=>` yet, but the authors only mean to propose `strong_order` be implemented, as that is the only one they've ever needed.
+
+
+### How can I teach this?
 
 
 
