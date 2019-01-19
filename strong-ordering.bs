@@ -28,105 +28,6 @@ ED: https://github.com/atomgalaxy/a-little-order/strong-ordering.bs
 }
 </style>
 
-Design guidelines
-=================
-
-- `*_order` algorithms are just a `<=>` with another name
-- they behave consistently with `<=>`
-- as `<=>`, they are customization points (in walter's paper meaning) (p0551)
-- in the absence of their definition, the standard provides a fallback that participates in overload resolution:
-  - if the result of `<=>` is convertible to the particular ordering
-  - or if a stronger ordering function is defined (it falls back to it).
-- fallback functions are not cool enough to have these names - the names should belong to the actually useful cust points.
-- THERE IS MORE FUTURE THAN THERE IS PAST
-  - so we should cater to the future while not leaving the past hanging
-- We infer weak ordering from JUST `<` so we can always do that.
-
-- and we provide overloads for `strong_order` for iec559 types.
-
-- fallbacks are a separable section
-- suite of overloads for standard types
-
-Fallbacks:
-- when are they useful:
-  - when you are assuming that (old ops) have the specified order and you preferentially use <=> if available.
-- `assume_*_order(T c&, T c&)` -  means: if `*_order` defined, use that, otherwise assume `<` and `==` do the right thing, because you are *asserting* that.
-
-Bikeshed for fallbacks:
-- `*_3way_compare`
-
-TODO:
-- naming of fallbacks
-- wording after barry
-- provide overloads of `*_order` for all containers.
-- provide all overloads for all the standard types:
-  - (this is separable)
-  - `optional`
-  - `expected`
-  - `tuple`
-  - `pair`
-  - `variant`
-  - `vector`
-  - `deque`
-  - `list`
-  - `forward_list`
-  - `set`
-  - `map`
-  - `multiset`
-  - `multimap`
-  - `array`
-  - `stack`
-  - `queue`
-
-- bikeshedding section on naming fallbacks
-
-- take wording for fallbacks from Jeff's p0863
-- integrate with Barry's ordering fallback
-
-```cpp
-template <typename T>
-struct __XXX_ordering_wrapper /* exposition only */ {
-  T const& __value; // exposition only
-  XXX_order operator<=>(__cmp_fallback_wrapper const&) = default; // d1186r1 gens the 'asserted' comparison category from < and =
-};
-template <typename T>
-XXX_order XXX_ordering(T const& __x, T const& __y) requires () {
-  return __XXX_ordering_wrapper{x} <=> __XXX_ordering_wrapper{y};
-}
-```
-
-New papers:
-- `strong_order(complex)`
-- Relax the stupid restriction for `complex<T>` for T to be an iec type. I WANT MY FUCKING GAUSSIAN INTEGERS
-- all library <=> (now separable section of this paper), also look 
-- NO: synthesize `strong_order` iff members have it
-  - provide magic library function that uses reflection to do this.
-
-Propose common ordering objects:
-
-```
-namespace std {
-  struct strong {
-    static constexpr auto less_v = [](auto const& x, auto const& y) {
-        return is_lt(strong_order(x, y));
-    };
-    using less = decltype(less_v);
-
-    struct less {
-      template <typename T, typename U> bool operator()(T c& x, U c& y) {
-      }
-    };
-    struct greater { template <typename T> bool op(T c&, T c&); };
-    struct equal { template <typename T> bool op(T c&, T c&); };
-    struct neq { template <typename T> bool op(T c&, T c&); };
-    struct cmp { ... <=>; }
-  };
-}
-
-std::set<T, std::strong::less>
-
-```
-
 Revision History {#history}
 ===========================
 
@@ -173,18 +74,45 @@ In the standard, we need to provide both of these capabilities. This paper prese
 R0 and R1 of this paper presented substantial cases for why we need both of the above capabilities in the standard. This paper moves them to the appendix and presents them in short.
 
 
-Design Principles
-=================
+Design Rationale
+================
 
 To arrive at the final design of this paper, we used the following principles:
 
-- _P-consistency_: `*_order` algorithms must behave consistently with `<=>` when that is possible.
-- _P-weakening_: If a type has a given order, than it also has all weaker orders.
-- _P-customization_: As `<=>` is a customization point for the natural ordering on a type, so `strong_order` is a customization point for an arbitrary strong order on that type.
-- _P-fallback_: We need convenient functions to get `*_ordering` types from legacy comparison operators.
+- *consistency*: `*_order` algorithms should behave consistently with `<=>` by default.
+- *weakening*: If a type has a given order, than it also has all weaker orders.
+- *ambiguity of legacy*: The ordering category provided by the legacy comparison operators is ambiguous. The standard currently expects merely that `<` provides a weak ordering.
+- *customization*: As `<=>` is a customization point for the natural ordering on a type, so `strong_order` is a customization point for an arbitrary strong order on that type.
+- *fallback*: We need convenient functions to get `*_ordering` types from legacy comparison operators.
 
 
-_Corrolary 1_:  if `<=>` provides a given order `X`, then the default implementation of `X_order` should use it.
+- *Corrolary 1*: from *consistency* it follows that, if `<=>` provides a given order `X`, then the default implementation of `X_order` should use it.
+- *Corrolary 2*: from *consistency*, *weakening* and *customization*, it follows that:
+  - if `<=>` does not provide a strong enough order, but a stronger ordering function (e.g. `strong_order` for `weak_order`, `weak_order` for `partial_order`) is available, then the weaker ordering function must fall back on it (this works recursively, so if `strong_order` is defined, so is `partial_order`).
+- *Corrolary 3*: from *consistency* and *fallback*, it follows that if `<=>` exists, the fallback function should use it in preference of legacy comparison operators.
+- *Corrolary 4*: From *fallback* and *ambiguity of legacy*, it follows that by using a fallback function, the user is asserting that `<` and `==` implement the corresponding ordering.
+- *Corrolary 5*: From *customization* and the definition of *customization point*, it follows that `*_order` functions must be specified as <i>does not participate in overload resolution</i> when they cannot be synthesized according to the above rules.
+- *Corrolary 6*: From *Corrolaries 4 and 5* it follows that the fallbacks and the customization points cannot be the same functions, as their roles are fundamentally incompatible. To illustrate: the fallback function for synthesizing `strong_ordering` must exist whenever `<` and `==` do, but the `strong_order` customization point cannot be synthesized purely from those.
+
+
+- *Observation 1*: Given [[D1185R1]] provides a method of generating a `<=>` operator from `<` and `==`, we can defer to that method for synthesizing the fallback functions.
+- *Observation 2*: If `strong_order` is a customization point for providing a stronger order than `<=>` does, data structures that recurse to their contents for `<=>` must also recurse for `strong_order`.
+    - Given that none of the types in the standard library are getting `<=>` in `C++20`, we are deferring proposing this until such time as `<=>` is proposed for them as well.
+
+If one agrees with the premises, then all the corrolaries follow.
+
+Questions for LEWG:
+===================
+1. Is there consensus that the *customization* premise (as above) is correct and should be adopted?
+    - Corrolary: if not, then the iec559 exception bullet in the current working draft has no sensible home, and should be removed.
+2. Is there consensus that the *fallback* premise (as above) is correct and should be adopted?
+    - Rejecting this means that we are rejecting the rationale for their inclusion in the current working draft and they should be removed.
+
+(The *consistency*, *weakening* and *ambiguity of legacy* are true from a good design, mathematical, and empirical point of view, respectively, so they are not subject to poll).
+
+If the answers to both of those questions are yes, then this paper follows in its entirety.
+
+
 
 
 This paper proposes a new ordering customization point for possibly non-semantic strong orderings, which *should* be equal to `std::strong_order` for strongly-ordered types, and can be customized to represent an arbitrary total order for types that do not have a semantic ordering.
