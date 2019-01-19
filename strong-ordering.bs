@@ -152,48 +152,36 @@ This is a short list of the most obvious algorithms that require any order to wo
 - set/map
 
 
-### Given that it is viral, is it worth the implementation effort?
+### Given that it is viral, is it worth the implementation effort? {#impl-effort}
 
 Given that any customization point we designate has to potentially be overloaded for all the generic wrappers in the standard library, is it even worth the effort defining them?
 
 This paper does not propose any such wrappers, because the standard library doesn't even have `<=>` yet, but the authors only mean to propose `strong_order` be implemented, as that is the only one they've ever needed.
 
 
-### How can I teach this?
+### How can I teach this? {#faq-teaching}
 
+For types that endeavour to be *Regular* or something like it (as in, have sane value semantics):
 
+#### Writing new types:
+- `operator==` defines what "strong equality" means. This is because copies must compare equal, and `==` should be the finest relation that observes this rule.
+- if `(x <=> y) == 0` if and only if `x == y`, then `operator<=>` should return `strong_ordering`, otherwise it should return `weak_ordering` (unless it only defines a partial order, but then you're not asking the question).
+- If your type does not provide an order, you should still provide an overload of
+`strong_order`.
+- If you are obeying the rule of zero, writing `auto operator<=>(...) = default` will give you the correct `==` and `<=>` without any additional work. In most cases, this should already be enough, since `<=>` will result in a `strong_ordering`.
+    - if writing a generic wrapper, or your constituent types have an overloaded `strong_order`, you must then also define `strong_order` to be:
 
-This paper proposes a new ordering customization point for possibly non-semantic strong orderings, which *should* be equal to `std::strong_order` for strongly-ordered types, and can be customized to represent an arbitrary total order for types that do not have a semantic ordering.
+```
+strong_ordering strong_order(T x, T y) {
+  return strong_order(tie(x.m1, x.m2, ...), tie(y.m1, y.m2, ...));
+}
+```
+or, hopefully, when we get reflection, be able to generate it.
 
-The current C++ standard does not have an explicitly designated customization point for providing a *default ordering*. *Elements of Programming* uses `less<T>::operator()` for this purpose, as does the global order for pointers; but with the introduction of `operator<=>`, `less<T>` is missing features, such as computing equality without calling it twice. It has also failed to get adoption for this purpose throughout the years, perhaps exactly due to the missing features.
+#### Using orderings:
+Generic algorithms in general should require and call `weak_order(x, y)`. It will either use the default (weak) ordering on `<=>`, so there are no surprises, or fall back on `strong_order`, which will call `<=>` if it is strong, so no suprises, and if `<=>` does not exist, the type will hopefully have an overload for `strong_order` specifically, which is, again, no surprises. It always does the right thing.
 
-Note: see [[#exposition]] for the definitions and discussion of orderings.
-
-The wording of point 1.1 of the `std::strong_order` algorithm suggests that `std::strong_order` is finally this missing customization point for specifying a default ordering for types whose natural ordering is not strong and total, since it does exactly that for the iec559 types.
-
-The issue is that the rest of the points make this function rather unsuitable for use as a customization point, since the language explicitly makes it not SFINAE-friendly. In the event that it cannot be synthesized, it is marked as *deleted*, and not as *"shall not participate in overload resolution"*.
-
-LEWG has expressed a strong preference to introducing a new customization point for such non-semantic strong orderings, and clarified that `std::strong_order` should not be a customization point.
-
-
-Exposition: On Natural and Default Orderings {#exposition}
-==========================================================
-
-There are obviously many reasons for sorting. However, this paper is chiefly concerned with the division between the *natural ordering* and the *default total ordering* as required for **Regular** types by Stepanov and McJones in their seminal work *Elements of Programming* (page 62, section 4.4).
-
-The **natural ordering** is the ordering that makes semantic sense for a type. This is the ordering that `operator<=>` and its library extensions are tailor-made for: not every type is ordered (or even equality-comparable), and when a type supports an ordering, it might be strong, partial, or weak.
-
-We use these orderings when we need them to make sense - heaps, scheduling tasks by topological sorts, various displays for users, etc. Not all value types have a natural ordering, because not all types are ordered. The Gaussian integers are one such type.
-
-The **default ordering**, from *Elements of Programming* is the finest ordering (transitive antisymmetric antireflexive relation) that a type admits, with its equality is defined by value-substitutability (unequal elements must be ordered); it is always strong and total, and might not make semantic sense.
-
-According to *Elements of Programming*, every **Regular** type should provide a default ordering.
-
-A type with a default ordering is far more useful than one without; ordering enables the use of tree-based containers (i.e. `map`, `set`), and algorithms based on sorted data (`unique`, the various set algorithms, `merge`, and the various versions of binary search) -- and this is just the tip of the iceberg. The only requirement for the above is having *a* total strong ordering - what the ordering *means* is utterly irrelevant, we only require a global order relation.
-
-The lexicographic ordering of the Gaussian integers is a good example of a default ordering.
-
-Another excellent example is `float` -- its various `NaN`s and infinities are not ordered, which is the reason its natural ordering is not suitable as a default ordering. However, iec559 defines a total strong ordering for those values, thus enabling the uses outlined above.
+Data structures that require a weak order should default to it as well.
 
 
 Status Quo {#status}
