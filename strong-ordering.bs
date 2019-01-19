@@ -241,29 +241,38 @@ constexpr strong_ordering strong_order(const T& a, const T& b);
 Proposal {#proposal}
 ====================
 
-Introduce a new customization point for an arbitrary total ordering {#new-customization-point}
-----------------------------------------------------------------------------------------------
+Make `strong_order` and friends customization points {#propose-customization}
+-----------------------------------------------------------------------------
 
-Introduce a new algorithm, with the name `std::default_order` (but see [[#name-bikeshed]]), with the following semantics:
+For the functions `strong_order`, `weak_order`, `partial_order`,
+`strong_equal` and `weak_equal`, we propose to:
 
-Let `T` be a type, and `a` and `b` be values of type `T` (as if `a` and `b` were `declval<T>()`):
-1. If well-formed, the expression `default_order(a, b)` shall return an object convertible to `strong_ordering`.
-3. `default_order` shall be a designated customization point in the sense of [[!P0551R3]].
-2. If the expression `strong_order(a, b)` is well-formed, then the expression `default_order(a, b)` is well-formed.
-4. If not explicitly specialized for a type `T` and `strong_order(a, b)` is well-formed, the expression `default_order(a, b)` shall return the result of the expression `strong_order(a, b)`. (Note: this means that `default_order` defaults to `strong_order` if available for the type. -- end note.)
+- Remove the fallbacks to `==` and `<`
+- Have the functions not participate in overload resolution (instead of being defined as deleted) if there is no strong order available.
 
 
-Move the iec559 treatment (point 1.1) from `strong_order` to `default_order` {#noexcept}
-----------------------------------------------------------------------------------------
+Replace the iec559 rule in `strong_order` with separate overloads {#propose-iec559}
+-----------------------------------------------------------------------------------
 
-Since this paper adds an explicit customization point for a non-semantic total order on any type, the exception for iec559 floating-point types can now be implemented by explicitly providing an implementation for the `default_order` customization point for those types.
+Since `strong_order` as a customiation point, the strong order for floating
+point types should be provided as overloads of `strong_order` rather than being
+baked into the generic `strong_order` function.
 
-The concrete proposal is as follows:
-1. remove point 1.1 of the `strong_order` algorithm, which removes the exception for iec559 types.
-2. add a provision to `default_order`
-    1. if `(bool) numeric_limits<T>::is_iec559` is `true`, the expression `default_order(a, b)` returns a result of type `strong_ordering` that is consistent with the `totalOrder` operation as specified in ISO/IEC/IEEE 60559. 
+We propose that the bullet point regarding `iec559` be removed from the
+`strong_order` algorithm, and that the following three overloads for
+`strong_order` are added:
 
-Remark: libraries are encouraged to provide implementations of this customization point for their user-defined types, especially if the `operator<=>` for the type does not provide a `strong_ordering`, to enable possibly non-semantic total orderings over their entire domain. The use of implementations of this customization point that do not define a strict total order render the program ill-formed (no diagnostic required).
+- `strong_order(float, float);` 
+- `strong_order(double, double);` 
+- `strong_order(long double, long double);` 
+
+These overloads should implement the `totalOrder` operation as specified in
+ISO/IEC/IEEE 60559, and should not participate in overload resolution if
+`numeric_limts<T>::is_iec559` is false for the type of their arguments.
+
+
+Add fallback functions {#proposal-fallback}
+-------------------------------------------
 
 
 Name of The Default Order Algorithm {#name-bikeshed}
