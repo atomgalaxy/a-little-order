@@ -264,11 +264,11 @@ propose to keep them under new names, with the following changes to their
 behaviour:
 
 - They will, in preference to anything else, return the
-  result of calling the corresponding customization point.
+    result of calling the corresponding customization point.
 - They will not attempt to call `<=>` directly, as this is called by the
-  customisation point.
+    customisation point.
 - They will fall back to `==` and `<` using the language mechanism proposed by
-  [[!P1186R1]] instead of calling `==` and `<` directly.
+    [[!D1186R1]] instead of calling `==` and `<` directly.
 
 As per the original comparison algorithms, they will be defined as deleted if
 neither the corresponding customization point nor the `==` and `<` operators
@@ -277,6 +277,13 @@ are available.
 Following the same reasoning as in [[#remove-equal]], there will be no fallback
 functions for `strong_equality` and `weak_equality`.
 
+We propose naming the fallback functions `strong_order_assume`, `weak_order_assume` and `partial_order_assume`.
+
+Other options to consider:
+ - `X_order_assume`
+ - `assume_X_order`
+ - `fallback_X_order`
+ - `X_order_fallback`
 
 On Compatibility Between the Natural and Default Orderings {#compat}
 ====================================================================
