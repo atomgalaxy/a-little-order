@@ -64,16 +64,18 @@ R2 of this paper is a merge of its R1 and Jeff Snyder's [[P0873R1]], and is sync
 Problem Description {#problem}
 ==============================
 
-This paper is a proposal to amend a library extension that has been voted into the working draft as part of [[P0768R1]]. The working draft wording of the `*_order` functions does not present a coherent design that delivers both functions that it is meant to serve.
+This paper is a proposal to amend the *comparison algorithms* that have been voted into the working draft as part of [[P0768R1]].
 
-As worded, `strong_order` provides:
+As worded, the `strong_order` comparison algorithm provides:
 
 - a strong ordering for some types that do not have it provided by `<=>` (iec559 floating point types),
-- serves as a non-customizable fallback function otherwise.
+- a way of generating a value of type `strong_ordering` by falling back to the `==` and `<` operators if `<=>` is not callable or does not result in a `strong_ordering`.
 
-In the standard, we need to provide both of these capabilities. This paper presents the case that they are fundamentally incompatible, and need to be split.
+However, the authors of this paper and the author of [[P0515R3]] intended for `strong_order` to be a customization point, and it is not currently usable as such.
 
-[[P0891R0]] and [[P0891R1]] of this paper presented substantial cases for why we need both of the above capabilities in the standard. This paper only summarizes the currently relevant bits of that discussion. For wider context, the reader should refer to the previous revisions, as well as to [[P0863R1]].
+In the standard, we need to provide the ability to customize `strong_order` and a way to fall back to `==` and `<`. This paper argues that these are fundamentally incompatible, and cannot be served by the same function.
+
+[[P0891R0]] and [[P0891R1]] of this paper presented the case for having a customization point for ordering in the language. This paper only summarizes the currently relevant bits of that discussion. For wider context, the reader should refer to the previous revisions, as well as to [[P0863R1]].
 
 
 Design Rationale {#design-rationale}

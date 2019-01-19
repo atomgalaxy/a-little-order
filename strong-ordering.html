@@ -1227,10 +1227,10 @@ Possible extra rowspan handling
       text-align: center;
     }
   </style>
-  <meta content="Bikeshed version 04b354547d55896d854a81cffb3965bd6f8758ec" name="generator">
+  <meta content="Bikeshed version 9c6ae748322940994300e90a77c34437364b40a6" name="generator">
   <link href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="39e8b71f45de1428399293b91905a86073c926e7" name="document-revision">
+  <meta content="035babb9a74e96471c5cf2413aff6b5d8057ef63" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1608,16 +1608,17 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <h2 class="heading settled" data-level="2" id="sup"><span class="secno">2. </span><span class="content">Status of this paper</span><a class="self-link" href="#sup"></a></h2>
    <p>R2 of this paper is a merge of its R1 and Jeff Snyder’s <a data-link-type="biblio" href="#biblio-p0873r1">[P0873R1]</a>, and is synchronized with Barry Revzin’s <a data-link-type="biblio" href="#biblio-d1186r1">[D1186R1]</a>. It incorporates all feedback for R0 and R1, and presents a coherent design for the library components of <code class="highlight"><c- o>&lt;=></c-></code>.</p>
    <h2 class="heading settled" data-level="3" id="problem"><span class="secno">3. </span><span class="content">Problem Description</span><a class="self-link" href="#problem"></a></h2>
-   <p>This paper is a proposal to amend a library extension that has been voted into the working draft as part of <a data-link-type="biblio" href="#biblio-p0768r1">[P0768R1]</a>. The working draft wording of the <code class="highlight"><c- o>*</c-><c- n>_order</c-></code> functions does not present a coherent design that delivers both functions that it is meant to serve.</p>
-   <p>As worded, <code class="highlight"><c- n>strong_order</c-></code> provides:</p>
+   <p>This paper is a proposal to amend the <em>comparison algorithms</em> that have been voted into the working draft as part of <a data-link-type="biblio" href="#biblio-p0768r1">[P0768R1]</a>.</p>
+   <p>As worded, the <code class="highlight"><c- n>strong_order</c-></code> comparison algorithm provides:</p>
    <ul>
     <li data-md>
      <p>a strong ordering for some types that do not have it provided by <code class="highlight"><c- o>&lt;=></c-></code> (iec559 floating point types),</p>
     <li data-md>
-     <p>serves as a non-customizable fallback function otherwise.</p>
+     <p>a way of generating a value of type <code class="highlight"><c- n>strong_ordering</c-></code> by falling back to the <code class="highlight"><c- o>==</c-></code> and <code class="highlight"><c- o>&lt;</c-></code> operators if <code class="highlight"><c- o>&lt;=></c-></code> is not callable or does not result in a <code class="highlight"><c- n>strong_ordering</c-></code>.</p>
    </ul>
-   <p>In the standard, we need to provide both of these capabilities. This paper presents the case that they are fundamentally incompatible, and need to be split.</p>
-   <p><a data-link-type="biblio" href="#biblio-p0891r0">[P0891R0]</a> and <a data-link-type="biblio" href="#biblio-p0891r1">[P0891R1]</a> of this paper presented substantial cases for why we need both of the above capabilities in the standard. This paper only summarizes the currently relevant bits of that discussion. For wider context, the reader should refer to the previous revisions, as well as to <a data-link-type="biblio" href="#biblio-p0863r1">[P0863R1]</a>.</p>
+   <p>However, the authors of this paper and the author of <a data-link-type="biblio" href="#biblio-p0515r3">[P0515R3]</a> intended for <code class="highlight"><c- n>strong_order</c-></code> to be a customization point, and it is not currently usable as such.</p>
+   <p>In the standard, we need to provide the ability to customize <code class="highlight"><c- n>strong_order</c-></code> and a way to fall back to <code class="highlight"><c- o>==</c-></code> and <code class="highlight"><c- o>&lt;</c-></code>. This paper argues that these are fundamentally incompatible, and cannot be served by the same function.</p>
+   <p><a data-link-type="biblio" href="#biblio-p0891r0">[P0891R0]</a> and <a data-link-type="biblio" href="#biblio-p0891r1">[P0891R1]</a> of this paper presented the case for having a customization point for ordering in the language. This paper only summarizes the currently relevant bits of that discussion. For wider context, the reader should refer to the previous revisions, as well as to <a data-link-type="biblio" href="#biblio-p0863r1">[P0863R1]</a>.</p>
    <h2 class="heading settled" data-level="4" id="design-rationale"><span class="secno">4. </span><span class="content">Design Rationale</span><a class="self-link" href="#design-rationale"></a></h2>
    <p>To arrive at the final design of this paper, we used the following principles:</p>
    <ul>
@@ -2100,6 +2101,8 @@ functions for <code class="highlight"><c- n>strong_equality</c-></code> and <cod
    <dd><a href="https://wg21.link/d1185r1">(Untitled)</a>. URL: <a href="https://wg21.link/d1185r1">https://wg21.link/d1185r1</a>
    <dt id="biblio-p0100r2">[P0100R2]
    <dd>Lawrence Crowl. <a href="https://wg21.link/p0100r2">Comparison in C++</a>. 27 November 2016. URL: <a href="https://wg21.link/p0100r2">https://wg21.link/p0100r2</a>
+   <dt id="biblio-p0515r3">[P0515R3]
+   <dd>Herb Sutter, Jens Maurer, Walter E. Brown. <a href="https://wg21.link/p0515r3">Consistent comparison</a>. 10 November 2017. URL: <a href="https://wg21.link/p0515r3">https://wg21.link/p0515r3</a>
    <dt id="biblio-p0768r1">[P0768R1]
    <dd>Walter E. Brown. <a href="https://wg21.link/p0768r1">Library Support for the Spaceship (Comparison) Operator</a>. 10 November 2017. URL: <a href="https://wg21.link/p0768r1">https://wg21.link/p0768r1</a>
    <dt id="biblio-p0863r1">[P0863R1]
