@@ -83,39 +83,39 @@ Principles {#principles}
 
 To arrive at the final design of this paper, we used the following principles:
 
-- <dfn>consistency</dfn>: `*_order` algorithms should behave consistently with `<=>` by default.
-- <dfn>weakening</dfn>: If a type has a given order, than it also has all weaker orders.
-- <dfn>ambiguity of legacy</dfn>: The ordering category provided by the legacy comparison operators is ambiguous. The standard currently expects merely that `<` provides a weak ordering.
-- <dfn>customization</dfn>: As `<=>` is a customization point for the natural ordering on a type, so `strong_order` is a customization point for an arbitrary strong order on that type.
-- <dfn>fallback</dfn>: We need convenient functions to get `*_ordering` types from legacy comparison operators.
+- <dfn>Consistency</dfn>: `*_order` algorithms should behave consistently with `<=>` by default.
+- <dfn>Weakening</dfn>: If a type has a given order, than it also has all weaker orders.
+- <dfn>Ambiguity of Legacy</dfn>: The ordering category provided by the legacy comparison operators is ambiguous. The standard currently expects merely that `<` provides a weak ordering.
+- <dfn>Customization</dfn>: As `<=>` is a customization point for the natural ordering on a type, so `strong_order` is a customization point for an arbitrary strong order on that type.
+- <dfn>Fallback</dfn>: We need convenient functions to get `*_ordering` types from legacy comparison operators.
 
 
 From these principles, these corollaries follow:
 
-- <dfn>Corollary 1</dfn>: from [=consistency=] it follows that, if `<=>` provides a given order `X`, then the default implementation of `X_order` should use it.
-- <dfn>Corollary 2</dfn>: from [=consistency=], [=weakening=] and [=customization=], it follows that:
+- <dfn>Corollary 1</dfn>: from [=Consistency=] it follows that, if `<=>` provides a given order `X`, then the default implementation of `X_order` should use it.
+- <dfn>Corollary 2</dfn>: from [=Consistency=], [=Weakening=] and [=Customization=], it follows that:
     - if `<=>` does not provide a strong enough order, but a stronger ordering function (e.g. `strong_order` for `weak_order`, `weak_order` for `partial_order`) is available, then the weaker ordering function must fall back on it (this works recursively, so if `strong_order` is defined, so is `partial_order`).
-- <dfn>Corollary 3</dfn>: from [=consistency=] and [=fallback=], it follows that if `<=>` exists, the fallback function should use it in preference of legacy comparison operators.
-- <dfn>Corollary 4</dfn>: From [=fallback=] and [=ambiguity of legacy=], it follows that by using a fallback function, the user is asserting that `<` and `==` implement the corresponding ordering.
-- <dfn>Corollary 5</dfn>: From [=customization=] and the definition of *customization point*, it follows that `*_order` functions must be specified as <i>does not participate in overload resolution</i> when they cannot be synthesized according to the above rules.
+- <dfn>Corollary 3</dfn>: from [=Consistency=] and [=Fallback=], it follows that if `<=>` exists, the fallback function should use it in preference of legacy comparison operators.
+- <dfn>Corollary 4</dfn>: From [=Fallback=] and [=Ambiguity of Legacy=], it follows that by using a fallback function, the user is asserting that `<` and `==` implement the corresponding ordering.
+- <dfn>Corollary 5</dfn>: From [=Customization=] and the definition of *customization point*, it follows that `*_order` functions must be specified as <i>does not participate in overload resolution</i> when they cannot be synthesized according to the above rules.
 - <dfn>Corollary 6</dfn>: From [=Corollary 4=] and [=Corollary 5=] it follows that the fallbacks and the customization points cannot be the same functions, as their roles are fundamentally incompatible. To illustrate: the fallback function for synthesizing `strong_ordering` must exist whenever `<` and `==` do, but the `strong_order` customization point must not be synthesized purely from those.
 
 
 In addition, we have made the following observations:
 
-- Given [[D1185R1]] provides a method of generating a `<=>` operator from `<` and `==`, we should (due to [=consistency=]) defer to that method for synthesizing the fallback functions.
+- Given [[D1185R1]] provides a method of generating a `<=>` operator from `<` and `==`, we should (due to [=Consistency=]) defer to that method for synthesizing the fallback functions.
 - If `strong_order` is a customization point for providing a stronger order than `<=>` does, data structures that recurse to their contents for `<=>` should also recurse for `strong_order`.
 - Given that the '<=>' operator is not being provided for any of the types in the standard library C++20, we are deferring proposing this until such time as `<=>` is proposed for them as well.
 
 Questions for LEWG: {#lewg-questions}
 =====================================
 
-1. <dfn>Question: consensus</dfn>: Is there consensus that the [=customization=] premise (as above) is correct and should be adopted?
+1. <dfn>Question: consensus</dfn>: Is there consensus that the [=Customization=] premise (as above) is correct and should be adopted?
     - If not, then should the iec559 exception bullet in the current working draft be removed?
-2. <dfn>Question: fallbacks</dfn>:Is there consensus that the [=fallback=] premise (as above) is correct and should be adopted?
+2. <dfn>Question: fallbacks</dfn>:Is there consensus that the [=Fallback=] premise (as above) is correct and should be adopted?
     - Rejecting this means that we are rejecting the rationale for their inclusion in the current working draft and that they should be removed.
 
-(The [=consistency=], [=weakening=] and [=ambiguity of legacy=] are true from a good design, mathematical, and empirical point of view, respectively, so they are not subject to poll).
+(The [=Consistency=], [=Weakening=] and [=Ambiguity of Legacy=] are true from a good design, mathematical, and empirical point of view, respectively, so they are not subject to poll).
 
 If the answers to both of those questions are yes, then this paper follows in its entirety.
 
