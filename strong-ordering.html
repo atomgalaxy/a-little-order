@@ -2,7 +2,7 @@
  <head>
   <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
-  <title>P0891R1: Everyone Deserves a Little Order</title>
+  <title>P0891R2: Everyone Deserves a Little Order</title>
 <style data-fill-with="stylesheet">/******************************************************************************
  *                   Style sheet for the W3C specifications                   *
  *
@@ -1230,7 +1230,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version 9c6ae748322940994300e90a77c34437364b40a6" name="generator">
   <link href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="035babb9a74e96471c5cf2413aff6b5d8057ef63" name="document-revision">
+  <meta content="482d38c8bc92788f2afe51744edc957c0542659d" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1490,8 +1490,8 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
  <body class="h-entry">
   <div class="head">
    <p data-fill-with="logo"></p>
-   <h1 class="p-name no-ref" id="title">P0891R1<br>Everyone Deserves a Little Order</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Published Proposal, <time class="dt-updated" datetime="2018-10-27">2018-10-27</time></span></h2>
+   <h1 class="p-name no-ref" id="title">P0891R2<br>Everyone Deserves a Little Order</h1>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Published Proposal, <time class="dt-updated" datetime="2019-01-20">2019-01-20</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1512,7 +1512,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   </div>
   <div class="p-summary" data-fill-with="abstract">
    <h2 class="no-num no-toc no-ref heading settled" id="abstract"><span class="content">Abstract</span></h2>
-   <p>The specification of ordering algorithms at the end of <a data-link-type="biblio" href="#biblio-p0768r1">[P0768R1]</a> does not provide the ability to provide a default order for user-defined types (since they are specified in such a way that they are not intended to be customization points), and yet mixes in such a customization for iec559 floating point types. This paper suggests splitting that capability out into a separate customization point.</p>
+   <p>The specification of ordering algorithms at the end of <a data-link-type="biblio" href="#biblio-p0768r1">[P0768R1]</a> does not provide the ability to provide a default order for user-defined types (since they are specified in such a way that they are not intended to be customization points), and yet mixes in such a customization for iec559 floating point types. This paper suggests providing the functionality of both in a composable and principled way.</p>
   </div>
   <nav data-fill-with="table-of-contents" id="toc">
    <h2 class="no-num no-toc no-ref" id="contents">Table of Contents</h2>
@@ -1597,13 +1597,13 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p>Feedback in San Diego was:</p>
    <ul>
     <li data-md>
-     <p>We want to solve <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>set</c-><c- o>&lt;</c-><c- n>T</c-><c- o>></c-></code> for not obviously comparable <code class="highlight"><c- n>T</c-></code> (0/6/4/1/1). [in scope]</p>
+     <p>We want to solve <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>set</c-><c- o>&lt;</c-><c- n>T</c-><c- o>></c-></code> for not obviously comparable <code class="highlight"><c- n>T</c-></code> (0/6/4/1/1).</p>
     <li data-md>
-     <p>We want to solve <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>unordered_set</c-><c- o>&lt;</c-><c- n>T</c-><c- o>></c-></code> for not obviously hasheable <code class="highlight"><c- n>T</c-></code> (out of scope)</p>
+     <p>We want to solve <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>unordered_set</c-><c- o>&lt;</c-><c- n>T</c-><c- o>></c-></code> for not obviously hasheable <code class="highlight"><c- n>T</c-></code>. (Out of scope of this paper)</p>
     <li data-md>
      <p>We need to adress the fact that containers need to provide specializations of <code class="highlight"><c- n>strong_order</c-></code> if it is a customization point.</p>
     <li data-md>
-     <p>We want <code class="highlight"><c- n>strong_order</c-></code> to be a customization point (Herb’s proposed poll) - never taken.</p>
+     <p>We want <code class="highlight"><c- n>strong_order</c-></code> to be the customization point (Herb’s proposed poll) - never taken.</p>
    </ul>
    <h2 class="heading settled" data-level="2" id="sup"><span class="secno">2. </span><span class="content">Status of this paper</span><a class="self-link" href="#sup"></a></h2>
    <p>R2 of this paper is a merge of its R1 and Jeff Snyder’s <a data-link-type="biblio" href="#biblio-p0873r1">[P0873R1]</a>, and is synchronized with Barry Revzin’s <a data-link-type="biblio" href="#biblio-d1186r1">[D1186R1]</a>. It incorporates all feedback for R0 and R1, and presents a coherent design for the library components of <code class="highlight"><c- o>&lt;=></c-></code>.</p>
@@ -1650,12 +1650,12 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="corrolary-5">Corrolary 5</dfn>: From <a data-link-type="dfn" href="#customization" id="ref-for-customization①">customization</a> and the definition of <em>customization point</em>, it follows that <code class="highlight"><c- o>*</c-><c- n>_order</c-></code> functions must be specified as <i>does not participate in overload resolution</i> when they cannot be synthesized according to the above rules.</p>
     <li data-md>
-     <p><dfn data-dfn-type="dfn" data-noexport id="corrolary-6">Corrolary 6<a class="self-link" href="#corrolary-6"></a></dfn>: From <a data-link-type="dfn" href="#corrolary-4" id="ref-for-corrolary-4">Corrolary 4</a> and <a data-link-type="dfn" href="#corrolary-5" id="ref-for-corrolary-5">Corrolary 5</a> it follows that the fallbacks and the customization points cannot be the same functions, as their roles are fundamentally incompatible. To illustrate: the fallback function for synthesizing <code class="highlight"><c- n>strong_ordering</c-></code> must exist whenever <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code> do, but the <code class="highlight"><c- n>strong_order</c-></code> customization point cannot be synthesized purely from those.</p>
+     <p><dfn data-dfn-type="dfn" data-noexport id="corrolary-6">Corrolary 6<a class="self-link" href="#corrolary-6"></a></dfn>: From <a data-link-type="dfn" href="#corrolary-4" id="ref-for-corrolary-4">Corrolary 4</a> and <a data-link-type="dfn" href="#corrolary-5" id="ref-for-corrolary-5">Corrolary 5</a> it follows that the fallbacks and the customization points cannot be the same functions, as their roles are fundamentally incompatible. To illustrate: the fallback function for synthesizing <code class="highlight"><c- n>strong_ordering</c-></code> must exist whenever <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code> do, but the <code class="highlight"><c- n>strong_order</c-></code> customization point must not be synthesized purely from those.</p>
    </ul>
    <p>In addition, we have observed the following useful facts.</p>
    <ul>
     <li data-md>
-     <p><em>Observation 1</em>: Given <a data-link-type="biblio" href="#biblio-d1185r1">[D1185R1]</a> provides a method of generating a <code class="highlight"><c- o>&lt;=></c-></code> operator from <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code>, we can defer to that method for synthesizing the fallback functions.</p>
+     <p><em>Observation 1</em>: Given <a data-link-type="biblio" href="#biblio-d1185r1">[D1185R1]</a> provides a method of generating a <code class="highlight"><c- o>&lt;=></c-></code> operator from <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code>, we should, due to <a data-link-type="dfn" href="#consistency" id="ref-for-consistency③">consistency</a>, defer to that method for synthesizing the fallback functions.</p>
     <li data-md>
      <p><em>Observation 2</em>: If <code class="highlight"><c- n>strong_order</c-></code> is a customization point for providing a stronger order than <code class="highlight"><c- o>&lt;=></c-></code> does, data structures that recurse to their contents for <code class="highlight"><c- o>&lt;=></c-></code> must also recurse for <code class="highlight"><c- n>strong_order</c-></code>.</p>
     <li data-md>
@@ -1677,7 +1677,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
        <p>Rejecting this means that we are rejecting the rationale for their inclusion in the current working draft and they should be removed.</p>
      </ul>
    </ol>
-   <p>(The <a data-link-type="dfn" href="#consistency" id="ref-for-consistency③">consistency</a>, <a data-link-type="dfn" href="#weakening" id="ref-for-weakening①">weakening</a> and <a data-link-type="dfn" href="#ambiguity-of-legacy" id="ref-for-ambiguity-of-legacy①">ambiguity of legacy</a> are true from a good design, mathematical, and empirical point of view, respectively, so they are not subject to poll).</p>
+   <p>(The <a data-link-type="dfn" href="#consistency" id="ref-for-consistency④">consistency</a>, <a data-link-type="dfn" href="#weakening" id="ref-for-weakening①">weakening</a> and <a data-link-type="dfn" href="#ambiguity-of-legacy" id="ref-for-ambiguity-of-legacy①">ambiguity of legacy</a> are true from a good design, mathematical, and empirical point of view, respectively, so they are not subject to poll).</p>
    <p>If the answers to both of those questions are yes, then this paper follows in its entirety.</p>
    <h2 class="heading settled" data-level="6" id="discussion"><span class="secno">6. </span><span class="content">Discussion</span><a class="self-link" href="#discussion"></a></h2>
    <h3 class="heading settled" data-level="6.1" id="discussion-poll-1"><span class="secno">6.1. </span><span class="content">Poll 1</span><a class="self-link" href="#discussion-poll-1"></a></h3>
@@ -2119,8 +2119,8 @@ functions for <code class="highlight"><c- n>strong_equality</c-></code> and <cod
   <aside class="dfn-panel" data-for="consistency">
    <b><a href="#consistency">#consistency</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-consistency">4. Design Rationale</a> <a href="#ref-for-consistency①">(2)</a> <a href="#ref-for-consistency②">(3)</a>
-    <li><a href="#ref-for-consistency③">5. Questions for LEWG:</a>
+    <li><a href="#ref-for-consistency">4. Design Rationale</a> <a href="#ref-for-consistency①">(2)</a> <a href="#ref-for-consistency②">(3)</a> <a href="#ref-for-consistency③">(4)</a>
+    <li><a href="#ref-for-consistency④">5. Questions for LEWG:</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="weakening">
