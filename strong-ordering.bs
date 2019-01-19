@@ -214,10 +214,6 @@ constexpr strong_ordering strong_order(const T& a, const T& b);
     5. Otherwise, the function shall be defined as deleted.
 
 
-Naming the fallback functions {#naming}
----------------------------------------
-
-
 Proposal {#proposal}
 ====================
 
@@ -229,6 +225,18 @@ For the functions `strong_order`, `weak_order`, `partial_order`,
 
 - Remove the fallbacks to `==` and `<`
 - Have the functions not participate in overload resolution (instead of being defined as deleted) if there is no strong order available.
+
+Remove the `strong_equal` and `weak_equal` comparison algorithms {#remove-equal}
+--------------------------------------------------------------------------------
+
+
+If we accept [[P1185R0]]'s rationale for not calling `<=>` when the user only
+needs equality (as EWG did in San Diego), we should also avoid doing so in the
+library. However, without making assumptions about the behaviour of `==`, there
+is no way to implement `strong_equal` and `weak_equal` without calling `<=>`.
+
+Therefore, we propose removing the `strong_equal` and `weak_equal`
+customisation points.
 
 
 Replace the iec559 rule in `strong_order` with separate overloads {#propose-iec559}
@@ -260,18 +268,27 @@ point for an order stronger than its own. Specifically:
 
 - `weak_order` should fall back to calling `strong_order`
 - `partial_order` should fall back to calling `weak_order`
-- `strong_equal` should fall back to calling `strong_order`
-- `weak_equal` should fall back to calling `weak_order`
 
 Add fallback functions {#proposal-fallback}
 -------------------------------------------
 
 To avoid losing the functionality of the existing comparison algorithms, we
-propose to keep them under new names, with the following changes to their behaviour:
+propose to keep them under new names, with the following changes to their
+behaviour:
 
 - They will, in preference to anything else, return the
   result of calling the corresponding customization point.
-- They will not attempt to call `<=>` directly, as this is redundant once the 
+- They will not attempt to call `<=>` directly, as this is called by the
+  customisation point.
+- They will fall back to `==` and `<` using the language mechanism proposed by
+  [[!P1186R1]] instead of calling `==` and `<` directly.
+
+As per the original comparison algorithms, they will be defined as deleted if
+neither the corresponding customization point nor the `==` and `<` operators
+are available.
+
+Following the same reasoning as in [[#remove-equal]], there will be no fallback
+functions for `strong_equality` and `weak_equality`.
 
 
 On Compatibility Between the Natural and Default Orderings {#compat}
