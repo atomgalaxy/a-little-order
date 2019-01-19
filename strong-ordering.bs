@@ -107,24 +107,11 @@ In addition, we have made the following observations:
 - If `strong_order` is a customization point for providing a stronger order than `<=>` does, data structures that recurse to their contents for `<=>` should also recurse for `strong_order`.
 - Given that the '<=>' operator is not being provided for any of the types in the standard library C++20, we are deferring proposing this until such time as `<=>` is proposed for them as well.
 
-Questions for LEWG: {#lewg-questions}
-=====================================
-
-1. <dfn>Question: consensus</dfn>: Is there consensus that the [=Customization=] premise (as above) is correct and should be adopted?
-    - If not, then should the iec559 exception bullet in the current working draft be removed?
-2. <dfn>Question: fallbacks</dfn>:Is there consensus that the [=Fallback=] premise (as above) is correct and should be adopted?
-    - Rejecting this means that we are rejecting the rationale for their inclusion in the current working draft and that they should be removed.
-
-(The [=Consistency=], [=Weakening=] and [=Ambiguity of Legacy=] are true from a good design, mathematical, and empirical point of view, respectively, so they are not subject to poll).
-
-If the answers to both of those questions are yes, then this paper follows in its entirety.
-
-
 Discussion {#discussion}
 ========================
 
-Discussion of [=Question: consensus=] {#discussion-poll-1}
-----------------------------------------------------------
+Discussion of the [=Customization=] principle {#discussion-customization}
+---------------------------------------------------------------------
 
   The arguments around whether `strong_order` should be a customization point have centered around the following issues. We summarize the discussion below.
 
@@ -182,8 +169,8 @@ Generic algorithms in general should require and call `weak_order(x, y)`. It wil
 Data structures that require a weak order should default to it as well.
 
 
-Discussion of [=Question: fallbacks=] {#discussion-fallbacks}
--------------------------------------------------------------
+Discussion of the [=Fallback=] principle {#discussion-fallback}
+---------------------------------------------------------------
 
 The arguments on whether we need to provide the fallback functions for legacy types center around:
 - how do we make it easy is it to define `<=>` in terms of `<` and `==` of a legacy type?
@@ -192,24 +179,17 @@ The arguments on whether we need to provide the fallback functions for legacy ty
 - In a context where we need to pass an ordering type as a parameter to a function, but we need to obtain it from a legacy type, how do we do that?
 
 
+Questions for LEWG: {#lewg-questions}
+=====================================
 
+1. Is there consensus that the [=Customization=] premise (as above) is correct and should be adopted?
+    - If not, then should the iec559 exception bullet in the current working draft be removed?
+2. Is there consensus that the [=Fallback=] premise (as above) is correct and should be adopted?
+    - Rejecting this means that we are rejecting the rationale for their inclusion in the current working draft and that they should be removed.
 
-Status Quo {#status}
-====================
+(The [=Consistency=], [=Weakening=] and [=Ambiguity of Legacy=] are true from a good design, mathematical, and empirical point of view, respectively, so they are not subject to poll).
 
-For reference, the current specification for the `std::strong_order` algorithm is as follows:
-
-```cpp
-template<class T>
-constexpr strong_ordering strong_order(const T& a, const T& b);
-```
-
-1. Effects: Compares two values and produces a result of type `strong_ordering`:
-    1. If `numeric_limits<T>::is_iec559` is true, returns a result of type `strong_ordering` that is consistent with the `totalOrder` operation as specified in ISO/IEC/IEEE 60559.
-    2. Otherwise, returns `a <=> b` if that expression is well-formed and convertible to `strong_ordering`.
-    3. Otherwise, if the expression `a <=> b` is well-formed, then the function shall be defined as deleted.
-    4. Otherwise, if the expressions `a == b` and `a < b` are each well-formed and convertible to `bool`, returns `strong_ordering::equal` when `a == b` is `true`, otherwise returns `strong_ordering::less` when `a < b` is `true`, and otherwise returns `strong_ordering::greater`.
-    5. Otherwise, the function shall be defined as deleted.
+If the answers to both of those questions are yes, then this paper follows in its entirety.
 
 
 Proposal {#proposal}
