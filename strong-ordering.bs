@@ -166,8 +166,7 @@ For types that endeavour to be *Regular* or something like it (as in, have sane 
 #### Writing new types:
 - `operator==` defines what "strong equality" means. This is because copies must compare equal, and `==` should be the finest relation that observes this rule.
 - if `(x <=> y) == 0` if and only if `x == y`, then `operator<=>` should return `strong_ordering`, otherwise it should return `weak_ordering` (unless it only defines a partial order, but then you're not asking the question).
-- If your type does not provide an order, you should still provide an overload of
-`strong_order`.
+- If your type does not provide an order, you should still provide an overload of `strong_order`.
 - If you are obeying the rule of zero, writing `auto operator<=>(...) = default` will give you the correct `==` and `<=>` without any additional work. In most cases, this should already be enough, since `<=>` will result in a `strong_ordering`.
     - if writing a generic wrapper, or your constituent types have an overloaded `strong_order`, you must then also define `strong_order` to be:
 
