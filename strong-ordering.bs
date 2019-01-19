@@ -52,6 +52,9 @@ Fallbacks:
   - when you are assuming that (old ops) have the specified order and you preferentially use <=> if available.
 - `assume_*_order(T c&, T c&)` -  means: if `*_order` defined, use that, otherwise assume `<` and `==` do the right thing, because you are *asserting* that.
 
+Bikeshed for fallbacks:
+- `*_3way_compare`
+
 TODO:
 - naming of fallbacks
 - wording after barry
@@ -101,7 +104,8 @@ New papers:
 Revision History {#history}
 ===========================
 
-- r1: Incorporated feedback from EWG meeting in Rappersville.
+R1: Incorporated feedback from LEWG meeting in Rappersville.
+------------------------------------------------------------
 
 The feedback was:
 - Remove the floating point exception (bullet 1.1) as R0 recommended, since Unicode strings, etc., are a possible rationale.
@@ -113,11 +117,20 @@ The feedback was:
 - Investigate the possibility of adding Lawrence's weak order (from [[P0100R2]]) for floating-point numbers (which did not make it in with spaceship).
 
 
+R2: Incorporated feedback from LEWG meeting in San Diego, merged with [[P0863R1]]
+---------------------------------------------------------------------------------
+
+Feedback in San Diego was:
+- We want to solve `std::set<T>` for not obviously comparable `T` (0/6/4/1/1). [in scope]
+- We want to solve `std::unordered_set<T>` for not obviously hasheable `T` (out of scope)
+- We need to adress the fact that containers need to provide specializations of `strong_order` if it is a customization point.
+- We want `strong_order` to be a customization point (Herb's proposed poll) - never taken.
+
+
 Status of this paper {#sup}
 ===========================
 
-This paper has been seen by LEWG, provided feedback, and reworked. It is ready to be seen again by LEWG.
-
+R2 of this paper is a merge of its R1 and Jeff Snyder's [[P0873R1]], and is synchronized with Barry Revzin's [[D1186R1]]. It incorporates all feedback for R0 and R1, and presents a coherent design for the library components of `<=>`.
 
 Problem Description {#problem}
 ==============================
