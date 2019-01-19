@@ -1230,7 +1230,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version 9c6ae748322940994300e90a77c34437364b40a6" name="generator">
   <link href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="2dfd139ef0b180fd350f362bad29c616b2939cb1" name="document-revision">
+  <meta content="ff465a00a25a87e870a5546e4d5ce14fdb639397" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1532,7 +1532,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
       <li>
        <a href="#discussion-customization"><span class="secno">5.1</span> <span class="content">Discussion of the <span>Customization</span> principle</span></a>
        <ol class="toc">
-        <li><a href="#but-is-it-legal-ill-make-it-legal"><span class="secno">5.1.1</span> <span class="content">Is it useful</span></a>
+        <li><a href="#but-is-it-legal-ill-make-it-legal"><span class="secno">5.1.1</span> <span class="content">Is it useful?</span></a>
         <li><a href="#impl-effort"><span class="secno">5.1.2</span> <span class="content">Given that it is viral, is it worth the implementation effort?</span></a>
         <li>
          <a href="#faq-teaching"><span class="secno">5.1.3</span> <span class="content">How can I teach this?</span></a>
@@ -1663,20 +1663,20 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    </ul>
    <h2 class="heading settled" data-level="5" id="discussion"><span class="secno">5. </span><span class="content">Discussion</span><a class="self-link" href="#discussion"></a></h2>
    <h3 class="heading settled" data-level="5.1" id="discussion-customization"><span class="secno">5.1. </span><span class="content">Discussion of the <a data-link-type="dfn" href="#customization" id="ref-for-customization②">Customization</a> principle</span><a class="self-link" href="#discussion-customization"></a></h3>
-   <p>The arguments around whether <code class="highlight"><c- n>strong_order</c-></code> should be a customization point have centered around the following issues. We summarize the discussion below.</p>
+   <p>The arguments around whether <code class="highlight"><c- n>strong_order</c-></code> should be a customization point have centered around the following questions:</p>
    <ul>
     <li data-md>
      <p>Is it even useful?</p>
     <li data-md>
      <p>Given that it is viral, is it worth the implementation effort?</p>
     <li data-md>
-     <p>Should all of them be customization points?</p>
+     <p>Should all of the comparison algorithms be customization points?</p>
     <li data-md>
-     <p>How can I teach this?</p>
+     <p>How can this be taught?</p>
    </ul>
-   <h4 class="heading settled" data-level="5.1.1" id="but-is-it-legal-ill-make-it-legal"><span class="secno">5.1.1. </span><span class="content">Is it useful</span><a class="self-link" href="#but-is-it-legal-ill-make-it-legal"></a></h4>
-   <p>It’s useful enough that SG6 pushed for the iec559 exception until they got it. The issue is that any time one would want to put an iec559 exception into a container, say, optional or a tuple, they would have to define <code class="highlight"><c- n>strong_order</c-></code> for it. The current wording disallows that completely, however. The current wording is not composable. As an example, it is impossible to define <code class="highlight"><c- n>strong_order</c-></code> for <code class="highlight"><c- n>complex</c-><c- o>&lt;</c-><c- b>float</c-><c- o>></c-></code> as, for instance, a lexicographic ordering, with current wording, even though that’s what it should be for speed. There should not be a <code class="highlight"><c- o>&lt;</c-></code> that works on complex, though.</p>
-   <p>It’s useful for any type that provides a less-than-strong <code class="highlight"><c- o>&lt;=></c-></code> that wants to enable its users to use <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>unique</c-></code> on it (they don’t care about the order, they only care about <code class="highlight"><c- o>==</c-></code>, but the function that establishes  the precondition to <code class="highlight"><c- n>unique</c-></code>, <code class="highlight"><c- n>sort</c-></code>, <em>does</em> care about an order that’s compatible with <code class="highlight"><c- o>==</c-></code>, which is <code class="highlight"><c- n>strong_order</c-></code>, and by premise, not <code class="highlight"><c- o>&lt;=></c-></code>. Same goes for putting it in a <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>set</c-></code> or <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>map</c-></code> where defining <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>hash</c-></code> is not an obvious exercise and consequently the unordered containers are not an option.</p>
+   <h4 class="heading settled" data-level="5.1.1" id="but-is-it-legal-ill-make-it-legal"><span class="secno">5.1.1. </span><span class="content">Is it useful?</span><a class="self-link" href="#but-is-it-legal-ill-make-it-legal"></a></h4>
+   <p>The iec559 exception seemed useful enough until it was merged. The issue is that any time one would want to put an iec559 type into a container, say, optional or a tuple, they would have to define <code class="highlight"><c- n>strong_order</c-></code> for that container type. However, the current wording disallows that completely. As an example, it is impossible to define <code class="highlight"><c- n>strong_order</c-></code> for <code class="highlight"><c- n>complex</c-><c- o>&lt;</c-><c- b>float</c-><c- o>></c-></code> (e.g. as a lexicographic ordering) with the current wording, even though that’s what it should be for speed (but there should not be a <code class="highlight"><c- o>&lt;</c-></code> for complex).</p>
+   <p>Having a customization point is useful for any type that does not provide a strong <code class="highlight"><c- k>operator</c-> <c- o>&lt;=></c-></code>, but wants to enable use of <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>unique</c-></code> on sequences of it. Such types don’t care about the order; they care about <code class="highlight"><c- o>==</c-></code>, but the function that establishes the precondition to <code class="highlight"><c- n>unique</c-></code> and <code class="highlight"><c- n>sort</c-></code> <em>does</em> care about an order that’s compatible with <code class="highlight"><c- o>==</c-></code>, which is <code class="highlight"><c- n>strong_order</c-></code>, and by premise, not <code class="highlight"><c- o>&lt;=></c-></code>. Same goes for putting it in a <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>set</c-></code> or <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>map</c-></code> where defining <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>hash</c-></code> is not an obvious exercise and consequently the unordered containers are not an option.</p>
    <p>It’s useful enough for <em>Stepanov</em> and <em>Mc Jones</em> to include it in <em>Regular</em> in <i>Elements of Programming</i>.</p>
    <p>Tony van Eerd: "Every place I go the first thing I write is sorted vector."</p>
    <p>This is a short list of the most obvious algorithms that require any order to work:</p>
