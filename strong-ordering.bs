@@ -31,8 +31,8 @@ ED: https://github.com/atomgalaxy/a-little-order/strong-ordering.bs
 Revision History {#history}
 ===========================
 
-R1: Incorporated feedback from LEWG meeting in Rappersville.
-------------------------------------------------------------
+R1: Incorporated feedback from LEWG meeting in Rappersville. {#rap-feedback}
+----------------------------------------------------------------------------
 
 The feedback was:
 - Remove the floating point exception (bullet 1.1) as R0 recommended, since Unicode strings, etc., are a possible rationale.
@@ -44,8 +44,8 @@ The feedback was:
 - Investigate the possibility of adding Lawrence's weak order (from [[P0100R2]]) for floating-point numbers (which did not make it in with spaceship).
 
 
-R2: Incorporated feedback from LEWG meeting in San Diego, merged with [[P0863R1]]
----------------------------------------------------------------------------------
+R2: Incorporated feedback from LEWG meeting in San Diego, merged with [[P0863R1]] {#sd-feedback}
+------------------------------------------------------------------------------------------------
 
 Feedback in San Diego was:
 
@@ -81,41 +81,41 @@ Design Rationale {#design-rationale}
 
 To arrive at the final design of this paper, we used the following principles:
 
-- *consistency*: `*_order` algorithms should behave consistently with `<=>` by default.
-- *weakening*: If a type has a given order, than it also has all weaker orders.
-- *ambiguity of legacy*: The ordering category provided by the legacy comparison operators is ambiguous. The standard currently expects merely that `<` provides a weak ordering.
-- *customization*: As `<=>` is a customization point for the natural ordering on a type, so `strong_order` is a customization point for an arbitrary strong order on that type.
-- *fallback*: We need convenient functions to get `*_ordering` types from legacy comparison operators.
+- <dfn>consistency</dfn>: `*_order` algorithms should behave consistently with `<=>` by default.
+- <dfn>weakening</dfn>: If a type has a given order, than it also has all weaker orders.
+- <dfn>ambiguity of legacy</dfn>: The ordering category provided by the legacy comparison operators is ambiguous. The standard currently expects merely that `<` provides a weak ordering.
+- <dfn>customization</dfn>: As `<=>` is a customization point for the natural ordering on a type, so `strong_order` is a customization point for an arbitrary strong order on that type.
+- <dfn>fallback</dfn>: We need convenient functions to get `*_ordering` types from legacy comparison operators.
 
 
 From these principles, the following corrolaries follow:
 
-- *Corrolary 1*: from *consistency* it follows that, if `<=>` provides a given order `X`, then the default implementation of `X_order` should use it.
-- *Corrolary 2*: from *consistency*, *weakening* and *customization*, it follows that:
-  - if `<=>` does not provide a strong enough order, but a stronger ordering function (e.g. `strong_order` for `weak_order`, `weak_order` for `partial_order`) is available, then the weaker ordering function must fall back on it (this works recursively, so if `strong_order` is defined, so is `partial_order`).
-- *Corrolary 3*: from *consistency* and *fallback*, it follows that if `<=>` exists, the fallback function should use it in preference of legacy comparison operators.
-- *Corrolary 4*: From *fallback* and *ambiguity of legacy*, it follows that by using a fallback function, the user is asserting that `<` and `==` implement the corresponding ordering.
-- *Corrolary 5*: From *customization* and the definition of *customization point*, it follows that `*_order` functions must be specified as <i>does not participate in overload resolution</i> when they cannot be synthesized according to the above rules.
-- *Corrolary 6*: From *Corrolaries 4 and 5* it follows that the fallbacks and the customization points cannot be the same functions, as their roles are fundamentally incompatible. To illustrate: the fallback function for synthesizing `strong_ordering` must exist whenever `<` and `==` do, but the `strong_order` customization point cannot be synthesized purely from those.
+- <dfn>Corrolary 1</dfn>: from [=consistency=] it follows that, if `<=>` provides a given order `X`, then the default implementation of `X_order` should use it.
+- <dfn>Corrolary 2</dfn>: from [=consistency=], [=weakening=] and [=customization=], it follows that:
+    - if `<=>` does not provide a strong enough order, but a stronger ordering function (e.g. `strong_order` for `weak_order`, `weak_order` for `partial_order`) is available, then the weaker ordering function must fall back on it (this works recursively, so if `strong_order` is defined, so is `partial_order`).
+- <dfn>Corrolary 3</dfn>: from [=consistency=] and [=fallback=], it follows that if `<=>` exists, the fallback function should use it in preference of legacy comparison operators.
+- <dfn>Corrolary 4</dfn>: From [=fallback=] and [=ambiguity of legacy=], it follows that by using a fallback function, the user is asserting that `<` and `==` implement the corresponding ordering.
+- <dfn>Corrolary 5</dfn>: From [=customization=] and the definition of *customization point*, it follows that `*_order` functions must be specified as <i>does not participate in overload resolution</i> when they cannot be synthesized according to the above rules.
+- <dfn>Corrolary 6</dfn>: From [=Corrolary 4=] and [=Corrolary 5=] it follows that the fallbacks and the customization points cannot be the same functions, as their roles are fundamentally incompatible. To illustrate: the fallback function for synthesizing `strong_ordering` must exist whenever `<` and `==` do, but the `strong_order` customization point cannot be synthesized purely from those.
 
 
 In addition, we have observed the following useful facts.
 
 - *Observation 1*: Given [[D1185R1]] provides a method of generating a `<=>` operator from `<` and `==`, we can defer to that method for synthesizing the fallback functions.
 - *Observation 2*: If `strong_order` is a customization point for providing a stronger order than `<=>` does, data structures that recurse to their contents for `<=>` must also recurse for `strong_order`.
-    - Given that none of the types in the standard library are getting `<=>` in `C++20`, we are deferring proposing this until such time as `<=>` is proposed for them as well.
+- Given that none of the types in the standard library are getting `<=>` in `C++20`, we are deferring proposing this until such time as `<=>` is proposed for them as well.
 
 If one agrees with the premises, then all the corrolaries follow.
 
 Questions for LEWG: {#lewg-questions}
 =====================================
 
-1. Is there consensus that the *customization* premise (as above) is correct and should be adopted?
+1. Is there consensus that the [=customization=] premise (as above) is correct and should be adopted?
     - Corrolary: if not, then the iec559 exception bullet in the current working draft has no sensible home, and should be removed.
-2. Is there consensus that the *fallback* premise (as above) is correct and should be adopted?
+2. Is there consensus that the [=fallback=] premise (as above) is correct and should be adopted?
     - Rejecting this means that we are rejecting the rationale for their inclusion in the current working draft and they should be removed.
 
-(The *consistency*, *weakening* and *ambiguity of legacy* are true from a good design, mathematical, and empirical point of view, respectively, so they are not subject to poll).
+(The [=consistency=], [=weakening=] and [=ambiguity of legacy=] are true from a good design, mathematical, and empirical point of view, respectively, so they are not subject to poll).
 
 If the answers to both of those questions are yes, then this paper follows in its entirety.
 
@@ -129,55 +129,55 @@ Q: Is there consensus that the *customization* premise (as above) is correct and
 
 (for reference: *customization*: As `<=>` is a customization point for the natural ordering on a type, so `strong_order` is a customization point for an arbitrary strong order on that type.)
 
-The arguments around whether `strong_order` should be a customization point have centered around the following issues. We summarize the discussion below.
+  The arguments around whether `strong_order` should be a customization point have centered around the following issues. We summarize the discussion below.
 
-- Is it even useful?
-- Given that it is viral, is it worth the implementation effort?
-- Should all of them be customization points?
-- How can I teach this?
+  - Is it even useful?
+  - Given that it is viral, is it worth the implementation effort?
+  - Should all of them be customization points?
+  - How can I teach this?
 
 
 ### Is it useful {#but-is-it-legal-ill-make-it-legal}
 
-It's useful enough that SG6 pushed for the iec559 exception until they got it. The issue is that any time one would want to put an iec559 exception into a container, say, optional or a tuple, they would have to define `strong_order` for it. The current wording disallows that completely, however. The current wording is not composable. As an example, it is impossible to define `strong_order` for `complex<float>` as, for instance, a lexicographic ordering, with current wording, even though that's what it should be for speed. There should not be a `<` that works on complex, though.
+  It's useful enough that SG6 pushed for the iec559 exception until they got it. The issue is that any time one would want to put an iec559 exception into a container, say, optional or a tuple, they would have to define `strong_order` for it. The current wording disallows that completely, however. The current wording is not composable. As an example, it is impossible to define `strong_order` for `complex<float>` as, for instance, a lexicographic ordering, with current wording, even though that's what it should be for speed. There should not be a `<` that works on complex, though.
 
-It's useful for any type that provides a less-than-strong `<=>` that wants to enable its users to use `std::unique` on it (they don't care about the order, they only care about `==`, but the function that establishes  the precondition to `unique`, `sort`, *does* care about an order that's compatible with `==`, which is `strong_order`, and by premise, not `<=>`. Same goes for putting it in a `std::set` or `std::map` where defining `std::hash` is not an obvious exercise and consequently the unordered containers are not an option.
+  It's useful for any type that provides a less-than-strong `<=>` that wants to enable its users to use `std::unique` on it (they don't care about the order, they only care about `==`, but the function that establishes  the precondition to `unique`, `sort`, *does* care about an order that's compatible with `==`, which is `strong_order`, and by premise, not `<=>`. Same goes for putting it in a `std::set` or `std::map` where defining `std::hash` is not an obvious exercise and consequently the unordered containers are not an option.
 
-It's useful enough for *Stepanov* and *Mc Jones* to include it in *Regular* in <i>Elements of Programming</i>.
+      It's useful enough for *Stepanov* and *Mc Jones* to include it in *Regular* in <i>Elements of Programming</i>.
 
-Tony van Eerd: "Every place I go the first thing I write is sorted vector."
+      Tony van Eerd: "Every place I go the first thing I write is sorted vector."
 
-This is a short list of the most obvious algorithms that require any order to work:
-- unique (via sort)
-- set/map
+      This is a short list of the most obvious algorithms that require any order to work:
+      - unique (via sort)
+      - set/map
 
 
 ### Given that it is viral, is it worth the implementation effort? {#impl-effort}
 
-Given that any customization point we designate has to potentially be overloaded for all the generic wrappers in the standard library, is it even worth the effort defining them?
+      Given that any customization point we designate has to potentially be overloaded for all the generic wrappers in the standard library, is it even worth the effort defining them?
 
-This paper does not propose any such wrappers, because the standard library doesn't even have `<=>` yet, but the authors only mean to propose `strong_order` be implemented, as that is the only one they've ever needed.
+      This paper does not propose any such wrappers, because the standard library doesn't even have `<=>` yet, but the authors only mean to propose `strong_order` be implemented, as that is the only one they've ever needed.
 
 
 ### How can I teach this? {#faq-teaching}
 
-For types that endeavour to be *Regular* or something like it (as in, have sane value semantics):
+      For types that endeavour to be *Regular* or something like it (as in, have sane value semantics):
 
-#### Writing new types:
-- `operator==` defines what "strong equality" means. This is because copies must compare equal, and `==` should be the finest relation that observes this rule.
-- if `(x <=> y) == 0` if and only if `x == y`, then `operator<=>` should return `strong_ordering`, otherwise it should return `weak_ordering` (unless it only defines a partial order, but then you're not asking the question).
-- If your type does not provide an order, you should still provide an overload of `strong_order`.
-- If you are obeying the rule of zero, writing `auto operator<=>(...) = default` will give you the correct `==` and `<=>` without any additional work. In most cases, this should already be enough, since `<=>` will result in a `strong_ordering`.
-    - if writing a generic wrapper, or your constituent types have an overloaded `strong_order`, you must then also define `strong_order` to be:
+#### Writing new types: {#wrinting-new}
+        - `operator==` defines what "strong equality" means. This is because copies must compare equal, and `==` should be the finest relation that observes this rule.
+        - if `(x <=> y) == 0` if and only if `x == y`, then `operator<=>` should return `strong_ordering`, otherwise it should return `weak_ordering` (unless it only defines a partial order, but then you're not asking the question).
+        - If your type does not provide an order, you should still provide an overload of `strong_order`.
+        - If you are obeying the rule of zero, writing `auto operator<=>(...) = default` will give you the correct `==` and `<=>` without any additional work. In most cases, this should already be enough, since `<=>` will result in a `strong_ordering`.
+        - if writing a generic wrapper, or your constituent types have an overloaded `strong_order`, you must then also define `strong_order` to be:
 
-```
-strong_ordering strong_order(T x, T y) {
-  return strong_order(tie(x.m1, x.m2, ...), tie(y.m1, y.m2, ...));
-}
+        ```
+        strong_ordering strong_order(T x, T y) {
+          return strong_order(tie(x.m1, x.m2, ...), tie(y.m1, y.m2, ...));
+        }
 ```
 or, hopefully, when we get reflection, be able to generate it.
 
-#### Using orderings:
+#### Using orderings: {#using-orderings}
 Generic algorithms in general should require and call `weak_order(x, y)`. It will either use the default (weak) ordering on `<=>`, so there are no surprises, or fall back on `strong_order`, which will call `<=>` if it is strong, so no suprises, and if `<=>` does not exist, the type will hopefully have an overload for `strong_order` specifically, which is, again, no surprises. It always does the right thing.
 
 Data structures that require a weak order should default to it as well.

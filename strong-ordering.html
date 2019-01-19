@@ -1230,7 +1230,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version 04b354547d55896d854a81cffb3965bd6f8758ec" name="generator">
   <link href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="798d11fa7593b34cf0aee799fe155ca969ac9887" name="document-revision">
+  <meta content="054528ff1eec47157ebe7be32cc368d39263b523" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1255,93 +1255,6 @@ Possible extra rowspan handling
 [data-md] > :last-child {
     margin-bottom: 0;
 }</style>
-<style>/* style-counters */
-
-body {
-    counter-reset: example figure issue;
-}
-.issue {
-    counter-increment: issue;
-}
-.issue:not(.no-marker)::before {
-    content: "Issue " counter(issue);
-}
-
-.example {
-    counter-increment: example;
-}
-.example:not(.no-marker)::before {
-    content: "Example " counter(example);
-}
-.invalid.example:not(.no-marker)::before,
-.illegal.example:not(.no-marker)::before {
-    content: "Invalid Example" counter(example);
-}
-
-figcaption {
-    counter-increment: figure;
-}
-figcaption:not(.no-marker)::before {
-    content: "Figure " counter(figure) " ";
-}</style>
-<style>/* style-syntax-highlighting */
-
-.highlight:not(.idl) { background: hsl(24, 20%, 95%); }
-code.highlight { padding: .1em; border-radius: .3em; }
-pre.highlight, pre > code.highlight { display: block; padding: 1em; margin: .5em 0; overflow: auto; border-radius: 0; }
-c-[a] { color: #990055 } /* Keyword.Declaration */
-c-[b] { color: #990055 } /* Keyword.Type */
-c-[c] { color: #708090 } /* Comment */
-c-[d] { color: #708090 } /* Comment.Multiline */
-c-[e] { color: #0077aa } /* Name.Attribute */
-c-[f] { color: #669900 } /* Name.Tag */
-c-[g] { color: #222222 } /* Name.Variable */
-c-[k] { color: #990055 } /* Keyword */
-c-[l] { color: #000000 } /* Literal */
-c-[m] { color: #000000 } /* Literal.Number */
-c-[n] { color: #0077aa } /* Name */
-c-[o] { color: #999999 } /* Operator */
-c-[p] { color: #999999 } /* Punctuation */
-c-[s] { color: #a67f59 } /* Literal.String */
-c-[t] { color: #a67f59 } /* Literal.String.Single */
-c-[u] { color: #a67f59 } /* Literal.String.Double */
-c-[cp] { color: #708090 } /* Comment.Preproc */
-c-[c1] { color: #708090 } /* Comment.Single */
-c-[cs] { color: #708090 } /* Comment.Special */
-c-[kc] { color: #990055 } /* Keyword.Constant */
-c-[kn] { color: #990055 } /* Keyword.Namespace */
-c-[kp] { color: #990055 } /* Keyword.Pseudo */
-c-[kr] { color: #990055 } /* Keyword.Reserved */
-c-[ld] { color: #000000 } /* Literal.Date */
-c-[nc] { color: #0077aa } /* Name.Class */
-c-[no] { color: #0077aa } /* Name.Constant */
-c-[nd] { color: #0077aa } /* Name.Decorator */
-c-[ni] { color: #0077aa } /* Name.Entity */
-c-[ne] { color: #0077aa } /* Name.Exception */
-c-[nf] { color: #0077aa } /* Name.Function */
-c-[nl] { color: #0077aa } /* Name.Label */
-c-[nn] { color: #0077aa } /* Name.Namespace */
-c-[py] { color: #0077aa } /* Name.Property */
-c-[ow] { color: #999999 } /* Operator.Word */
-c-[mb] { color: #000000 } /* Literal.Number.Bin */
-c-[mf] { color: #000000 } /* Literal.Number.Float */
-c-[mh] { color: #000000 } /* Literal.Number.Hex */
-c-[mi] { color: #000000 } /* Literal.Number.Integer */
-c-[mo] { color: #000000 } /* Literal.Number.Oct */
-c-[sb] { color: #a67f59 } /* Literal.String.Backtick */
-c-[sc] { color: #a67f59 } /* Literal.String.Char */
-c-[sd] { color: #a67f59 } /* Literal.String.Doc */
-c-[se] { color: #a67f59 } /* Literal.String.Escape */
-c-[sh] { color: #a67f59 } /* Literal.String.Heredoc */
-c-[si] { color: #a67f59 } /* Literal.String.Interpol */
-c-[sx] { color: #a67f59 } /* Literal.String.Other */
-c-[sr] { color: #a67f59 } /* Literal.String.Regex */
-c-[ss] { color: #a67f59 } /* Literal.String.Symbol */
-c-[vc] { color: #0077aa } /* Name.Variable.Class */
-c-[vg] { color: #0077aa } /* Name.Variable.Global */
-c-[vi] { color: #0077aa } /* Name.Variable.Instance */
-c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
-</style>
 <style>/* style-selflinks */
 
 .heading, .issue, .note, .example, li, dt {
@@ -1388,6 +1301,35 @@ dfn > a.self-link:hover {
 a.self-link::before            { content: "¶"; }
 .heading > a.self-link::before { content: "§"; }
 dfn > a.self-link::before      { content: "#"; }</style>
+<style>/* style-counters */
+
+body {
+    counter-reset: example figure issue;
+}
+.issue {
+    counter-increment: issue;
+}
+.issue:not(.no-marker)::before {
+    content: "Issue " counter(issue);
+}
+
+.example {
+    counter-increment: example;
+}
+.example:not(.no-marker)::before {
+    content: "Example " counter(example);
+}
+.invalid.example:not(.no-marker)::before,
+.illegal.example:not(.no-marker)::before {
+    content: "Invalid Example" counter(example);
+}
+
+figcaption {
+    counter-increment: figure;
+}
+figcaption:not(.no-marker)::before {
+    content: "Figure " counter(figure) " ";
+}</style>
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -1450,6 +1392,101 @@ pre .property::before, pre .property::after {
 [data-link-type=biblio] {
     white-space: pre;
 }</style>
+<style>/* style-dfn-panel */
+
+.dfn-panel {
+    position: absolute;
+    z-index: 35;
+    height: auto;
+    width: -webkit-fit-content;
+    width: fit-content;
+    max-width: 300px;
+    max-height: 500px;
+    overflow: auto;
+    padding: 0.5em 0.75em;
+    font: small Helvetica Neue, sans-serif, Droid Sans Fallback;
+    background: #DDDDDD;
+    color: black;
+    border: outset 0.2em;
+}
+.dfn-panel:not(.on) { display: none; }
+.dfn-panel * { margin: 0; padding: 0; text-indent: 0; }
+.dfn-panel > b { display: block; }
+.dfn-panel a { color: black; }
+.dfn-panel a:not(:hover) { text-decoration: none !important; border-bottom: none !important; }
+.dfn-panel > b + b { margin-top: 0.25em; }
+.dfn-panel ul { padding: 0; }
+.dfn-panel li { list-style: inside; }
+.dfn-panel.activated {
+    display: inline-block;
+    position: fixed;
+    left: .5em;
+    bottom: 2em;
+    margin: 0 auto;
+    max-width: calc(100vw - 1.5em - .4em - .5em);
+    max-height: 30vh;
+}
+
+.dfn-paneled { cursor: pointer; }
+</style>
+<style>/* style-syntax-highlighting */
+
+.highlight:not(.idl) { background: hsl(24, 20%, 95%); }
+code.highlight { padding: .1em; border-radius: .3em; }
+pre.highlight, pre > code.highlight { display: block; padding: 1em; margin: .5em 0; overflow: auto; border-radius: 0; }
+c-[a] { color: #990055 } /* Keyword.Declaration */
+c-[b] { color: #990055 } /* Keyword.Type */
+c-[c] { color: #708090 } /* Comment */
+c-[d] { color: #708090 } /* Comment.Multiline */
+c-[e] { color: #0077aa } /* Name.Attribute */
+c-[f] { color: #669900 } /* Name.Tag */
+c-[g] { color: #222222 } /* Name.Variable */
+c-[k] { color: #990055 } /* Keyword */
+c-[l] { color: #000000 } /* Literal */
+c-[m] { color: #000000 } /* Literal.Number */
+c-[n] { color: #0077aa } /* Name */
+c-[o] { color: #999999 } /* Operator */
+c-[p] { color: #999999 } /* Punctuation */
+c-[s] { color: #a67f59 } /* Literal.String */
+c-[t] { color: #a67f59 } /* Literal.String.Single */
+c-[u] { color: #a67f59 } /* Literal.String.Double */
+c-[cp] { color: #708090 } /* Comment.Preproc */
+c-[c1] { color: #708090 } /* Comment.Single */
+c-[cs] { color: #708090 } /* Comment.Special */
+c-[kc] { color: #990055 } /* Keyword.Constant */
+c-[kn] { color: #990055 } /* Keyword.Namespace */
+c-[kp] { color: #990055 } /* Keyword.Pseudo */
+c-[kr] { color: #990055 } /* Keyword.Reserved */
+c-[ld] { color: #000000 } /* Literal.Date */
+c-[nc] { color: #0077aa } /* Name.Class */
+c-[no] { color: #0077aa } /* Name.Constant */
+c-[nd] { color: #0077aa } /* Name.Decorator */
+c-[ni] { color: #0077aa } /* Name.Entity */
+c-[ne] { color: #0077aa } /* Name.Exception */
+c-[nf] { color: #0077aa } /* Name.Function */
+c-[nl] { color: #0077aa } /* Name.Label */
+c-[nn] { color: #0077aa } /* Name.Namespace */
+c-[py] { color: #0077aa } /* Name.Property */
+c-[ow] { color: #999999 } /* Operator.Word */
+c-[mb] { color: #000000 } /* Literal.Number.Bin */
+c-[mf] { color: #000000 } /* Literal.Number.Float */
+c-[mh] { color: #000000 } /* Literal.Number.Hex */
+c-[mi] { color: #000000 } /* Literal.Number.Integer */
+c-[mo] { color: #000000 } /* Literal.Number.Oct */
+c-[sb] { color: #a67f59 } /* Literal.String.Backtick */
+c-[sc] { color: #a67f59 } /* Literal.String.Char */
+c-[sd] { color: #a67f59 } /* Literal.String.Doc */
+c-[se] { color: #a67f59 } /* Literal.String.Escape */
+c-[sh] { color: #a67f59 } /* Literal.String.Heredoc */
+c-[si] { color: #a67f59 } /* Literal.String.Interpol */
+c-[sx] { color: #a67f59 } /* Literal.String.Other */
+c-[sr] { color: #a67f59 } /* Literal.String.Regex */
+c-[ss] { color: #a67f59 } /* Literal.String.Symbol */
+c-[vc] { color: #0077aa } /* Name.Variable.Class */
+c-[vg] { color: #0077aa } /* Name.Variable.Global */
+c-[vi] { color: #0077aa } /* Name.Variable.Instance */
+c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
+</style>
  <body class="h-entry">
   <div class="head">
    <p data-fill-with="logo"></p>
@@ -1483,8 +1520,8 @@ pre .property::before, pre .property::after {
     <li>
      <a href="#history"><span class="secno">1</span> <span class="content">Revision History</span></a>
      <ol class="toc">
-      <li><a href="#r1-incorporated-feedback-from-lewg-meeting-in-rappersville"><span class="secno">1.1</span> <span class="content">R1: Incorporated feedback from LEWG meeting in Rappersville.</span></a>
-      <li><a href="#r2-incorporated-feedback-from-lewg-meeting-in-san-diego-merged-with-p0863r1"><span class="secno">1.2</span> <span class="content">R2: Incorporated feedback from LEWG meeting in San Diego, merged with <span>[P0863R1]</span></span></a>
+      <li><a href="#rap-feedback"><span class="secno">1.1</span> <span class="content">R1: Incorporated feedback from LEWG meeting in Rappersville.</span></a>
+      <li><a href="#sd-feedback"><span class="secno">1.2</span> <span class="content">R2: Incorporated feedback from LEWG meeting in San Diego, merged with <span>[P0863R1]</span></span></a>
      </ol>
     <li><a href="#sup"><span class="secno">2</span> <span class="content">Status of this paper</span></a>
     <li><a href="#problem"><span class="secno">3</span> <span class="content">Problem Description</span></a>
@@ -1501,8 +1538,8 @@ pre .property::before, pre .property::after {
         <li>
          <a href="#faq-teaching"><span class="secno">6.1.3</span> <span class="content">How can I teach this? {#faq-teaching}</span></a>
          <ol class="toc">
-          <li><a href="#writing-new-types"><span class="secno">6.1.3.1</span> <span class="content">Writing new types:</span></a>
-          <li><a href="#using-orderings"><span class="secno">6.1.3.2</span> <span class="content">Using orderings:</span></a>
+          <li><a href="#wrinting-new"><span class="secno">6.1.3.1</span> <span class="content">Writing new types: {#wrinting-new}</span></a>
+          <li><a href="#using-orderings"><span class="secno">6.1.3.2</span> <span class="content">Using orderings: {#using-orderings}</span></a>
          </ol>
        </ol>
      </ol>
@@ -1529,6 +1566,11 @@ pre .property::before, pre .property::after {
     <li><a href="#ack"><span class="secno">13</span> <span class="content">Acknowledgments</span></a>
     <li><a href="#example-cust-point"><span class="secno"></span> <span class="content">Appendix A: Proof <code class="highlight"><c- n>strong_order</c-></code> is not a valid customization point</span></a>
     <li>
+     <a href="#index"><span class="secno"></span> <span class="content">Index</span></a>
+     <ol class="toc">
+      <li><a href="#index-defined-here"><span class="secno"></span> <span class="content">Terms defined by this specification</span></a>
+     </ol>
+    <li>
      <a href="#references"><span class="secno"></span> <span class="content">References</span></a>
      <ol class="toc">
       <li><a href="#normative"><span class="secno"></span> <span class="content">Normative References</span></a>
@@ -1538,7 +1580,7 @@ pre .property::before, pre .property::after {
   </nav>
   <main>
    <h2 class="heading settled" data-level="1" id="history"><span class="secno">1. </span><span class="content">Revision History</span><a class="self-link" href="#history"></a></h2>
-   <h3 class="heading settled" data-level="1.1" id="r1-incorporated-feedback-from-lewg-meeting-in-rappersville"><span class="secno">1.1. </span><span class="content">R1: Incorporated feedback from LEWG meeting in Rappersville.</span><a class="self-link" href="#r1-incorporated-feedback-from-lewg-meeting-in-rappersville"></a></h3>
+   <h3 class="heading settled" data-level="1.1" id="rap-feedback"><span class="secno">1.1. </span><span class="content">R1: Incorporated feedback from LEWG meeting in Rappersville.</span><a class="self-link" href="#rap-feedback"></a></h3>
    <p>The feedback was:</p>
    <ul>
     <li data-md>
@@ -1558,7 +1600,7 @@ pre .property::before, pre .property::after {
     <li data-md>
      <p>Investigate the possibility of adding Lawrence’s weak order (from <a data-link-type="biblio" href="#biblio-p0100r2">[P0100R2]</a>) for floating-point numbers (which did not make it in with spaceship).</p>
    </ul>
-   <h3 class="heading settled" data-level="1.2" id="r2-incorporated-feedback-from-lewg-meeting-in-san-diego-merged-with-p0863r1"><span class="secno">1.2. </span><span class="content">R2: Incorporated feedback from LEWG meeting in San Diego, merged with <a data-link-type="biblio" href="#biblio-p0863r1">[P0863R1]</a></span><a class="self-link" href="#r2-incorporated-feedback-from-lewg-meeting-in-san-diego-merged-with-p0863r1"></a></h3>
+   <h3 class="heading settled" data-level="1.2" id="sd-feedback"><span class="secno">1.2. </span><span class="content">R2: Incorporated feedback from LEWG meeting in San Diego, merged with <a data-link-type="biblio" href="#biblio-p0863r1">[P0863R1]</a></span><a class="self-link" href="#sd-feedback"></a></h3>
    <p>Feedback in San Diego was:</p>
    <ul>
     <li data-md>
@@ -1587,32 +1629,34 @@ pre .property::before, pre .property::after {
    <p>To arrive at the final design of this paper, we used the following principles:</p>
    <ul>
     <li data-md>
-     <p><em>consistency</em>: <code class="highlight"><c- o>*</c-><c- n>_order</c-></code> algorithms should behave consistently with <code class="highlight"><c- o>&lt;=></c-></code> by default.</p>
+     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="consistency">consistency</dfn>: <code class="highlight"><c- o>*</c-><c- n>_order</c-></code> algorithms should behave consistently with <code class="highlight"><c- o>&lt;=></c-></code> by default.</p>
     <li data-md>
-     <p><em>weakening</em>: If a type has a given order, than it also has all weaker orders.</p>
+     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="weakening">weakening</dfn>: If a type has a given order, than it also has all weaker orders.</p>
     <li data-md>
-     <p><em>ambiguity of legacy</em>: The ordering category provided by the legacy comparison operators is ambiguous. The standard currently expects merely that <code class="highlight"><c- o>&lt;</c-></code> provides a weak ordering.</p>
+     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="ambiguity-of-legacy">ambiguity of legacy</dfn>: The ordering category provided by the legacy comparison operators is ambiguous. The standard currently expects merely that <code class="highlight"><c- o>&lt;</c-></code> provides a weak ordering.</p>
     <li data-md>
-     <p><em>customization</em>: As <code class="highlight"><c- o>&lt;=></c-></code> is a customization point for the natural ordering on a type, so <code class="highlight"><c- n>strong_order</c-></code> is a customization point for an arbitrary strong order on that type.</p>
+     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="customization">customization</dfn>: As <code class="highlight"><c- o>&lt;=></c-></code> is a customization point for the natural ordering on a type, so <code class="highlight"><c- n>strong_order</c-></code> is a customization point for an arbitrary strong order on that type.</p>
     <li data-md>
-     <p><em>fallback</em>: We need convenient functions to get <code class="highlight"><c- o>*</c-><c- n>_ordering</c-></code> types from legacy comparison operators.</p>
+     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="fallback">fallback</dfn>: We need convenient functions to get <code class="highlight"><c- o>*</c-><c- n>_ordering</c-></code> types from legacy comparison operators.</p>
    </ul>
    <p>From these principles, the following corrolaries follow:</p>
    <ul>
     <li data-md>
-     <p><em>Corrolary 1</em>: from <em>consistency</em> it follows that, if <code class="highlight"><c- o>&lt;=></c-></code> provides a given order <code class="highlight"><c- n>X</c-></code>, then the default implementation of <code class="highlight"><c- n>X_order</c-></code> should use it.</p>
+     <p><dfn data-dfn-type="dfn" data-noexport id="corrolary-1">Corrolary 1<a class="self-link" href="#corrolary-1"></a></dfn>: from <a data-link-type="dfn" href="#consistency" id="ref-for-consistency">consistency</a> it follows that, if <code class="highlight"><c- o>&lt;=></c-></code> provides a given order <code class="highlight"><c- n>X</c-></code>, then the default implementation of <code class="highlight"><c- n>X_order</c-></code> should use it.</p>
     <li data-md>
-     <p><em>Corrolary 2</em>: from <em>consistency</em>, <em>weakening</em> and <em>customization</em>, it follows that:</p>
+     <p><dfn data-dfn-type="dfn" data-noexport id="corrolary-2">Corrolary 2<a class="self-link" href="#corrolary-2"></a></dfn>: from <a data-link-type="dfn" href="#consistency" id="ref-for-consistency①">consistency</a>, <a data-link-type="dfn" href="#weakening" id="ref-for-weakening">weakening</a> and <a data-link-type="dfn" href="#customization" id="ref-for-customization">customization</a>, it follows that:</p>
+     <ul>
+      <li data-md>
+       <p>if <code class="highlight"><c- o>&lt;=></c-></code> does not provide a strong enough order, but a stronger ordering function (e.g. <code class="highlight"><c- n>strong_order</c-></code> for <code class="highlight"><c- n>weak_order</c-></code>, <code class="highlight"><c- n>weak_order</c-></code> for <code class="highlight"><c- n>partial_order</c-></code>) is available, then the weaker ordering function must fall back on it (this works recursively, so if <code class="highlight"><c- n>strong_order</c-></code> is defined, so is <code class="highlight"><c- n>partial_order</c-></code>).</p>
+     </ul>
     <li data-md>
-     <p>if <code class="highlight"><c- o>&lt;=></c-></code> does not provide a strong enough order, but a stronger ordering function (e.g. <code class="highlight"><c- n>strong_order</c-></code> for <code class="highlight"><c- n>weak_order</c-></code>, <code class="highlight"><c- n>weak_order</c-></code> for <code class="highlight"><c- n>partial_order</c-></code>) is available, then the weaker ordering function must fall back on it (this works recursively, so if <code class="highlight"><c- n>strong_order</c-></code> is defined, so is <code class="highlight"><c- n>partial_order</c-></code>).</p>
+     <p><dfn data-dfn-type="dfn" data-noexport id="corrolary-3">Corrolary 3<a class="self-link" href="#corrolary-3"></a></dfn>: from <a data-link-type="dfn" href="#consistency" id="ref-for-consistency②">consistency</a> and <a data-link-type="dfn" href="#fallback" id="ref-for-fallback">fallback</a>, it follows that if <code class="highlight"><c- o>&lt;=></c-></code> exists, the fallback function should use it in preference of legacy comparison operators.</p>
     <li data-md>
-     <p><em>Corrolary 3</em>: from <em>consistency</em> and <em>fallback</em>, it follows that if <code class="highlight"><c- o>&lt;=></c-></code> exists, the fallback function should use it in preference of legacy comparison operators.</p>
+     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="corrolary-4">Corrolary 4</dfn>: From <a data-link-type="dfn" href="#fallback" id="ref-for-fallback①">fallback</a> and <a data-link-type="dfn" href="#ambiguity-of-legacy" id="ref-for-ambiguity-of-legacy">ambiguity of legacy</a>, it follows that by using a fallback function, the user is asserting that <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code> implement the corresponding ordering.</p>
     <li data-md>
-     <p><em>Corrolary 4</em>: From <em>fallback</em> and <em>ambiguity of legacy</em>, it follows that by using a fallback function, the user is asserting that <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code> implement the corresponding ordering.</p>
+     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="corrolary-5">Corrolary 5</dfn>: From <a data-link-type="dfn" href="#customization" id="ref-for-customization①">customization</a> and the definition of <em>customization point</em>, it follows that <code class="highlight"><c- o>*</c-><c- n>_order</c-></code> functions must be specified as <i>does not participate in overload resolution</i> when they cannot be synthesized according to the above rules.</p>
     <li data-md>
-     <p><em>Corrolary 5</em>: From <em>customization</em> and the definition of <em>customization point</em>, it follows that <code class="highlight"><c- o>*</c-><c- n>_order</c-></code> functions must be specified as <i>does not participate in overload resolution</i> when they cannot be synthesized according to the above rules.</p>
-    <li data-md>
-     <p><em>Corrolary 6</em>: From <em>Corrolaries 4 and 5</em> it follows that the fallbacks and the customization points cannot be the same functions, as their roles are fundamentally incompatible. To illustrate: the fallback function for synthesizing <code class="highlight"><c- n>strong_ordering</c-></code> must exist whenever <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code> do, but the <code class="highlight"><c- n>strong_order</c-></code> customization point cannot be synthesized purely from those.</p>
+     <p><dfn data-dfn-type="dfn" data-noexport id="corrolary-6">Corrolary 6<a class="self-link" href="#corrolary-6"></a></dfn>: From <a data-link-type="dfn" href="#corrolary-4" id="ref-for-corrolary-4">Corrolary 4</a> and <a data-link-type="dfn" href="#corrolary-5" id="ref-for-corrolary-5">Corrolary 5</a> it follows that the fallbacks and the customization points cannot be the same functions, as their roles are fundamentally incompatible. To illustrate: the fallback function for synthesizing <code class="highlight"><c- n>strong_ordering</c-></code> must exist whenever <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code> do, but the <code class="highlight"><c- n>strong_order</c-></code> customization point cannot be synthesized purely from those.</p>
    </ul>
    <p>In addition, we have observed the following useful facts.</p>
    <ul>
@@ -1620,28 +1664,26 @@ pre .property::before, pre .property::after {
      <p><em>Observation 1</em>: Given <a data-link-type="biblio" href="#biblio-d1185r1">[D1185R1]</a> provides a method of generating a <code class="highlight"><c- o>&lt;=></c-></code> operator from <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code>, we can defer to that method for synthesizing the fallback functions.</p>
     <li data-md>
      <p><em>Observation 2</em>: If <code class="highlight"><c- n>strong_order</c-></code> is a customization point for providing a stronger order than <code class="highlight"><c- o>&lt;=></c-></code> does, data structures that recurse to their contents for <code class="highlight"><c- o>&lt;=></c-></code> must also recurse for <code class="highlight"><c- n>strong_order</c-></code>.</p>
-     <ul>
-      <li data-md>
-       <p>Given that none of the types in the standard library are getting <code class="highlight"><c- o>&lt;=></c-></code> in <code class="highlight"><c- n>C</c-><c- o>++</c-><c- mi>20</c-></code>, we are deferring proposing this until such time as <code class="highlight"><c- o>&lt;=></c-></code> is proposed for them as well.</p>
-     </ul>
+    <li data-md>
+     <p>Given that none of the types in the standard library are getting <code class="highlight"><c- o>&lt;=></c-></code> in <code class="highlight"><c- n>C</c-><c- o>++</c-><c- mi>20</c-></code>, we are deferring proposing this until such time as <code class="highlight"><c- o>&lt;=></c-></code> is proposed for them as well.</p>
    </ul>
    <p>If one agrees with the premises, then all the corrolaries follow.</p>
    <h2 class="heading settled" data-level="5" id="lewg-questions"><span class="secno">5. </span><span class="content">Questions for LEWG:</span><a class="self-link" href="#lewg-questions"></a></h2>
    <ol>
     <li data-md>
-     <p>Is there consensus that the <em>customization</em> premise (as above) is correct and should be adopted?</p>
+     <p>Is there consensus that the <a data-link-type="dfn" href="#customization" id="ref-for-customization②">customization</a> premise (as above) is correct and should be adopted?</p>
      <ul>
       <li data-md>
        <p>Corrolary: if not, then the iec559 exception bullet in the current working draft has no sensible home, and should be removed.</p>
      </ul>
     <li data-md>
-     <p>Is there consensus that the <em>fallback</em> premise (as above) is correct and should be adopted?</p>
+     <p>Is there consensus that the <a data-link-type="dfn" href="#fallback" id="ref-for-fallback②">fallback</a> premise (as above) is correct and should be adopted?</p>
      <ul>
       <li data-md>
        <p>Rejecting this means that we are rejecting the rationale for their inclusion in the current working draft and they should be removed.</p>
      </ul>
    </ol>
-   <p>(The <em>consistency</em>, <em>weakening</em> and <em>ambiguity of legacy</em> are true from a good design, mathematical, and empirical point of view, respectively, so they are not subject to poll).</p>
+   <p>(The <a data-link-type="dfn" href="#consistency" id="ref-for-consistency③">consistency</a>, <a data-link-type="dfn" href="#weakening" id="ref-for-weakening①">weakening</a> and <a data-link-type="dfn" href="#ambiguity-of-legacy" id="ref-for-ambiguity-of-legacy①">ambiguity of legacy</a> are true from a good design, mathematical, and empirical point of view, respectively, so they are not subject to poll).</p>
    <p>If the answers to both of those questions are yes, then this paper follows in its entirety.</p>
    <h2 class="heading settled" data-level="6" id="discussion"><span class="secno">6. </span><span class="content">Discussion</span><a class="self-link" href="#discussion"></a></h2>
    <h3 class="heading settled" data-level="6.1" id="discussion-poll-1"><span class="secno">6.1. </span><span class="content">Poll 1</span><a class="self-link" href="#discussion-poll-1"></a></h3>
@@ -1675,7 +1717,7 @@ pre .property::before, pre .property::after {
    <p>This paper does not propose any such wrappers, because the standard library doesn’t even have <code class="highlight"><c- o>&lt;=></c-></code> yet, but the authors only mean to propose <code class="highlight"><c- n>strong_order</c-></code> be implemented, as that is the only one they’ve ever needed.</p>
    <h4 class="heading settled" data-level="6.1.3" id="faq-teaching"><span class="secno">6.1.3. </span><span class="content">How can I teach this? {#faq-teaching}</span><a class="self-link" href="#faq-teaching"></a></h4>
    <p>For types that endeavour to be <em>Regular</em> or something like it (as in, have sane value semantics):</p>
-   <h5 class="heading settled" data-level="6.1.3.1" id="writing-new-types"><span class="secno">6.1.3.1. </span><span class="content">Writing new types:</span><a class="self-link" href="#writing-new-types"></a></h5>
+   <h5 class="heading settled" data-level="6.1.3.1" id="wrinting-new"><span class="secno">6.1.3.1. </span><span class="content">Writing new types: {#wrinting-new}</span><a class="self-link" href="#wrinting-new"></a></h5>
    <ul>
     <li data-md>
      <p><code class="highlight"><c- k>operator</c-><c- o>==</c-></code> defines what "strong equality" means. This is because copies must compare equal, and <code class="highlight"><c- o>==</c-></code> should be the finest relation that observes this rule.</p>
@@ -1685,17 +1727,15 @@ pre .property::before, pre .property::after {
      <p>If your type does not provide an order, you should still provide an overload of <code class="highlight"><c- n>strong_order</c-></code>.</p>
     <li data-md>
      <p>If you are obeying the rule of zero, writing <code class="highlight"><c- k>auto</c-> <c- k>operator</c-><c- o>&lt;=></c-><c- p>(...)</c-> <c- o>=</c-> <c- k>default</c-></code> will give you the correct <code class="highlight"><c- o>==</c-></code> and <code class="highlight"><c- o>&lt;=></c-></code> without any additional work. In most cases, this should already be enough, since <code class="highlight"><c- o>&lt;=></c-></code> will result in a <code class="highlight"><c- n>strong_ordering</c-></code>.</p>
-     <ul>
-      <li data-md>
-       <p>if writing a generic wrapper, or your constituent types have an overloaded <code class="highlight"><c- n>strong_order</c-></code>, you must then also define <code class="highlight"><c- n>strong_order</c-></code> to be:</p>
-     </ul>
+    <li data-md>
+     <p>if writing a generic wrapper, or your constituent types have an overloaded <code class="highlight"><c- n>strong_order</c-></code>, you must then also define <code class="highlight"><c- n>strong_order</c-></code> to be:</p>
    </ul>
-<pre class="highlight"><c- n>strong_ordering</c-> <c- nf>strong_order</c-><c- p>(</c-><c- n>T</c-> <c- n>x</c-><c- p>,</c-> <c- n>T</c-> <c- n>y</c-><c- p>)</c-> <c- p>{</c->
-  <c- k>return</c-> <c- n>strong_order</c-><c- p>(</c-><c- n>tie</c-><c- p>(</c-><c- n>x</c-><c- p>.</c-><c- n>m1</c-><c- p>,</c-> <c- n>x</c-><c- p>.</c-><c- n>m2</c-><c- p>,</c-> <c- p>...),</c-> <c- n>tie</c-><c- p>(</c-><c- n>y</c-><c- p>.</c-><c- n>m1</c-><c- p>,</c-> <c- n>y</c-><c- p>.</c-><c- n>m2</c-><c- p>,</c-> <c- p>...));</c->
-<c- p>}</c->
+<pre class="highlight">        <c- n>strong_ordering</c-> <c- nf>strong_order</c-><c- p>(</c-><c- n>T</c-> <c- n>x</c-><c- p>,</c-> <c- n>T</c-> <c- n>y</c-><c- p>)</c-> <c- p>{</c->
+          <c- k>return</c-> <c- n>strong_order</c-><c- p>(</c-><c- n>tie</c-><c- p>(</c-><c- n>x</c-><c- p>.</c-><c- n>m1</c-><c- p>,</c-> <c- n>x</c-><c- p>.</c-><c- n>m2</c-><c- p>,</c-> <c- p>...),</c-> <c- n>tie</c-><c- p>(</c-><c- n>y</c-><c- p>.</c-><c- n>m1</c-><c- p>,</c-> <c- n>y</c-><c- p>.</c-><c- n>m2</c-><c- p>,</c-> <c- p>...));</c->
+        <c- p>}</c->
 </pre>
    or, hopefully, when we get reflection, be able to generate it. 
-   <h5 class="heading settled" data-level="6.1.3.2" id="using-orderings"><span class="secno">6.1.3.2. </span><span class="content">Using orderings:</span><a class="self-link" href="#using-orderings"></a></h5>
+   <h5 class="heading settled" data-level="6.1.3.2" id="using-orderings"><span class="secno">6.1.3.2. </span><span class="content">Using orderings: {#using-orderings}</span><a class="self-link" href="#using-orderings"></a></h5>
     Generic algorithms in general should require and call <code class="highlight"><c- n>weak_order</c-><c- p>(</c-><c- n>x</c-><c- p>,</c-> <c- n>y</c-><c- p>)</c-></code>. It will either use the default (weak) ordering on <code class="highlight"><c- o>&lt;=></c-></code>, so there are no surprises, or fall back on <code class="highlight"><c- n>strong_order</c-></code>, which will call <code class="highlight"><c- o>&lt;=></c-></code> if it is strong, so no suprises, and if <code class="highlight"><c- o>&lt;=></c-></code> does not exist, the type will hopefully have an overload for <code class="highlight"><c- n>strong_order</c-></code> specifically, which is, again, no surprises. It always does the right thing. 
    <p>Data structures that require a weak order should default to it as well.</p>
    <h2 class="heading settled" data-level="7" id="status"><span class="secno">7. </span><span class="content">Status Quo</span><a class="self-link" href="#status"></a></h2>
@@ -2094,6 +2134,21 @@ ISO/IEC/IEEE 60559, and should not participate in overload resolution if <code c
 
 })();
 </script>
+  <h2 class="no-num no-ref heading settled" id="index"><span class="content">Index</span><a class="self-link" href="#index"></a></h2>
+  <h3 class="no-num no-ref heading settled" id="index-defined-here"><span class="content">Terms defined by this specification</span><a class="self-link" href="#index-defined-here"></a></h3>
+  <ul class="index">
+   <li><a href="#ambiguity-of-legacy">ambiguity of legacy</a><span>, in §4</span>
+   <li><a href="#consistency">consistency</a><span>, in §4</span>
+   <li><a href="#corrolary-1">Corrolary 1</a><span>, in §4</span>
+   <li><a href="#corrolary-2">Corrolary 2</a><span>, in §4</span>
+   <li><a href="#corrolary-3">Corrolary 3</a><span>, in §4</span>
+   <li><a href="#corrolary-4">Corrolary 4</a><span>, in §4</span>
+   <li><a href="#corrolary-5">Corrolary 5</a><span>, in §4</span>
+   <li><a href="#corrolary-6">Corrolary 6</a><span>, in §4</span>
+   <li><a href="#customization">customization</a><span>, in §4</span>
+   <li><a href="#fallback">fallback</a><span>, in §4</span>
+   <li><a href="#weakening">weakening</a><span>, in §4</span>
+  </ul>
   <h2 class="no-num no-ref heading settled" id="references"><span class="content">References</span><a class="self-link" href="#references"></a></h2>
   <h3 class="no-num no-ref heading settled" id="normative"><span class="content">Normative References</span><a class="self-link" href="#normative"></a></h3>
   <dl>
@@ -2119,3 +2174,106 @@ ISO/IEC/IEEE 60559, and should not participate in overload resolution if <code c
    <dt id="biblio-p0891r1">[P0891R1]
    <dd>Gašper Ažman. <a href="https://wg21.link/p0891r1">Everyone Deserves a Little Order</a>. 27 October 2018. URL: <a href="https://wg21.link/p0891r1">https://wg21.link/p0891r1</a>
   </dl>
+  <aside class="dfn-panel" data-for="consistency">
+   <b><a href="#consistency">#consistency</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-consistency">4. Design Rationale</a> <a href="#ref-for-consistency①">(2)</a> <a href="#ref-for-consistency②">(3)</a>
+    <li><a href="#ref-for-consistency③">5. Questions for LEWG:</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="weakening">
+   <b><a href="#weakening">#weakening</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-weakening">4. Design Rationale</a>
+    <li><a href="#ref-for-weakening①">5. Questions for LEWG:</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="ambiguity-of-legacy">
+   <b><a href="#ambiguity-of-legacy">#ambiguity-of-legacy</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-ambiguity-of-legacy">4. Design Rationale</a>
+    <li><a href="#ref-for-ambiguity-of-legacy①">5. Questions for LEWG:</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="customization">
+   <b><a href="#customization">#customization</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-customization">4. Design Rationale</a> <a href="#ref-for-customization①">(2)</a>
+    <li><a href="#ref-for-customization②">5. Questions for LEWG:</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="fallback">
+   <b><a href="#fallback">#fallback</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-fallback">4. Design Rationale</a> <a href="#ref-for-fallback①">(2)</a>
+    <li><a href="#ref-for-fallback②">5. Questions for LEWG:</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="corrolary-4">
+   <b><a href="#corrolary-4">#corrolary-4</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-corrolary-4">4. Design Rationale</a>
+   </ul>
+  </aside>
+  <aside class="dfn-panel" data-for="corrolary-5">
+   <b><a href="#corrolary-5">#corrolary-5</a></b><b>Referenced in:</b>
+   <ul>
+    <li><a href="#ref-for-corrolary-5">4. Design Rationale</a>
+   </ul>
+  </aside>
+<script>/* script-dfn-panel */
+
+document.body.addEventListener("click", function(e) {
+    var queryAll = function(sel) { return [].slice.call(document.querySelectorAll(sel)); }
+    // Find the dfn element or panel, if any, that was clicked on.
+    var el = e.target;
+    var target;
+    var hitALink = false;
+    while(el.parentElement) {
+        if(el.tagName == "A") {
+            // Clicking on a link in a <dfn> shouldn't summon the panel
+            hitALink = true;
+        }
+        if(el.classList.contains("dfn-paneled")) {
+            target = "dfn";
+            break;
+        }
+        if(el.classList.contains("dfn-panel")) {
+            target = "dfn-panel";
+            break;
+        }
+        el = el.parentElement;
+    }
+    if(target != "dfn-panel") {
+        // Turn off any currently "on" or "activated" panels.
+        queryAll(".dfn-panel.on, .dfn-panel.activated").forEach(function(el){
+            el.classList.remove("on");
+            el.classList.remove("activated");
+        });
+    }
+    if(target == "dfn" && !hitALink) {
+        // open the panel
+        var dfnPanel = document.querySelector(".dfn-panel[data-for='" + el.id + "']");
+        if(dfnPanel) {
+            dfnPanel.classList.add("on");
+            var rect = el.getBoundingClientRect();
+            dfnPanel.style.left = window.scrollX + rect.right + 5 + "px";
+            dfnPanel.style.top = window.scrollY + rect.top + "px";
+            var panelRect = dfnPanel.getBoundingClientRect();
+            var panelWidth = panelRect.right - panelRect.left;
+            if(panelRect.right > document.body.scrollWidth && (rect.left - (panelWidth + 5)) > 0) {
+                // Reposition, because the panel is overflowing
+                dfnPanel.style.left = window.scrollX + rect.left - (panelWidth + 5) + "px";
+            }
+        } else {
+            console.log("Couldn't find .dfn-panel[data-for='" + el.id + "']");
+        }
+    } else if(target == "dfn-panel") {
+        // Switch it to "activated" state, which pins it.
+        el.classList.add("activated");
+        el.style.left = null;
+        el.style.top = null;
+    }
+
+});
+</script>
