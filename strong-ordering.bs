@@ -49,10 +49,10 @@ R2: Incorporated feedback from LEWG meeting in San Diego, merged with [[P0863R1]
 
 Feedback in San Diego was:
 
-- We want to solve `std::set<T>` for not obviously comparable `T` (0/6/4/1/1). [in scope]
-- We want to solve `std::unordered_set<T>` for not obviously hasheable `T` (out of scope)
+- We want to solve `std::set<T>` for not obviously comparable `T` (0/6/4/1/1).
+- We want to solve `std::unordered_set<T>` for not obviously hasheable `T`. (Out of scope of this paper)
 - We need to adress the fact that containers need to provide specializations of `strong_order` if it is a customization point.
-- We want `strong_order` to be a customization point (Herb's proposed poll) - never taken.
+- We want `strong_order` to be the customization point (Herb's proposed poll) - never taken.
 
 
 Status of this paper {#sup}
@@ -96,12 +96,12 @@ From these principles, the following corrolaries follow:
 - <dfn>Corrolary 3</dfn>: from [=consistency=] and [=fallback=], it follows that if `<=>` exists, the fallback function should use it in preference of legacy comparison operators.
 - <dfn>Corrolary 4</dfn>: From [=fallback=] and [=ambiguity of legacy=], it follows that by using a fallback function, the user is asserting that `<` and `==` implement the corresponding ordering.
 - <dfn>Corrolary 5</dfn>: From [=customization=] and the definition of *customization point*, it follows that `*_order` functions must be specified as <i>does not participate in overload resolution</i> when they cannot be synthesized according to the above rules.
-- <dfn>Corrolary 6</dfn>: From [=Corrolary 4=] and [=Corrolary 5=] it follows that the fallbacks and the customization points cannot be the same functions, as their roles are fundamentally incompatible. To illustrate: the fallback function for synthesizing `strong_ordering` must exist whenever `<` and `==` do, but the `strong_order` customization point cannot be synthesized purely from those.
+- <dfn>Corrolary 6</dfn>: From [=Corrolary 4=] and [=Corrolary 5=] it follows that the fallbacks and the customization points cannot be the same functions, as their roles are fundamentally incompatible. To illustrate: the fallback function for synthesizing `strong_ordering` must exist whenever `<` and `==` do, but the `strong_order` customization point must not be synthesized purely from those.
 
 
 In addition, we have observed the following useful facts.
 
-- *Observation 1*: Given [[D1185R1]] provides a method of generating a `<=>` operator from `<` and `==`, we can defer to that method for synthesizing the fallback functions.
+- *Observation 1*: Given [[D1185R1]] provides a method of generating a `<=>` operator from `<` and `==`, we should, due to [=consistency=], defer to that method for synthesizing the fallback functions.
 - *Observation 2*: If `strong_order` is a customization point for providing a stronger order than `<=>` does, data structures that recurse to their contents for `<=>` must also recurse for `strong_order`.
 - Given that none of the types in the standard library are getting `<=>` in `C++20`, we are deferring proposing this until such time as `<=>` is proposed for them as well.
 
