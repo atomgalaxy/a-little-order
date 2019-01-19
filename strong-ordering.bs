@@ -78,8 +78,8 @@ In the standard, we need to provide the ability to customize `strong_order` and 
 [[P0891R0]] and [[P0891R1]] of this paper presented the case for having a customization point for ordering in the language. This paper only summarizes the currently relevant bits of that discussion. For wider context, the reader should refer to the previous revisions, as well as to [[P0863R1]].
 
 
-Design Rationale {#design-rationale}
-====================================
+Principles {#principles}
+========================
 
 To arrive at the final design of this paper, we used the following principles:
 
@@ -90,7 +90,7 @@ To arrive at the final design of this paper, we used the following principles:
 - <dfn>fallback</dfn>: We need convenient functions to get `*_ordering` types from legacy comparison operators.
 
 
-From these principles, the following corrolaries follow:
+From these principles, these corollaries follow:
 
 - <dfn>Corollary 1</dfn>: from [=consistency=] it follows that, if `<=>` provides a given order `X`, then the default implementation of `X_order` should use it.
 - <dfn>Corollary 2</dfn>: from [=consistency=], [=weakening=] and [=customization=], it follows that:
@@ -101,21 +101,19 @@ From these principles, the following corrolaries follow:
 - <dfn>Corollary 6</dfn>: From [=Corollary 4=] and [=Corollary 5=] it follows that the fallbacks and the customization points cannot be the same functions, as their roles are fundamentally incompatible. To illustrate: the fallback function for synthesizing `strong_ordering` must exist whenever `<` and `==` do, but the `strong_order` customization point must not be synthesized purely from those.
 
 
-In addition, we have observed the following useful facts.
+In addition, we have made the following observations:
 
-- *Observation 1*: Given [[D1185R1]] provides a method of generating a `<=>` operator from `<` and `==`, we should, due to [=consistency=], defer to that method for synthesizing the fallback functions.
-- *Observation 2*: If `strong_order` is a customization point for providing a stronger order than `<=>` does, data structures that recurse to their contents for `<=>` must also recurse for `strong_order`.
-- Given that none of the types in the standard library are getting `<=>` in `C++20`, we are deferring proposing this until such time as `<=>` is proposed for them as well.
-
-If one agrees with the premises, then all the corrolaries follow.
+- Given [[D1185R1]] provides a method of generating a `<=>` operator from `<` and `==`, we should (due to [=consistency=]) defer to that method for synthesizing the fallback functions.
+- If `strong_order` is a customization point for providing a stronger order than `<=>` does, data structures that recurse to their contents for `<=>` should also recurse for `strong_order`.
+- Given that the '<=>' operator is not being provided for any of the types in the standard library C++20, we are deferring proposing this until such time as `<=>` is proposed for them as well.
 
 Questions for LEWG: {#lewg-questions}
 =====================================
 
 1. <dfn>Question: consensus</dfn>: Is there consensus that the [=customization=] premise (as above) is correct and should be adopted?
-    - Corollary: if not, then the iec559 exception bullet in the current working draft has no sensible home, and should be removed.
-2. <dfn>Question: fallbacks</dfn>: Is there consensus that the [=fallback=] premise (as above) is correct and should be adopted?
-    - Rejecting this means that we are rejecting the rationale for their inclusion in the current working draft and they should be removed.
+    - If not, then should the iec559 exception bullet in the current working draft be removed?
+2. <dfn>Question: fallbacks</dfn>:Is there consensus that the [=fallback=] premise (as above) is correct and should be adopted?
+    - Rejecting this means that we are rejecting the rationale for their inclusion in the current working draft and that they should be removed.
 
 (The [=consistency=], [=weakening=] and [=ambiguity of legacy=] are true from a good design, mathematical, and empirical point of view, respectively, so they are not subject to poll).
 
