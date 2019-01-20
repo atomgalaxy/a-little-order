@@ -5,7 +5,7 @@ Audience: LEWG, LWG
 Editor: Gašper Ažman <gasper.azman@gmail.com>
 Editor: Jeff Snyder <jeff-isocpp@caffeinated.me.uk>
 Shortname: P0891
-Abstract: The specification of ordering algorithms at the end of [[P0768R1]] does not provide the ability to provide a default order for user-defined types (since they are specified in such a way that they are not intended to be customization points), and yet mixes in such a customization for IEC559 floating point types. This paper suggests providing the functionality of both in a composable and principled way.
+Abstract: The specification of ordering algorithms at the end of [[P0768R1]] does not provide the ability to provide a default order for user-defined types (since they are specified in such a way that they are not intended to be customisation points), and yet mixes in such a customisation for IEC559 floating point types. This paper suggests providing the functionality of both in a composable and principled way.
 Group: WG21
 Date: 2019-01-20
 Markup Shorthands: markdown yes
@@ -41,11 +41,11 @@ R1: Incorporated feedback from LEWG meeting in Rappersville. {#rap-feedback}
 
 The feedback was:
 - Remove the floating point exception (bullet 1.1) as R0 recommended, since Unicode strings, etc., are a possible rationale.
-- Do not propose propose making existing `*_order` functions "customization points" (as used in [[!P0551R3]]).
-- Add a new `default_order` customization point, along with a bikeshedding section on its actual name, with the behaviour:
+- Do not propose propose making existing `*_order` functions "customisation points" (as used in [[!P0551R3]]).
+- Add a new `default_order` customisation point, along with a bikeshedding section on its actual name, with the behaviour:
     - It has the IEC 559 behavior from bullet 1.1 of `strong_order`
     - It is defined for all (other) floating-point types; it is implementation-defined whether it is consistent with the partial order from the comparison operators. (Implementations should do this.)
-    - It is a customization point (à la [[!P0551R3]]).
+    - It is a customisation point (à la [[!P0551R3]]).
 - Investigate the possibility of adding Lawrence's weak order (from [[P0100R2]]) for floating-point numbers (which did not make it in with spaceship).
 
 
@@ -56,8 +56,8 @@ Feedback in San Diego was:
 
 - We want to solve `std::set<T>` for not obviously comparable `T` (0/6/4/1/1).
 - We want to solve `std::unordered_set<T>` for not obviously hasheable `T`. (Out of scope of this paper)
-- We need to adress the fact that containers need to provide specializations of `strong_order` if it is a customization point.
-- We want `strong_order` to be the customization point (Herb's proposed poll) - never taken.
+- We need to adress the fact that containers need to provide specializations of `strong_order` if it is a customisation point.
+- We want `strong_order` to be the customisation point (Herb's proposed poll) - never taken.
 
 
 Status of this paper {#sup}
@@ -76,11 +76,11 @@ As worded, the `strong_order` comparison algorithm provides:
 - a strong ordering for some types that do not have it provided by `<=>` (IEC559 floating point types),
 - a way of generating a value of type `strong_ordering` by falling back to the `==` and `<` operators if `<=>` is not callable or does not result in a `strong_ordering`.
 
-However, the authors of this paper and the author of [[P0515R3]] intended for `strong_order` to be a customization point, and it is not currently usable as such.
+However, the authors of this paper and the author of [[P0515R3]] intended for `strong_order` to be a customisation point, and it is not currently usable as such.
 
 In the standard, we need to provide the ability to customize `strong_order` and a way to fall back to `==` and `<`. This paper argues that these are fundamentally incompatible, and cannot be served by the same function.
 
-[[P0891R0]] and [[P0891R1]] of this paper presented the case for having a customization point for ordering in the language. This paper only summarizes the currently relevant bits of that discussion. For wider context, the reader should refer to the previous revisions, as well as to [[P0863R1]].
+[[P0891R0]] and [[P0891R1]] of this paper presented the case for having a customisation point for ordering in the language. This paper only summarizes the currently relevant bits of that discussion. For wider context, the reader should refer to the previous revisions, as well as to [[P0863R1]].
 
 
 Principles {#principles}
@@ -91,38 +91,38 @@ To arrive at the final design of this paper, we used the following principles:
 - <dfn>Consistency</dfn>: `*_order` algorithms should behave consistently with `<=>` by default.
 - <dfn>Weakening</dfn>: If a type has a given order, than it also has all weaker orders.
 - <dfn>Ambiguity of Legacy</dfn>: The ordering category provided by the legacy comparison operators is ambiguous. The standard currently expects merely that `<` provides a weak ordering.
-- <dfn>Customization</dfn>: As `<=>` is a customization point for the natural ordering on a type, so `strong_order` is a customization point for an arbitrary strong order on that type.
+- <dfn>Customisation</dfn>: As `<=>` is a customisation point for the natural ordering on a type, so `strong_order` is a customisation point for an arbitrary strong order on that type.
 - <dfn>Fallback</dfn>: We need convenient functions to get `*_ordering` types from legacy comparison operators.
 
 
 From these principles, these corollaries follow:
 
 - <dfn>Corollary 1</dfn>: from [=Consistency=] it follows that, if `<=>` provides a given order `X`, then the default implementation of `X_order` should use it.
-- <dfn>Corollary 2</dfn>: from [=Consistency=], [=Weakening=] and [=Customization=], it follows that:
+- <dfn>Corollary 2</dfn>: from [=Consistency=], [=Weakening=] and [=Customisation=], it follows that:
     - if `<=>` does not provide a strong enough order, but a stronger ordering function (e.g. `strong_order` for `weak_order`, `weak_order` for `partial_order`) is available, then the weaker ordering function must fall back on it (this works recursively, so if `strong_order` is defined, so is `partial_order`).
 - <dfn>Corollary 3</dfn>: from [=Consistency=] and [=Fallback=], it follows that if `<=>` exists, the fallback function should use it in preference of legacy comparison operators.
 - <dfn>Corollary 4</dfn>: From [=Fallback=] and [=Ambiguity of Legacy=], it follows that by using a fallback function, the user is asserting that `<` and `==` implement the corresponding ordering.
-- <dfn>Corollary 5</dfn>: From [=Customization=] and the definition of *customization point*, it follows that `*_order` functions must be specified as <i>does not participate in overload resolution</i> when they cannot be synthesized according to the above rules.
-- <dfn>Corollary 6</dfn>: From [=Corollary 4=] and [=Corollary 5=] it follows that the fallbacks and the customization points cannot be the same functions, as their roles are fundamentally incompatible. To illustrate: the fallback function for synthesizing `strong_ordering` must exist whenever `<` and `==` do, but the `strong_order` customization point must not be synthesized purely from those.
+- <dfn>Corollary 5</dfn>: From [=Customisation=] and the definition of *customisation point*, it follows that `*_order` functions must be specified as <i>does not participate in overload resolution</i> when they cannot be synthesized according to the above rules.
+- <dfn>Corollary 6</dfn>: From [=Corollary 4=] and [=Corollary 5=] it follows that the fallbacks and the customisation points cannot be the same functions, as their roles are fundamentally incompatible. To illustrate: the fallback function for synthesizing `strong_ordering` must exist whenever `<` and `==` do, but the `strong_order` customisation point must not be synthesized purely from those.
 
 
 In addition, we have made the following observations:
 
 - Given [[D1186R1]] provides a method of generating a `<=>` operator from `<` and `==`, we should (due to [=Consistency=]) defer to that method for synthesizing the fallback functions.
-- If `strong_order` is a customization point for providing a stronger order than `<=>` does, data structures that recurse to their contents for `<=>` should also recurse for `strong_order`.
+- If `strong_order` is a customisation point for providing a stronger order than `<=>` does, data structures that recurse to their contents for `<=>` should also recurse for `strong_order`.
 - Given that the `<=>` operator is not being provided for any of the types in the standard library C++20, we are deferring proposing this until such time as `<=>` is proposed for them as well.
 
 Discussion {#discussion}
 ========================
 
-Discussion of the [=Customization=] principle {#discussion-customization}
+Discussion of the [=Customisation=] principle {#discussion-customisation}
 ---------------------------------------------------------------------
 
-The arguments around whether `strong_order` should be a customization point have centered around the following questions:
+The arguments around whether `strong_order` should be a customisation point have centered around the following questions:
 
 - Is it even useful?
 - Given that it is viral, is it worth the implementation effort?
-- Should all of the comparison algorithms be customization points?
+- Should all of the comparison algorithms be customisation points?
 - How can this be taught?
 
 
@@ -149,16 +149,16 @@ these examples work, we need to *customise* `strong_order` for `optional`,
 `pair` and other container types, and for that to be permitted `strong_order`
 must be a customisation point.
 
-Having an agreed-upon customization point for an arbitrary order is long
+Having an agreed-upon customisation point for an arbitrary order is long
 overdue. It is time to define what that customisation point is, so it can be
 provided and used consistently across C++ libraries and applications. That name
-should be `strong_order`, since `default_order` as a distinct customization
+should be `strong_order`, since `default_order` as a distinct customisation
 point was rejected by LEWG in San Diego in favor of the design in R0 of this
 paper.
 
 ### Given that it is viral, is it worth the implementation effort? ### {#impl-effort}
 
-Given that any customization point we designate has to potentially be overloaded for all the generic wrappers in the standard library, is it worth the effort of defining them?
+Given that any customisation point we designate has to potentially be overloaded for all the generic wrappers in the standard library, is it worth the effort of defining them?
 
 This paper does not propose any such wrappers, because the standard library does not even support `operator <=>` for such wrapper types yet. This paper only proposes that `strong_order` be established as a customisation point.
 
@@ -206,7 +206,7 @@ However, as C++ applications and libraries are updated to implement `operator <=
 Questions for LEWG: {#lewg-questions}
 =====================================
 
-1. Is there consensus that the [=Customization=] premise (as above) is correct and should be adopted?
+1. Is there consensus that the [=Customisation=] premise (as above) is correct and should be adopted?
     - If not, then should the IEC559 exception bullet in the current working draft be removed?
 2. Is there consensus that the [=Fallback=] premise (as above) is correct and should be adopted?
     - Rejecting this means that we are rejecting the rationale for their inclusion in the current working draft and that they should be removed.
@@ -228,7 +228,7 @@ is no way to implement `strong_equal` and `weak_equal` without calling `<=>`.
 Therefore, we propose removing the `strong_equal` and `weak_equal` algorithms.
 
 
-Make `strong_order` and friends customization points {#proposal-customization}
+Make `strong_order` and friends customisation points {#proposal-customisation}
 ------------------------------------------------------------------------------
 
 For the functions `strong_order`, `weak_order` and `partial_order` we propose to:
@@ -257,12 +257,12 @@ ISO/IEC/IEEE 60559, and should not participate in overload resolution if
 `numeric_limts<T>::is_iec559` is `false` for the type of their arguments.
 
 
-Make the weaker customization points call stronger customizatoin points {#proposal-weakening}
+Make the weaker customisation points call stronger customizatoin points {#proposal-weakening}
 ---------------------------------------------------------------------------------------------
 
 To handle cases such as where a type provides a `partial_ordering` from `<=>`
-and a `strong_order` overload, if a customization point cannot get an
-appropriate result from calling `<=>`, it should try to call a customization
+and a `strong_order` overload, if a customisation point cannot get an
+appropriate result from calling `<=>`, it should try to call a customisation
 point for an order stronger than its own. Specifically:
 
 - `weak_order` should fall back to calling `strong_order`
@@ -277,14 +277,14 @@ propose to keep them under new names, with the following changes to their
 behaviour:
 
 - They will, in preference to anything else, return the
-    result of calling the corresponding customization point.
+    result of calling the corresponding customisation point.
 - They will not attempt to call `<=>` directly, as this is called by the
     customisation point.
 - They will fall back to `==` and `<` using the language mechanism proposed by
     [[!D1186R1]] instead of calling `==` and `<` directly.
 
 As per the original comparison algorithms, they will be defined as deleted if
-neither the corresponding customization point nor the `==` and `<` operators
+neither the corresponding customisation point nor the `==` and `<` operators
 are available.
 
 Following the same reasoning as in [[#proposal-remove-equal]], there will be no fallback
@@ -299,7 +299,7 @@ Other options to consider:
  - `fallback_X_order`
  - `X_order_fallback`
 
-See the [=fallback=] discussion on why the `X_order` names should be given to the customization points.
+See the [=fallback=] discussion on why the `X_order` names should be given to the customisation points.
 
 
 Proposed Wording {#wording}
@@ -405,10 +405,10 @@ From section 24.x.4, Comparison Algorithms [cmp.alg], remove `strong_equal` and 
 </div>
 
 
-Then add the `strong_order` customization point object:
+Then add the `strong_order` customisation point object:
 
 <div class='ins'>
-(#) The name `strong_order` denotes a customization point object. The expression `std::strong_order(E, F)` for some subexpressions `E` and `F` with type `T` is expression-equivalent to:
+(#) The name `strong_order` denotes a customisation point object. The expression `std::strong_order(E, F)` for some subexpressions `E` and `F` with type `T` is expression-equivalent to:
 <ul style='list-style-type: none; padding-left: 0px;'>
 <li>(#.1) `strong_order(E, F)` if it is a valid expression,</li>
 <li>(#.2) Otherwise, `E <=> F` if it is a valid expression and its type is convertible to `strong_ordering`,</li>
@@ -425,10 +425,10 @@ Add overloads for IEC559 types:
 </div>
 
 
-Add the `weak_order` customization point object:
+Add the `weak_order` customisation point object:
 
 <div class='ins'>
-(#) The name `weak_order` denotes a customization point object. The expression `std::weak_order(E, F)` for some subexpressions `E` and `F` with type `T` is expression-equivalent to:
+(#) The name `weak_order` denotes a customisation point object. The expression `std::weak_order(E, F)` for some subexpressions `E` and `F` with type `T` is expression-equivalent to:
 <ul style='list-style-type: none;'>
 <li>(#.1) `weak_order(E, F)` if it is a valid expression,</li>
 <li>(#.2) Otherwise, `E <=> F` if it is a valid expression and its type is convertible to `weak_ordering`,</li>
@@ -439,10 +439,10 @@ Add the `weak_order` customization point object:
 </div>
 
 
-Add the `partial_order` customization point object:
+Add the `partial_order` customisation point object:
 
 <div class='ins'>
-(#) The name `partial_order` denotes a customization point object. The expression `std::partial_order(E, F)` for some subexpressions `E` and `F` with type `T` is expression-equivalent to:
+(#) The name `partial_order` denotes a customisation point object. The expression `std::partial_order(E, F)` for some subexpressions `E` and `F` with type `T` is expression-equivalent to:
 <ul style='list-style-type: none;'>
 <li>(#.1) `partial_order(E, F)` if it is a valid expression,</li>
 <li>(#.2) Otherwise, `E <=> F` if it is a valid expression and its type is convertible to `partial_ordering`,</li>
@@ -461,10 +461,10 @@ We would like to thank
   - **Thomas Köppe** for his valuable comments, review, and most of all some extremely clear and laconic wording;
   - **Sam Finch** for *thoroughly* breaking the original examples, some example code, great substantive comments, and pointing out that the current definition actually breaks types that define a partially-ordered set of comparison operators;
   - **Richard Smith** for further fixing my example in light of Concepts, and example code.
-  - **Herb Sutter and Walter Brown** for providing (mutually opposing) guidance on customization points.
+  - **Herb Sutter and Walter Brown** for providing (mutually opposing) guidance on customisation points.
   - **Louis Dionne** for great comments on the structure of the paper and how to bring the focus where it needs to be;
   - **Walter Brown** for representing the paper at a committee meeting when Gašper could not make it in person, and guidance with direction;
-  - **Barry Revzin** for representing the paper at a committee meeting when Gašper could not make it in person, and his various papers that touch ours, and for pre-reviewing our wording and suggesting we make the customization points CPOs, and reworking his paper to support the `3WAY<strength>(x, y)` syntax.
+  - **Barry Revzin** for representing the paper at a committee meeting when Gašper could not make it in person, and his various papers that touch ours, and for pre-reviewing our wording and suggesting we make the customisation points CPOs, and reworking his paper to support the `3WAY<strength>(x, y)` syntax.
   - **Herb Sutter** for his comments and support for getting ordering right.
 
 And, *again*, a special thank-you to Walter Brown, who, with his final lightning talk in Bellevue, reminded us to remember whose shoulders we are standing on.
@@ -472,7 +472,7 @@ And, *again*, a special thank-you to Walter Brown, who, with his final lightning
 Thank you all!
 
 
-Appendix A: Proof `strong_order` is not a valid customization point {#example-cust-point}
+Appendix A: Proof `strong_order` is not a valid customisation point {#example-cust-point}
 =========================================================================================
 
 Say we have a template struct representing the Gaussian integers, with a *natural order* defined by the Manhattan distance from `0+0i`. This struct still defines a `std::strong_order` to model **Regular**.

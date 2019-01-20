@@ -1230,7 +1230,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version 9c6ae748322940994300e90a77c34437364b40a6" name="generator">
   <link href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="61908af13a1d6e90537fd8191ab652f1c775f3c4" name="document-revision">
+  <meta content="2bb52aa7baa499d6dcb0c948ffabda9129180de7" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1517,7 +1517,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   </div>
   <div class="p-summary" data-fill-with="abstract">
    <h2 class="no-num no-toc no-ref heading settled" id="abstract"><span class="content">Abstract</span></h2>
-   <p>The specification of ordering algorithms at the end of <a data-link-type="biblio" href="#biblio-p0768r1">[P0768R1]</a> does not provide the ability to provide a default order for user-defined types (since they are specified in such a way that they are not intended to be customization points), and yet mixes in such a customization for IEC559 floating point types. This paper suggests providing the functionality of both in a composable and principled way.</p>
+   <p>The specification of ordering algorithms at the end of <a data-link-type="biblio" href="#biblio-p0768r1">[P0768R1]</a> does not provide the ability to provide a default order for user-defined types (since they are specified in such a way that they are not intended to be customisation points), and yet mixes in such a customisation for IEC559 floating point types. This paper suggests providing the functionality of both in a composable and principled way.</p>
   </div>
   <nav data-fill-with="table-of-contents" id="toc">
    <h2 class="no-num no-toc no-ref" id="contents">Table of Contents</h2>
@@ -1535,7 +1535,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <a href="#discussion"><span class="secno">5</span> <span class="content">Discussion</span></a>
      <ol class="toc">
       <li>
-       <a href="#discussion-customization"><span class="secno">5.1</span> <span class="content">Discussion of the <span>Customization</span> principle</span></a>
+       <a href="#discussion-customisation"><span class="secno">5.1</span> <span class="content">Discussion of the <span>Customisation</span> principle</span></a>
        <ol class="toc">
         <li><a href="#but-is-it-legal-ill-make-it-legal"><span class="secno">5.1.1</span> <span class="content">Is it useful?</span></a>
         <li><a href="#impl-effort"><span class="secno">5.1.2</span> <span class="content">Given that it is viral, is it worth the implementation effort?</span></a>
@@ -1553,14 +1553,14 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <a href="#proposal"><span class="secno">7</span> <span class="content">Proposal</span></a>
      <ol class="toc">
       <li><a href="#proposal-remove-equal"><span class="secno">7.1</span> <span class="content">Remove the <code class="highlight"><c- n>strong_equal</c-></code> and <code class="highlight"><c- n>weak_equal</c-></code> comparison algorithms</span></a>
-      <li><a href="#proposal-customization"><span class="secno">7.2</span> <span class="content">Make <code class="highlight"><c- n>strong_order</c-></code> and friends customization points</span></a>
+      <li><a href="#proposal-customisation"><span class="secno">7.2</span> <span class="content">Make <code class="highlight"><c- n>strong_order</c-></code> and friends customisation points</span></a>
       <li><a href="#proposal-iec559"><span class="secno">7.3</span> <span class="content">Replace the IEC559 rule in <code class="highlight"><c- n>strong_order</c-></code> with separate overloads</span></a>
-      <li><a href="#proposal-weakening"><span class="secno">7.4</span> <span class="content">Make the weaker customization points call stronger customizatoin points</span></a>
+      <li><a href="#proposal-weakening"><span class="secno">7.4</span> <span class="content">Make the weaker customisation points call stronger customizatoin points</span></a>
       <li><a href="#proposal-fallback"><span class="secno">7.5</span> <span class="content">Add fallback functions</span></a>
      </ol>
     <li><a href="#wording"><span class="secno">8</span> <span class="content">Proposed Wording</span></a>
     <li><a href="#ack"><span class="secno">9</span> <span class="content">Acknowledgments</span></a>
-    <li><a href="#example-cust-point"><span class="secno"></span> <span class="content">Appendix A: Proof <code class="highlight"><c- n>strong_order</c-></code> is not a valid customization point</span></a>
+    <li><a href="#example-cust-point"><span class="secno"></span> <span class="content">Appendix A: Proof <code class="highlight"><c- n>strong_order</c-></code> is not a valid customisation point</span></a>
     <li>
      <a href="#index"><span class="secno"></span> <span class="content">Index</span></a>
      <ol class="toc">
@@ -1582,16 +1582,16 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p>Remove the floating point exception (bullet 1.1) as R0 recommended, since Unicode strings, etc., are a possible rationale.</p>
     <li data-md>
-     <p>Do not propose propose making existing <code class="highlight"><c- o>*</c-><c- n>_order</c-></code> functions "customization points" (as used in <a data-link-type="biblio" href="#biblio-p0551r3">[P0551R3]</a>).</p>
+     <p>Do not propose propose making existing <code class="highlight"><c- o>*</c-><c- n>_order</c-></code> functions "customisation points" (as used in <a data-link-type="biblio" href="#biblio-p0551r3">[P0551R3]</a>).</p>
     <li data-md>
-     <p>Add a new <code class="highlight"><c- n>default_order</c-></code> customization point, along with a bikeshedding section on its actual name, with the behaviour:</p>
+     <p>Add a new <code class="highlight"><c- n>default_order</c-></code> customisation point, along with a bikeshedding section on its actual name, with the behaviour:</p>
      <ul>
       <li data-md>
        <p>It has the IEC 559 behavior from bullet 1.1 of <code class="highlight"><c- n>strong_order</c-></code></p>
       <li data-md>
        <p>It is defined for all (other) floating-point types; it is implementation-defined whether it is consistent with the partial order from the comparison operators. (Implementations should do this.)</p>
       <li data-md>
-       <p>It is a customization point (à la <a data-link-type="biblio" href="#biblio-p0551r3">[P0551R3]</a>).</p>
+       <p>It is a customisation point (à la <a data-link-type="biblio" href="#biblio-p0551r3">[P0551R3]</a>).</p>
      </ul>
     <li data-md>
      <p>Investigate the possibility of adding Lawrence’s weak order (from <a data-link-type="biblio" href="#biblio-p0100r2">[P0100R2]</a>) for floating-point numbers (which did not make it in with spaceship).</p>
@@ -1604,9 +1604,9 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p>We want to solve <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>unordered_set</c-><c- o>&lt;</c-><c- n>T</c-><c- o>></c-></code> for not obviously hasheable <code class="highlight"><c- n>T</c-></code>. (Out of scope of this paper)</p>
     <li data-md>
-     <p>We need to adress the fact that containers need to provide specializations of <code class="highlight"><c- n>strong_order</c-></code> if it is a customization point.</p>
+     <p>We need to adress the fact that containers need to provide specializations of <code class="highlight"><c- n>strong_order</c-></code> if it is a customisation point.</p>
     <li data-md>
-     <p>We want <code class="highlight"><c- n>strong_order</c-></code> to be the customization point (Herb’s proposed poll) - never taken.</p>
+     <p>We want <code class="highlight"><c- n>strong_order</c-></code> to be the customisation point (Herb’s proposed poll) - never taken.</p>
    </ul>
    <h2 class="heading settled" data-level="2" id="sup"><span class="secno">2. </span><span class="content">Status of this paper</span><a class="self-link" href="#sup"></a></h2>
    <p>R2 of this paper is a merge of its R1 and Jeff Snyder’s <a data-link-type="biblio" href="#biblio-p0863r1">[P0863R1]</a>, and is synchronized with Barry Revzin’s <a data-link-type="biblio" href="#biblio-d1186r1">[D1186R1]</a>. It incorporates all feedback for R0 and R1, and presents a coherent design for the library components of <code class="highlight"><c- o>&lt;=></c-></code>.</p>
@@ -1619,9 +1619,9 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p>a way of generating a value of type <code class="highlight"><c- n>strong_ordering</c-></code> by falling back to the <code class="highlight"><c- o>==</c-></code> and <code class="highlight"><c- o>&lt;</c-></code> operators if <code class="highlight"><c- o>&lt;=></c-></code> is not callable or does not result in a <code class="highlight"><c- n>strong_ordering</c-></code>.</p>
    </ul>
-   <p>However, the authors of this paper and the author of <a data-link-type="biblio" href="#biblio-p0515r3">[P0515R3]</a> intended for <code class="highlight"><c- n>strong_order</c-></code> to be a customization point, and it is not currently usable as such.</p>
+   <p>However, the authors of this paper and the author of <a data-link-type="biblio" href="#biblio-p0515r3">[P0515R3]</a> intended for <code class="highlight"><c- n>strong_order</c-></code> to be a customisation point, and it is not currently usable as such.</p>
    <p>In the standard, we need to provide the ability to customize <code class="highlight"><c- n>strong_order</c-></code> and a way to fall back to <code class="highlight"><c- o>==</c-></code> and <code class="highlight"><c- o>&lt;</c-></code>. This paper argues that these are fundamentally incompatible, and cannot be served by the same function.</p>
-   <p><a data-link-type="biblio" href="#biblio-p0891r0">[P0891R0]</a> and <a data-link-type="biblio" href="#biblio-p0891r1">[P0891R1]</a> of this paper presented the case for having a customization point for ordering in the language. This paper only summarizes the currently relevant bits of that discussion. For wider context, the reader should refer to the previous revisions, as well as to <a data-link-type="biblio" href="#biblio-p0863r1">[P0863R1]</a>.</p>
+   <p><a data-link-type="biblio" href="#biblio-p0891r0">[P0891R0]</a> and <a data-link-type="biblio" href="#biblio-p0891r1">[P0891R1]</a> of this paper presented the case for having a customisation point for ordering in the language. This paper only summarizes the currently relevant bits of that discussion. For wider context, the reader should refer to the previous revisions, as well as to <a data-link-type="biblio" href="#biblio-p0863r1">[P0863R1]</a>.</p>
    <h2 class="heading settled" data-level="4" id="principles"><span class="secno">4. </span><span class="content">Principles</span><a class="self-link" href="#principles"></a></h2>
    <p>To arrive at the final design of this paper, we used the following principles:</p>
    <ul>
@@ -1632,7 +1632,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="ambiguity-of-legacy">Ambiguity of Legacy</dfn>: The ordering category provided by the legacy comparison operators is ambiguous. The standard currently expects merely that <code class="highlight"><c- o>&lt;</c-></code> provides a weak ordering.</p>
     <li data-md>
-     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="customization">Customization</dfn>: As <code class="highlight"><c- o>&lt;=></c-></code> is a customization point for the natural ordering on a type, so <code class="highlight"><c- n>strong_order</c-></code> is a customization point for an arbitrary strong order on that type.</p>
+     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="customisation">Customisation</dfn>: As <code class="highlight"><c- o>&lt;=></c-></code> is a customisation point for the natural ordering on a type, so <code class="highlight"><c- n>strong_order</c-></code> is a customisation point for an arbitrary strong order on that type.</p>
     <li data-md>
      <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="fallback">Fallback</dfn>: We need convenient functions to get <code class="highlight"><c- o>*</c-><c- n>_ordering</c-></code> types from legacy comparison operators.</p>
    </ul>
@@ -1641,7 +1641,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p><dfn data-dfn-type="dfn" data-noexport id="corollary-1">Corollary 1<a class="self-link" href="#corollary-1"></a></dfn>: from <a data-link-type="dfn" href="#consistency" id="ref-for-consistency">Consistency</a> it follows that, if <code class="highlight"><c- o>&lt;=></c-></code> provides a given order <code class="highlight"><c- n>X</c-></code>, then the default implementation of <code class="highlight"><c- n>X_order</c-></code> should use it.</p>
     <li data-md>
-     <p><dfn data-dfn-type="dfn" data-noexport id="corollary-2">Corollary 2<a class="self-link" href="#corollary-2"></a></dfn>: from <a data-link-type="dfn" href="#consistency" id="ref-for-consistency①">Consistency</a>, <a data-link-type="dfn" href="#weakening" id="ref-for-weakening">Weakening</a> and <a data-link-type="dfn" href="#customization" id="ref-for-customization">Customization</a>, it follows that:</p>
+     <p><dfn data-dfn-type="dfn" data-noexport id="corollary-2">Corollary 2<a class="self-link" href="#corollary-2"></a></dfn>: from <a data-link-type="dfn" href="#consistency" id="ref-for-consistency①">Consistency</a>, <a data-link-type="dfn" href="#weakening" id="ref-for-weakening">Weakening</a> and <a data-link-type="dfn" href="#customisation" id="ref-for-customisation">Customisation</a>, it follows that:</p>
      <ul>
       <li data-md>
        <p>if <code class="highlight"><c- o>&lt;=></c-></code> does not provide a strong enough order, but a stronger ordering function (e.g. <code class="highlight"><c- n>strong_order</c-></code> for <code class="highlight"><c- n>weak_order</c-></code>, <code class="highlight"><c- n>weak_order</c-></code> for <code class="highlight"><c- n>partial_order</c-></code>) is available, then the weaker ordering function must fall back on it (this works recursively, so if <code class="highlight"><c- n>strong_order</c-></code> is defined, so is <code class="highlight"><c- n>partial_order</c-></code>).</p>
@@ -1651,29 +1651,29 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="corollary-4">Corollary 4</dfn>: From <a data-link-type="dfn" href="#fallback" id="ref-for-fallback①">Fallback</a> and <a data-link-type="dfn" href="#ambiguity-of-legacy" id="ref-for-ambiguity-of-legacy">Ambiguity of Legacy</a>, it follows that by using a fallback function, the user is asserting that <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code> implement the corresponding ordering.</p>
     <li data-md>
-     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="corollary-5">Corollary 5</dfn>: From <a data-link-type="dfn" href="#customization" id="ref-for-customization①">Customization</a> and the definition of <em>customization point</em>, it follows that <code class="highlight"><c- o>*</c-><c- n>_order</c-></code> functions must be specified as <i>does not participate in overload resolution</i> when they cannot be synthesized according to the above rules.</p>
+     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="corollary-5">Corollary 5</dfn>: From <a data-link-type="dfn" href="#customisation" id="ref-for-customisation①">Customisation</a> and the definition of <em>customisation point</em>, it follows that <code class="highlight"><c- o>*</c-><c- n>_order</c-></code> functions must be specified as <i>does not participate in overload resolution</i> when they cannot be synthesized according to the above rules.</p>
     <li data-md>
-     <p><dfn data-dfn-type="dfn" data-noexport id="corollary-6">Corollary 6<a class="self-link" href="#corollary-6"></a></dfn>: From <a data-link-type="dfn" href="#corollary-4" id="ref-for-corollary-4">Corollary 4</a> and <a data-link-type="dfn" href="#corollary-5" id="ref-for-corollary-5">Corollary 5</a> it follows that the fallbacks and the customization points cannot be the same functions, as their roles are fundamentally incompatible. To illustrate: the fallback function for synthesizing <code class="highlight"><c- n>strong_ordering</c-></code> must exist whenever <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code> do, but the <code class="highlight"><c- n>strong_order</c-></code> customization point must not be synthesized purely from those.</p>
+     <p><dfn data-dfn-type="dfn" data-noexport id="corollary-6">Corollary 6<a class="self-link" href="#corollary-6"></a></dfn>: From <a data-link-type="dfn" href="#corollary-4" id="ref-for-corollary-4">Corollary 4</a> and <a data-link-type="dfn" href="#corollary-5" id="ref-for-corollary-5">Corollary 5</a> it follows that the fallbacks and the customisation points cannot be the same functions, as their roles are fundamentally incompatible. To illustrate: the fallback function for synthesizing <code class="highlight"><c- n>strong_ordering</c-></code> must exist whenever <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code> do, but the <code class="highlight"><c- n>strong_order</c-></code> customisation point must not be synthesized purely from those.</p>
    </ul>
    <p>In addition, we have made the following observations:</p>
    <ul>
     <li data-md>
      <p>Given <a data-link-type="biblio" href="#biblio-d1186r1">[D1186R1]</a> provides a method of generating a <code class="highlight"><c- o>&lt;=></c-></code> operator from <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code>, we should (due to <a data-link-type="dfn" href="#consistency" id="ref-for-consistency③">Consistency</a>) defer to that method for synthesizing the fallback functions.</p>
     <li data-md>
-     <p>If <code class="highlight"><c- n>strong_order</c-></code> is a customization point for providing a stronger order than <code class="highlight"><c- o>&lt;=></c-></code> does, data structures that recurse to their contents for <code class="highlight"><c- o>&lt;=></c-></code> should also recurse for <code class="highlight"><c- n>strong_order</c-></code>.</p>
+     <p>If <code class="highlight"><c- n>strong_order</c-></code> is a customisation point for providing a stronger order than <code class="highlight"><c- o>&lt;=></c-></code> does, data structures that recurse to their contents for <code class="highlight"><c- o>&lt;=></c-></code> should also recurse for <code class="highlight"><c- n>strong_order</c-></code>.</p>
     <li data-md>
      <p>Given that the <code class="highlight"><c- o>&lt;=></c-></code> operator is not being provided for any of the types in the standard library C++20, we are deferring proposing this until such time as <code class="highlight"><c- o>&lt;=></c-></code> is proposed for them as well.</p>
    </ul>
    <h2 class="heading settled" data-level="5" id="discussion"><span class="secno">5. </span><span class="content">Discussion</span><a class="self-link" href="#discussion"></a></h2>
-   <h3 class="heading settled" data-level="5.1" id="discussion-customization"><span class="secno">5.1. </span><span class="content">Discussion of the <a data-link-type="dfn" href="#customization" id="ref-for-customization②">Customization</a> principle</span><a class="self-link" href="#discussion-customization"></a></h3>
-   <p>The arguments around whether <code class="highlight"><c- n>strong_order</c-></code> should be a customization point have centered around the following questions:</p>
+   <h3 class="heading settled" data-level="5.1" id="discussion-customisation"><span class="secno">5.1. </span><span class="content">Discussion of the <a data-link-type="dfn" href="#customisation" id="ref-for-customisation②">Customisation</a> principle</span><a class="self-link" href="#discussion-customisation"></a></h3>
+   <p>The arguments around whether <code class="highlight"><c- n>strong_order</c-></code> should be a customisation point have centered around the following questions:</p>
    <ul>
     <li data-md>
      <p>Is it even useful?</p>
     <li data-md>
      <p>Given that it is viral, is it worth the implementation effort?</p>
     <li data-md>
-     <p>Should all of the comparison algorithms be customization points?</p>
+     <p>Should all of the comparison algorithms be customisation points?</p>
     <li data-md>
      <p>How can this be taught?</p>
    </ul>
@@ -1688,14 +1688,14 @@ ordering for them, e.g. so that they can be used in containers such as <code cla
 floating point numbers, but it breaks down quickly when we try more complicated
 examples such as <code class="highlight"><c- n>set</c-><c- o>&lt;</c-><c- n>optional</c-><c- o>&lt;</c-><c- b>float</c-><c- o>>></c-></code> or <code class="highlight"><c- n>set</c-><c- o>&lt;</c-><c- n>pair</c-><c- o>&lt;</c-><c- b>float</c-><c- p>,</c-><c- b>int</c-><c- o>>></c-></code>. To make
 these examples work, we need to <em>customise</em> <code class="highlight"><c- n>strong_order</c-></code> for <code class="highlight"><c- n>optional</c-></code>, <code class="highlight"><c- n>pair</c-></code> and other container types, and for that to be permitted <code class="highlight"><c- n>strong_order</c-></code> must be a customisation point.</p>
-   <p>Having an agreed-upon customization point for an arbitrary order is long
+   <p>Having an agreed-upon customisation point for an arbitrary order is long
 overdue. It is time to define what that customisation point is, so it can be
 provided and used consistently across C++ libraries and applications. That name
-should be <code class="highlight"><c- n>strong_order</c-></code>, since <code class="highlight"><c- n>default_order</c-></code> as a distinct customization
+should be <code class="highlight"><c- n>strong_order</c-></code>, since <code class="highlight"><c- n>default_order</c-></code> as a distinct customisation
 point was rejected by LEWG in San Diego in favor of the design in R0 of this
 paper.</p>
    <h4 class="heading settled" data-level="5.1.2" id="impl-effort"><span class="secno">5.1.2. </span><span class="content">Given that it is viral, is it worth the implementation effort?</span><a class="self-link" href="#impl-effort"></a></h4>
-   <p>Given that any customization point we designate has to potentially be overloaded for all the generic wrappers in the standard library, is it worth the effort of defining them?</p>
+   <p>Given that any customisation point we designate has to potentially be overloaded for all the generic wrappers in the standard library, is it worth the effort of defining them?</p>
    <p>This paper does not propose any such wrappers, because the standard library does not even support <code class="highlight"><c- k>operator</c-> <c- o>&lt;=></c-></code> for such wrapper types yet. This paper only proposes that <code class="highlight"><c- n>strong_order</c-></code> be established as a customisation point.</p>
    <h4 class="heading settled" data-level="5.1.3" id="faq-teaching"><span class="secno">5.1.3. </span><span class="content">How can I teach this?</span><a class="self-link" href="#faq-teaching"></a></h4>
    <p>For types that endeavour to be <em>Regular</em> or something like it (as in, have sane value semantics), do the following.</p>
@@ -1738,7 +1738,7 @@ These will find the most appropriate ordering available, or SFINAE away if no su
    <h2 class="heading settled" data-level="6" id="lewg-questions"><span class="secno">6. </span><span class="content">Questions for LEWG:</span><a class="self-link" href="#lewg-questions"></a></h2>
    <ol>
     <li data-md>
-     <p>Is there consensus that the <a data-link-type="dfn" href="#customization" id="ref-for-customization③">Customization</a> premise (as above) is correct and should be adopted?</p>
+     <p>Is there consensus that the <a data-link-type="dfn" href="#customisation" id="ref-for-customisation③">Customisation</a> premise (as above) is correct and should be adopted?</p>
      <ul>
       <li data-md>
        <p>If not, then should the IEC559 exception bullet in the current working draft be removed?</p>
@@ -1758,7 +1758,7 @@ needs equality (as EWG did in San Diego), we should also avoid doing so in the
 library. However, without making assumptions about the behaviour of <code class="highlight"><c- o>==</c-></code>, there
 is no way to implement <code class="highlight"><c- n>strong_equal</c-></code> and <code class="highlight"><c- n>weak_equal</c-></code> without calling <code class="highlight"><c- o>&lt;=></c-></code>.</p>
    <p>Therefore, we propose removing the <code class="highlight"><c- n>strong_equal</c-></code> and <code class="highlight"><c- n>weak_equal</c-></code> algorithms.</p>
-   <h3 class="heading settled" data-level="7.2" id="proposal-customization"><span class="secno">7.2. </span><span class="content">Make <code class="highlight"><c- n>strong_order</c-></code> and friends customization points</span><a class="self-link" href="#proposal-customization"></a></h3>
+   <h3 class="heading settled" data-level="7.2" id="proposal-customisation"><span class="secno">7.2. </span><span class="content">Make <code class="highlight"><c- n>strong_order</c-></code> and friends customisation points</span><a class="self-link" href="#proposal-customisation"></a></h3>
    <p>For the functions <code class="highlight"><c- n>strong_order</c-></code>, <code class="highlight"><c- n>weak_order</c-></code> and <code class="highlight"><c- n>partial_order</c-></code> we propose to:</p>
    <ul>
     <li data-md>
@@ -1781,9 +1781,9 @@ baked into the generic <code class="highlight"><c- n>strong_order</c-></code> fu
    </ul>
    <p>These overloads should implement the <code class="highlight"><c- n>totalOrder</c-></code> operation as specified in
 ISO/IEC/IEEE 60559, and should not participate in overload resolution if <code class="highlight"><c- n>numeric_limts</c-><c- o>&lt;</c-><c- n>T</c-><c- o>>::</c-><c- n>is_iec559</c-></code> is <code class="highlight">false</code> for the type of their arguments.</p>
-   <h3 class="heading settled" data-level="7.4" id="proposal-weakening"><span class="secno">7.4. </span><span class="content">Make the weaker customization points call stronger customizatoin points</span><a class="self-link" href="#proposal-weakening"></a></h3>
-   <p>To handle cases such as where a type provides a <code class="highlight"><c- n>partial_ordering</c-></code> from <code class="highlight"><c- o>&lt;=></c-></code> and a <code class="highlight"><c- n>strong_order</c-></code> overload, if a customization point cannot get an
-appropriate result from calling <code class="highlight"><c- o>&lt;=></c-></code>, it should try to call a customization
+   <h3 class="heading settled" data-level="7.4" id="proposal-weakening"><span class="secno">7.4. </span><span class="content">Make the weaker customisation points call stronger customizatoin points</span><a class="self-link" href="#proposal-weakening"></a></h3>
+   <p>To handle cases such as where a type provides a <code class="highlight"><c- n>partial_ordering</c-></code> from <code class="highlight"><c- o>&lt;=></c-></code> and a <code class="highlight"><c- n>strong_order</c-></code> overload, if a customisation point cannot get an
+appropriate result from calling <code class="highlight"><c- o>&lt;=></c-></code>, it should try to call a customisation
 point for an order stronger than its own. Specifically:</p>
    <ul>
     <li data-md>
@@ -1798,7 +1798,7 @@ behaviour:</p>
    <ul>
     <li data-md>
      <p>They will, in preference to anything else, return the
-result of calling the corresponding customization point.</p>
+result of calling the corresponding customisation point.</p>
     <li data-md>
      <p>They will not attempt to call <code class="highlight"><c- o>&lt;=></c-></code> directly, as this is called by the
 customisation point.</p>
@@ -1806,7 +1806,7 @@ customisation point.</p>
      <p>They will fall back to <code class="highlight"><c- o>==</c-></code> and <code class="highlight"><c- o>&lt;</c-></code> using the language mechanism proposed by <a data-link-type="biblio" href="#biblio-d1186r1">[D1186R1]</a> instead of calling <code class="highlight"><c- o>==</c-></code> and <code class="highlight"><c- o>&lt;</c-></code> directly.</p>
    </ul>
    <p>As per the original comparison algorithms, they will be defined as deleted if
-neither the corresponding customization point nor the <code class="highlight"><c- o>==</c-></code> and <code class="highlight"><c- o>&lt;</c-></code> operators
+neither the corresponding customisation point nor the <code class="highlight"><c- o>==</c-></code> and <code class="highlight"><c- o>&lt;</c-></code> operators
 are available.</p>
    <p>Following the same reasoning as in <a href="#proposal-remove-equal">§7.1 Remove the strong_equal and weak_equal comparison algorithms</a>, there will be no fallback
 functions for <code class="highlight"><c- n>strong_equality</c-></code> and <code class="highlight"><c- n>weak_equality</c-></code>.</p>
@@ -1824,7 +1824,7 @@ functions for <code class="highlight"><c- n>strong_equality</c-></code> and <cod
     <li data-md>
      <p><code class="highlight"><c- n>X_order_fallback</c-></code></p>
    </ul>
-   <p>See the <a data-link-type="dfn" href="#fallback" id="ref-for-fallback④">fallback</a> discussion on why the <code class="highlight"><c- n>X_order</c-></code> names should be given to the customization points.</p>
+   <p>See the <a data-link-type="dfn" href="#fallback" id="ref-for-fallback④">fallback</a> discussion on why the <code class="highlight"><c- n>X_order</c-></code> names should be given to the customisation points.</p>
    <h2 class="heading settled" data-level="8" id="wording"><span class="secno">8. </span><span class="content">Proposed Wording</span><a class="self-link" href="#wording"></a></h2>
    <p>Change the current <code class="highlight"><c- n>strong_order</c-></code> to <code class="highlight"><c- n>assumed_strong_order</c-></code> (but see bikeshedding section):</p>
    <p><code class="highlight"><c- k>template</c-><c- o>&lt;</c-><c- k>class</c-> <c- nc>T</c-><c- o>></c-> <c- k>constexpr</c-> <c- n>strong_ordering</c-></code> <span class="ins"><code class="highlight"><c- n>assumed</c-></code></span><code class="highlight"><c- n>_strong_order</c-><c- p>(</c-><c- k>const</c-> <c- n>T</c-><c- o>&amp;</c-> <c- n>a</c-><c- p>,</c-> <c- k>const</c-> <c- n>T</c-><c- o>&amp;</c-> <c- n>b</c-><c- p>);</c-></code></p>
@@ -1910,9 +1910,9 @@ functions for <code class="highlight"><c- n>strong_equality</c-></code> and <cod
      <li>(5.4) Otherwise, the function is defined as deleted.
     </ul>
    </div>
-   <p>Then add the <code class="highlight"><c- n>strong_order</c-></code> customization point object:</p>
+   <p>Then add the <code class="highlight"><c- n>strong_order</c-></code> customisation point object:</p>
    <div class="ins">
-     (#) The name <code class="highlight"><c- n>strong_order</c-></code> denotes a customization point object. The expression <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> for some subexpressions <code class="highlight"><c- n>E</c-></code> and <code class="highlight"><c- n>F</c-></code> with type <code class="highlight"><c- n>T</c-></code> is expression-equivalent to: 
+     (#) The name <code class="highlight"><c- n>strong_order</c-></code> denotes a customisation point object. The expression <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> for some subexpressions <code class="highlight"><c- n>E</c-></code> and <code class="highlight"><c- n>F</c-></code> with type <code class="highlight"><c- n>T</c-></code> is expression-equivalent to: 
     <ul style="list-style-type: none; padding-left: 0px;">
      <li>(#.1) <code class="highlight"><c- n>strong_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> if it is a valid expression,
      <li>(#.2) Otherwise, <code class="highlight"><c- n>E</c-> <c- o>&lt;=></c-> <c- n>F</c-></code> if it is a valid expression and its type is convertible to <code class="highlight"><c- n>strong_ordering</c-></code>,
@@ -1922,9 +1922,9 @@ functions for <code class="highlight"><c- n>strong_equality</c-></code> and <cod
    </div>
    <p>Add overloads for IEC559 types:</p>
    <div class="ins"> (#) <code class="highlight"><c- n>strong_order</c-><c- p>(</c-><c- n>T</c-><c- p>,</c-> <c- n>T</c-><c- p>)</c-></code> when <code class="highlight"><c- n>T</c-></code> is a type for which <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>numeric_limits</c-><c- o>&lt;</c-><c- n>T</c-><c- o>>::</c-><c- n>is_iec559</c-></code> is <code class="highlight">true</code> shall be a valid expression, whose value shall be consistent with the totalOrder operation as specified in ISO/IEC/IEEE 60559. </div>
-   <p>Add the <code class="highlight"><c- n>weak_order</c-></code> customization point object:</p>
+   <p>Add the <code class="highlight"><c- n>weak_order</c-></code> customisation point object:</p>
    <div class="ins">
-     (#) The name <code class="highlight"><c- n>weak_order</c-></code> denotes a customization point object. The expression <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>weak_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> for some subexpressions <code class="highlight"><c- n>E</c-></code> and <code class="highlight"><c- n>F</c-></code> with type <code class="highlight"><c- n>T</c-></code> is expression-equivalent to: 
+     (#) The name <code class="highlight"><c- n>weak_order</c-></code> denotes a customisation point object. The expression <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>weak_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> for some subexpressions <code class="highlight"><c- n>E</c-></code> and <code class="highlight"><c- n>F</c-></code> with type <code class="highlight"><c- n>T</c-></code> is expression-equivalent to: 
     <ul style="list-style-type: none;">
      <li>(#.1) <code class="highlight"><c- n>weak_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> if it is a valid expression,
      <li>(#.2) Otherwise, <code class="highlight"><c- n>E</c-> <c- o>&lt;=></c-> <c- n>F</c-></code> if it is a valid expression and its type is convertible to <code class="highlight"><c- n>weak_ordering</c-></code>,
@@ -1933,9 +1933,9 @@ functions for <code class="highlight"><c- n>strong_equality</c-></code> and <cod
     </ul>
      [Note: Whenever <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>weak_order</c-></code> is a valid expression, its type is convertible to <code class="highlight"><c- n>weak_ordering</c-></code>. --end note] 
    </div>
-   <p>Add the <code class="highlight"><c- n>partial_order</c-></code> customization point object:</p>
+   <p>Add the <code class="highlight"><c- n>partial_order</c-></code> customisation point object:</p>
    <div class="ins">
-     (#) The name <code class="highlight"><c- n>partial_order</c-></code> denotes a customization point object. The expression <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>partial_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> for some subexpressions <code class="highlight"><c- n>E</c-></code> and <code class="highlight"><c- n>F</c-></code> with type <code class="highlight"><c- n>T</c-></code> is expression-equivalent to: 
+     (#) The name <code class="highlight"><c- n>partial_order</c-></code> denotes a customisation point object. The expression <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>partial_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> for some subexpressions <code class="highlight"><c- n>E</c-></code> and <code class="highlight"><c- n>F</c-></code> with type <code class="highlight"><c- n>T</c-></code> is expression-equivalent to: 
     <ul style="list-style-type: none;">
      <li>(#.1) <code class="highlight"><c- n>partial_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> if it is a valid expression,
      <li>(#.2) Otherwise, <code class="highlight"><c- n>E</c-> <c- o>&lt;=></c-> <c- n>F</c-></code> if it is a valid expression and its type is convertible to <code class="highlight"><c- n>partial_ordering</c-></code>,
@@ -1956,19 +1956,19 @@ functions for <code class="highlight"><c- n>strong_equality</c-></code> and <cod
     <li data-md>
      <p><strong>Richard Smith</strong> for further fixing my example in light of Concepts, and example code.</p>
     <li data-md>
-     <p><strong>Herb Sutter and Walter Brown</strong> for providing (mutually opposing) guidance on customization points.</p>
+     <p><strong>Herb Sutter and Walter Brown</strong> for providing (mutually opposing) guidance on customisation points.</p>
     <li data-md>
      <p><strong>Louis Dionne</strong> for great comments on the structure of the paper and how to bring the focus where it needs to be;</p>
     <li data-md>
      <p><strong>Walter Brown</strong> for representing the paper at a committee meeting when Gašper could not make it in person, and guidance with direction;</p>
     <li data-md>
-     <p><strong>Barry Revzin</strong> for representing the paper at a committee meeting when Gašper could not make it in person, and his various papers that touch ours, and for pre-reviewing our wording and suggesting we make the customization points CPOs, and reworking his paper to support the <code class="highlight"><c- mi>3</c-><c- n>WAY</c-><c- o>&lt;</c-><c- n>strength</c-><c- o>></c-><c- p>(</c-><c- n>x</c-><c- p>,</c-> <c- n>y</c-><c- p>)</c-></code> syntax.</p>
+     <p><strong>Barry Revzin</strong> for representing the paper at a committee meeting when Gašper could not make it in person, and his various papers that touch ours, and for pre-reviewing our wording and suggesting we make the customisation points CPOs, and reworking his paper to support the <code class="highlight"><c- mi>3</c-><c- n>WAY</c-><c- o>&lt;</c-><c- n>strength</c-><c- o>></c-><c- p>(</c-><c- n>x</c-><c- p>,</c-> <c- n>y</c-><c- p>)</c-></code> syntax.</p>
     <li data-md>
      <p><strong>Herb Sutter</strong> for his comments and support for getting ordering right.</p>
    </ul>
    <p>And, <em>again</em>, a special thank-you to Walter Brown, who, with his final lightning talk in Bellevue, reminded us to remember whose shoulders we are standing on.</p>
    <p>Thank you all!</p>
-   <h2 class="heading settled" id="example-cust-point"><span class="content">Appendix A: Proof <code class="highlight"><c- n>strong_order</c-></code> is not a valid customization point</span><a class="self-link" href="#example-cust-point"></a></h2>
+   <h2 class="heading settled" id="example-cust-point"><span class="content">Appendix A: Proof <code class="highlight"><c- n>strong_order</c-></code> is not a valid customisation point</span><a class="self-link" href="#example-cust-point"></a></h2>
    <p>Say we have a template struct representing the Gaussian integers, with a <em>natural order</em> defined by the Manhattan distance from <code class="highlight"><c- mi>0</c-><c- o>+</c-><c- mi>0</c-><c- n>i</c-></code>. This struct still defines a <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_order</c-></code> to model <strong>Regular</strong>.</p>
    <p class="note" role="note"><span>Note:</span> The <strong>Regular</strong> above refers to the <em>Elements of Programming</em> concept, not the ISO C++ <strong>Regular</strong>, which is weaker.</p>
    <p class="note" role="note"><span>Note:</span> There is no natural order on Gaussian integers, but humor this example, please.</p>
@@ -2167,7 +2167,7 @@ functions for <code class="highlight"><c- n>strong_equality</c-></code> and <cod
    <li><a href="#corollary-4">Corollary 4</a><span>, in §4</span>
    <li><a href="#corollary-5">Corollary 5</a><span>, in §4</span>
    <li><a href="#corollary-6">Corollary 6</a><span>, in §4</span>
-   <li><a href="#customization">Customization</a><span>, in §4</span>
+   <li><a href="#customisation">Customisation</a><span>, in §4</span>
    <li><a href="#fallback">Fallback</a><span>, in §4</span>
    <li><a href="#weakening">Weakening</a><span>, in §4</span>
   </ul>
@@ -2217,12 +2217,12 @@ functions for <code class="highlight"><c- n>strong_equality</c-></code> and <cod
     <li><a href="#ref-for-ambiguity-of-legacy①">6. Questions for LEWG:</a>
    </ul>
   </aside>
-  <aside class="dfn-panel" data-for="customization">
-   <b><a href="#customization">#customization</a></b><b>Referenced in:</b>
+  <aside class="dfn-panel" data-for="customisation">
+   <b><a href="#customisation">#customisation</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-customization">4. Principles</a> <a href="#ref-for-customization①">(2)</a>
-    <li><a href="#ref-for-customization②">5.1. Discussion of the Customization principle</a>
-    <li><a href="#ref-for-customization③">6. Questions for LEWG:</a>
+    <li><a href="#ref-for-customisation">4. Principles</a> <a href="#ref-for-customisation①">(2)</a>
+    <li><a href="#ref-for-customisation②">5.1. Discussion of the Customisation principle</a>
+    <li><a href="#ref-for-customisation③">6. Questions for LEWG:</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="fallback">
