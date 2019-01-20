@@ -103,9 +103,9 @@ From these principles, these corollaries follow:
 
 In addition, we have made the following observations:
 
-- Given [[D1185R1]] provides a method of generating a `<=>` operator from `<` and `==`, we should (due to [=Consistency=]) defer to that method for synthesizing the fallback functions.
+- Given [[D1186R1]] provides a method of generating a `<=>` operator from `<` and `==`, we should (due to [=Consistency=]) defer to that method for synthesizing the fallback functions.
 - If `strong_order` is a customization point for providing a stronger order than `<=>` does, data structures that recurse to their contents for `<=>` should also recurse for `strong_order`.
-- Given that the '<=>' operator is not being provided for any of the types in the standard library C++20, we are deferring proposing this until such time as `<=>` is proposed for them as well.
+- Given that the `<=>` operator is not being provided for any of the types in the standard library C++20, we are deferring proposing this until such time as `<=>` is proposed for them as well.
 
 Discussion {#discussion}
 ========================
@@ -125,15 +125,32 @@ The arguments around whether `strong_order` should be a customization point have
 
 The iec559 exception seemed useful enough until it was merged. The issue is that any time one would want to put an iec559 type into a container, say, optional or a tuple, they would have to define `strong_order` for that container type. However, the current wording disallows that completely. As an example, it is impossible to define `strong_order` for `complex<float>` (e.g. as a lexicographic ordering) with the current wording, even though that's what it should be for speed (but there should not be a `<` for complex).
 
-Having a customization point is useful for any type that does not provide a strong `operator <=>`, but wants to enable use of `std::unique` on sequences of it. Such types don't care about the order; they care about `==`, but the function that establishes the precondition to `unique` and `sort` *does* care about an order that's compatible with `==`, which is `strong_order`, and by premise, not `<=>`. Same goes for putting it in a `std::set` or `std::map` where defining `std::hash` is not an obvious exercise and consequently the unordered containers are not an option.
+Having a customization point is useful for any type that does not provide a strong `operator <=>`, but wants to enable use of `std::unique` on sequences of it. Such types don't care about the order; they care about `==`, but the function that establishes the precondition to `unique` and `sort` *does* care about an order that's compatible with `==`, which is `strong_order`, and by premise, not `<=>`. Same goes for putting it in a `std::set` or `std::map` wherever defining `std::hash` is not an obvious exercise, eliminating the unordered containers as an option.
 
 It's useful enough for *Stepanov* and *Mc Jones* to include it in *Regular* in <i>Elements of Programming</i>.
 
-Tony van Eerd: "Every place I go the first thing I write is sorted vector."
+> "Every place I go one of the first things I end up writing is `sorted_vector`."<br>
+> &nbsp;&nbsp;&nbsp;&nbsp;-- Tony Van Eerd
 
-This is a short list of the most obvious algorithms that require any order to work:
-- unique (via sort)
-- set/map
+This is a short list of the most obvious algorithms and data structures that require an arbitrary order to work:
+- `unique` (via `sort`)
+- `set`
+- `map`
+- `sorted_vector`
+- `lower_bound`, `upper_bound`, `equal_range`, `binary_search`
+- `heap` (needs a weak order, but the order is rarely the default)
+- `priority_queue` (just needs a weak order, and the order is rarely the default)
+- Fast implementations of set algorithms (union, multiunion, intersection, difference, symmetric difference)
+- Algebraic Structure Algorithms (think polynomials and generalized domains, used in number theory):
+    - Fast Quotient/Remainder
+    - Greatest Common Divisor
+    - Generalized Euclidean Algorithm
+
+Please note that for a fair number of these, the order on the type needs absolutely no meaning other than establishing a global ordering relation on elements for the purpose of performance. This is definitely not just about hash maps.
+
+If set operations are a bottleneck in your program (web search is one such application), hashed containers are the absolute worst possible implementations due to poor cache locality (the whole point of hashing is to spread values around). Sorted vectors are far faster due to being accessed in memory order.
+
+The point is, yes, having an agreed-upon customization point for an arbitrary order is long overdue. It is time to define it, so it can provided and be used consistently by all C++ programs and types henceforth by agreeing on a name for it. That name is `strong_order`, by virtue of `default_order` as a distinct customization point being rejected by LEWG in San Diego in favor of the R0 design.
 
 
 ### Given that it is viral, is it worth the implementation effort? ### {#impl-effort}
@@ -149,22 +166,26 @@ For types that endeavour to be *Regular* or something like it (as in, have sane 
 
 
 #### Writing new types: #### {#wrinting-new}
-- `operator==` defines what "strong equality" means. This is because copies must compare equal, and `==` should be the finest relation that observes this rule.
-- if `(x <=> y) == 0` if and only if `x == y`, then `operator<=>` should return `strong_ordering`, otherwise it should return `weak_ordering` (unless it only defines a partial order, but then you're not asking the question).
-- If your type does not provide an order, you should still provide an overload of `strong_order`.
+- `operator==` defines what "strong equality" means. This is because copies must compare equal, and `==` should be the finest relation that observes this rule. EOP defines it as "must represent the same value in the domain of the type."
+- if `(x <=> y) == 0` if and only if `x == y`, then `operator<=>` should return `strong_ordering`, otherwise it should return `weak_ordering` (unless it only defines a partial order, and then it must return `partial_ordering` anyway).
+- If your type does not provide an order, you should still provide an overload of `strong_order` that defines an arbitrary order consistent with `==`.
 - If you are obeying the rule of zero, writing `auto operator<=>(...) = default` will give you the correct `==` and `<=>` without any additional work. In most cases, this should already be enough, since `<=>` will result in a `strong_ordering`.
 - if writing a generic wrapper, or your constituent types have an overloaded `strong_order`, you must then also define `strong_order` to be:
 
 ```
 strong_ordering strong_order(T x, T y) {
-  return strong_order(tie(x.m1, x.m2, ...), tie(y.m1, y.m2, ...));
+  if (auto ord = strong_order(x.a, y.a); is_neq(ord)) { return ord; }
+  if (auto ord = strong_order(x.b, y.b); is_neq(ord)) { return ord; }
+  // ... for all members
+  return strong_ordering::equal;
 }
 ```
 or, hopefully, when we get reflection, be able to generate it.
 
 
 #### Using orderings: #### {#using-orderings}
-Generic algorithms in general should require and call `weak_order(x, y)`. It will either use the default (weak) ordering on `<=>`, so there are no surprises, or fall back on `strong_order`, which will call `<=>` if it is strong, so no suprises, and if `<=>` does not exist, the type will hopefully have an overload for `strong_order` specifically, which is, again, no surprises. It always does the right thing.
+
+Generic algorithms in general should require and call `weak_order(x, y)`. It will either use the default (convertible-to-weak) ordering on `<=>`, so there are no surprises, or, if not usable, fall back on the hopefully provided `strong_order` which again is not surprising. It always does the right thing.
 
 Data structures that require a weak order should default to it as well.
 
