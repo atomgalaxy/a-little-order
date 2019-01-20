@@ -252,7 +252,7 @@ For the functions `strong_order`, `weak_order` and `partial_order` we propose to
 Replace the iec559 rule in `strong_order` with separate overloads {#proposal-iec559}
 ------------------------------------------------------------------------------------
 
-Since `strong_order` as a customisation point, the strong order for floating
+Since `strong_order` is a customisation point, the strong order for floating
 point types should be provided as overloads of `strong_order` rather than being
 baked into the generic `strong_order` function.
 
