@@ -316,18 +316,6 @@ Other options to consider:
 See the [=fallback=] discussion on why the `X_order` names should be given to the customization points.
 
 
-On Compatibility Between the Natural and Default Orderings {#compat}
-====================================================================
-
-*Elements of Programming* specifies that for types where the natural and default orderings differ, the default ordering should be *finer* than the natural one: that is, if `a` and `b` are *comparable* and compare unequal under `<=>`, the default order produces the same result (less or greater).
-
-It is the opinion of the authors that requiring this in the language of the standard library as a mandatory semantic constraint seems like a bad idea.
-
-For instance, if one takes the Gaussian integers ordered by the Manhattan distance to zero (sum of absolute values of the two components), the compatible total order (a lexicographic ordering of every equivalence class) is far slower to compute than the simple lexicographic one.
-
-Furthermore, if needed, a *finer* compatible total order can always be achieved on the fly by comparing with the natural order first: if the result is `less` or `greater`, keep the result; otherwise, fall back on the default ordering.
-
-
 Proposed Wording {#wording}
 ===========================
 

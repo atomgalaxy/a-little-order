@@ -1230,7 +1230,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version 04b354547d55896d854a81cffb3965bd6f8758ec" name="generator">
   <link href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="fd85df019434da159cb0f16f98605fc5b6ac7989" name="document-revision">
+  <meta content="731a19541b34642c2dbdd35de0bca9025add4275" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1553,9 +1553,8 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
       <li><a href="#proposal-weakening"><span class="secno">7.4</span> <span class="content">Make the weaker customization points call stronger customizatoin points</span></a>
       <li><a href="#proposal-fallback"><span class="secno">7.5</span> <span class="content">Add fallback functions</span></a>
      </ol>
-    <li><a href="#compat"><span class="secno">8</span> <span class="content">On Compatibility Between the Natural and Default Orderings</span></a>
-    <li><a href="#wording"><span class="secno">9</span> <span class="content">Proposed Wording</span></a>
-    <li><a href="#ack"><span class="secno">10</span> <span class="content">Acknowledgments</span></a>
+    <li><a href="#wording"><span class="secno">8</span> <span class="content">Proposed Wording</span></a>
+    <li><a href="#ack"><span class="secno">9</span> <span class="content">Acknowledgments</span></a>
     <li><a href="#example-cust-point"><span class="secno"></span> <span class="content">Appendix A: Proof <code class="highlight"><c- n>strong_order</c-></code> is not a valid customization point</span></a>
     <li>
      <a href="#index"><span class="secno"></span> <span class="content">Index</span></a>
@@ -1855,12 +1854,7 @@ functions for <code class="highlight"><c- n>strong_equality</c-></code> and <cod
      <p><code class="highlight"><c- n>X_order_fallback</c-></code></p>
    </ul>
    <p>See the <a data-link-type="dfn" href="#fallback" id="ref-for-fallback④">fallback</a> discussion on why the <code class="highlight"><c- n>X_order</c-></code> names should be given to the customization points.</p>
-   <h2 class="heading settled" data-level="8" id="compat"><span class="secno">8. </span><span class="content">On Compatibility Between the Natural and Default Orderings</span><a class="self-link" href="#compat"></a></h2>
-   <p><em>Elements of Programming</em> specifies that for types where the natural and default orderings differ, the default ordering should be <em>finer</em> than the natural one: that is, if <code class="highlight"><c- n>a</c-></code> and <code class="highlight"><c- n>b</c-></code> are <em>comparable</em> and compare unequal under <code class="highlight"><c- o>&lt;=></c-></code>, the default order produces the same result (less or greater).</p>
-   <p>It is the opinion of the authors that requiring this in the language of the standard library as a mandatory semantic constraint seems like a bad idea.</p>
-   <p>For instance, if one takes the Gaussian integers ordered by the Manhattan distance to zero (sum of absolute values of the two components), the compatible total order (a lexicographic ordering of every equivalence class) is far slower to compute than the simple lexicographic one.</p>
-   <p>Furthermore, if needed, a <em>finer</em> compatible total order can always be achieved on the fly by comparing with the natural order first: if the result is <code class="highlight"><c- n>less</c-></code> or <code class="highlight"><c- n>greater</c-></code>, keep the result; otherwise, fall back on the default ordering.</p>
-   <h2 class="heading settled" data-level="9" id="wording"><span class="secno">9. </span><span class="content">Proposed Wording</span><a class="self-link" href="#wording"></a></h2>
+   <h2 class="heading settled" data-level="8" id="wording"><span class="secno">8. </span><span class="content">Proposed Wording</span><a class="self-link" href="#wording"></a></h2>
    <p>From section 24.x.4, Comparison Algorithms [cmp.alg], under <code class="highlight"><c- n>strong_order</c-></code>:</p>
    <div class="del">
      (1.1)  If <code class="highlight"><c- n>numeric_limits</c-><c- o>&lt;</c-><c- n>T</c-><c- o>>::</c-><c- n>is_iec559</c-></code> is true, returns a result of type <code class="highlight"><c- n>strong_ordering</c-></code> that is consistent with the <code class="highlight"><c- n>totalOrder</c-></code> operation as specified in ISO/IEC/IEEE 60559. 
@@ -1882,7 +1876,7 @@ functions for <code class="highlight"><c- n>strong_equality</c-></code> and <cod
    </div>
    <p>Under <code class="highlight"><c- p>[</c-><c- n>cmp</c-><c- p>.</c-><c- n>syn</c-><c- p>]</c-></code> -> <code class="highlight"><c- p>[</c-><c- n>cmp</c-><c- p>.</c-><c- n>alg</c-><c- p>]</c-></code>, insert declaration:</p>
    <div class="ins"> <code class="highlight"><c- k>template</c-> <c- o>&lt;</c-><c- k>class</c-> <c- nc>T</c-><c- o>></c-> <c- k>constexpr</c-> <c- n>strong_ordering</c-> <c- n>default_order</c-><c- p>(</c-><c- k>const</c-> <c- n>T</c-><c- o>&amp;</c-> <c- n>a</c-><c- p>,</c-> <c- k>const</c-> <c- n>T</c-><c- o>&amp;</c-> <c- n>b</c-><c- p>);</c-></code> </div>
-   <h2 class="heading settled" data-level="10" id="ack"><span class="secno">10. </span><span class="content">Acknowledgments</span><a class="self-link" href="#ack"></a></h2>
+   <h2 class="heading settled" data-level="9" id="ack"><span class="secno">9. </span><span class="content">Acknowledgments</span><a class="self-link" href="#ack"></a></h2>
    <p>We would like to thank</p>
    <ul>
     <li data-md>
