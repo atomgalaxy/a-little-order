@@ -1230,7 +1230,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version 04b354547d55896d854a81cffb3965bd6f8758ec" name="generator">
   <link href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="fb9695689fdc0c251eb2dd85af48aaabacdbd879" name="document-revision">
+  <meta content="edbc3ec370e102587dd2808a315d3b6beb17ce29" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1796,7 +1796,7 @@ is no way to implement <code class="highlight"><c- n>strong_equal</c-></code> an
      <p>Have the functions not participate in overload resolution (instead of being defined as deleted) if there is no strong order available.</p>
    </ul>
    <h3 class="heading settled" data-level="7.3" id="propose-iec559"><span class="secno">7.3. </span><span class="content">Replace the iec559 rule in <code class="highlight"><c- n>strong_order</c-></code> with separate overloads</span><a class="self-link" href="#propose-iec559"></a></h3>
-   <p>Since <code class="highlight"><c- n>strong_order</c-></code> as a customisation point, the strong order for floating
+   <p>Since <code class="highlight"><c- n>strong_order</c-></code> is a customisation point, the strong order for floating
 point types should be provided as overloads of <code class="highlight"><c- n>strong_order</c-></code> rather than being
 baked into the generic <code class="highlight"><c- n>strong_order</c-></code> function.</p>
    <p>We propose that the bullet point regarding <code class="highlight"><c- n>iec559</c-></code> be removed from the <code class="highlight"><c- n>strong_order</c-></code> algorithm, and that the following three overloads for <code class="highlight"><c- n>strong_order</c-></code> are added:</p>
