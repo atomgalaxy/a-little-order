@@ -26,6 +26,11 @@ ED: https://github.com/atomgalaxy/a-little-order/strong-ordering.bs
   text-decoration: line-through;
   text-decoration-color: rgb(255, 0, 0);
 }
+
+ul .std {
+  list-style-type: none;
+  padding-left: 0px;
+}
 </style>
 
 Revision History {#history}
@@ -317,7 +322,60 @@ See the [=fallback=] discussion on why the `X_order` names should be given to th
 Proposed Wording {#wording}
 ===========================
 
-From section 24.x.4, Comparison Algorithms [cmp.alg], under `strong_order`:
+From section 24.x.4, Comparison Algorithms [cmp.alg], remove `strong_equal` and `weak_equal`:
+
+<div class='del'>
+`template<class T> constexpr strong_equality strong_equal(const T& a, const T& b);`
+<ul>
+<li>4 <i>Effects</i>: Compares two values and produces a result of type `strong_equality`:</li>
+<ul>
+<li>(4.1) Returns a <=> b if that expression is well-formed and convertible to `strong_equality`.</li>
+<li>(4.2) Otherwise, if the expression a <=> b is well-formed, then the function is defined as deleted.</li>
+<li>(4.3) Otherwise, if the expression a == b is well-formed and convertible to bool, then</li>
+<ul>
+<li>(4.3.1) if a == b is true, returns `strong_equality::equal`;</li>
+<li>(4.3.2) otherwise, returns `strong_equality::nonequal`.</li>
+</ul>
+<li>(4.4) Otherwise, the function is defined as deleted.</li>
+</ul>
+</ul>
+
+
+`template<class T> constexpr weak_equality weak_equal(const T& a, const T& b);`
+<li>5 <i>Effects</i>: Compares two values and produces a result of type `weak_equality`:</li>
+<ul>
+<li>(5.1) Returns a <=> b if that expression is well-formed and convertible to `weak_equality`.</li>
+<li>(5.2) Otherwise, if the expression a <=> b is well-formed, then the function is defined as deleted.</li>
+<li>(5.3) Otherwise, if the expression a == b is well-formed and convertible to bool, then</li>
+<ul>
+<li>(5.3.1) if a == b is true, returns `weak_equality::equivalent`;</li>
+<li>(5.3.2) otherwise, returns `weak_equality::nonequivalent`.</li>
+</ul>
+<li>(5.4) Otherwise, the function is defined as deleted.</li>
+</ul>
+</div>
+
+Change the current `strong_order` to:
+
+`template<class T> constexpr strong_ordering` <span class='ins'>`assumed`</span>`_strong_order(const T& a, const T& b);`
+
+<ul class='std'>
+<li>1 Effects: Compares two values and produces a result of type `strong_ordering`:</li>
+<ul class='del'>
+<li class='del'>(1.1) If `numeric_­limits<T>::is_­iec559` is true, returns a result of type `strong_ordering` that is consistent with the totalOrder operation as specified in ISO/IEC/IEEE 60559.</li>
+<li>(1.2) Otherwise, returns a <=> b if that expression is well-formed and convertible to `strong_ordering`.</li>
+<li>(1.3) Otherwise, if the expression a <=> b is well-formed, then the function is defined as deleted.</li>
+<li>(1.4) Otherwise, if the expressions a == b and a < b are each well-formed and convertible to bool, then:</li>
+<ul>
+<li>(1.4.1) | `if a == b` is `true`, returns `strong_ordering::equal`;</li>
+<li>(1.4.2) | Otherwise, if `a < b` is `true`, returns `strong_ordering::less;`</li>
+<li>(1.4.3) | Otherwise, returns `strong_ordering::greater`.</li>
+</ul>
+<li>(1.5)   | Otherwise, the function is defined as deleted.</li>
+</ul>
+</ul>
+
+
 <div class='del'>
     (1.1)  If `numeric_limits<T>::is_iec559` is true, returns a result of type `strong_ordering`
 that is consistent with the `totalOrder` operation as specified in ISO/IEC/IEEE 60559.
