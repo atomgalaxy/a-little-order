@@ -1227,10 +1227,10 @@ Possible extra rowspan handling
       text-align: center;
     }
   </style>
-  <meta content="Bikeshed version 04b354547d55896d854a81cffb3965bd6f8758ec" name="generator">
+  <meta content="Bikeshed version 9c6ae748322940994300e90a77c34437364b40a6" name="generator">
   <link href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="fb9695689fdc0c251eb2dd85af48aaabacdbd879" name="document-revision">
+  <meta content="7f4c7180735e5f5ad60c015796df6b10269bf71d" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1547,10 +1547,10 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li>
      <a href="#proposal"><span class="secno">7</span> <span class="content">Proposal</span></a>
      <ol class="toc">
-      <li><a href="#remove-equal"><span class="secno">7.1</span> <span class="content">Remove the <code class="highlight"><c- n>strong_equal</c-></code> and <code class="highlight"><c- n>weak_equal</c-></code> comparison algorithms</span></a>
-      <li><a href="#propose-customization"><span class="secno">7.2</span> <span class="content">Make <code class="highlight"><c- n>strong_order</c-></code> and friends customization points</span></a>
-      <li><a href="#propose-iec559"><span class="secno">7.3</span> <span class="content">Replace the iec559 rule in <code class="highlight"><c- n>strong_order</c-></code> with separate overloads</span></a>
-      <li><a href="#propose-weakening"><span class="secno">7.4</span> <span class="content">Make the weaker customization points call stronger customizatoin points</span></a>
+      <li><a href="#proposal-remove-equal"><span class="secno">7.1</span> <span class="content">Remove the <code class="highlight"><c- n>strong_equal</c-></code> and <code class="highlight"><c- n>weak_equal</c-></code> comparison algorithms</span></a>
+      <li><a href="#proposal-customization"><span class="secno">7.2</span> <span class="content">Make <code class="highlight"><c- n>strong_order</c-></code> and friends customization points</span></a>
+      <li><a href="#proposal-iec559"><span class="secno">7.3</span> <span class="content">Replace the iec559 rule in <code class="highlight"><c- n>strong_order</c-></code> with separate overloads</span></a>
+      <li><a href="#proposal-weakening"><span class="secno">7.4</span> <span class="content">Make the weaker customization points call stronger customizatoin points</span></a>
       <li><a href="#proposal-fallback"><span class="secno">7.5</span> <span class="content">Add fallback functions</span></a>
      </ol>
     <li><a href="#compat"><span class="secno">8</span> <span class="content">On Compatibility Between the Natural and Default Orderings</span></a>
@@ -1781,13 +1781,13 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p>(The <a data-link-type="dfn" href="#consistency" id="ref-for-consistency④">Consistency</a>, <a data-link-type="dfn" href="#weakening" id="ref-for-weakening①">Weakening</a> and <a data-link-type="dfn" href="#ambiguity-of-legacy" id="ref-for-ambiguity-of-legacy①">Ambiguity of Legacy</a> are true from a good design, mathematical, and empirical point of view, respectively, so they are not subject to poll).</p>
    <p>If the answers to both of those questions are yes, then this paper follows in its entirety.</p>
    <h2 class="heading settled" data-level="7" id="proposal"><span class="secno">7. </span><span class="content">Proposal</span><a class="self-link" href="#proposal"></a></h2>
-   <h3 class="heading settled" data-level="7.1" id="remove-equal"><span class="secno">7.1. </span><span class="content">Remove the <code class="highlight"><c- n>strong_equal</c-></code> and <code class="highlight"><c- n>weak_equal</c-></code> comparison algorithms</span><a class="self-link" href="#remove-equal"></a></h3>
+   <h3 class="heading settled" data-level="7.1" id="proposal-remove-equal"><span class="secno">7.1. </span><span class="content">Remove the <code class="highlight"><c- n>strong_equal</c-></code> and <code class="highlight"><c- n>weak_equal</c-></code> comparison algorithms</span><a class="self-link" href="#proposal-remove-equal"></a></h3>
    <p>If we accept <a data-link-type="biblio" href="#biblio-p1185r0">[P1185R0]</a>'s rationale for not calling <code class="highlight"><c- o>&lt;=></c-></code> when the user only
 needs equality (as EWG did in San Diego), we should also avoid doing so in the
 library. However, without making assumptions about the behaviour of <code class="highlight"><c- o>==</c-></code>, there
 is no way to implement <code class="highlight"><c- n>strong_equal</c-></code> and <code class="highlight"><c- n>weak_equal</c-></code> without calling <code class="highlight"><c- o>&lt;=></c-></code>.</p>
    <p>Therefore, we propose removing the <code class="highlight"><c- n>strong_equal</c-></code> and <code class="highlight"><c- n>weak_equal</c-></code> algorithms.</p>
-   <h3 class="heading settled" data-level="7.2" id="propose-customization"><span class="secno">7.2. </span><span class="content">Make <code class="highlight"><c- n>strong_order</c-></code> and friends customization points</span><a class="self-link" href="#propose-customization"></a></h3>
+   <h3 class="heading settled" data-level="7.2" id="proposal-customization"><span class="secno">7.2. </span><span class="content">Make <code class="highlight"><c- n>strong_order</c-></code> and friends customization points</span><a class="self-link" href="#proposal-customization"></a></h3>
    <p>For the functions <code class="highlight"><c- n>strong_order</c-></code>, <code class="highlight"><c- n>weak_order</c-></code> and <code class="highlight"><c- n>partial_order</c-></code> we propose to:</p>
    <ul>
     <li data-md>
@@ -1795,7 +1795,7 @@ is no way to implement <code class="highlight"><c- n>strong_equal</c-></code> an
     <li data-md>
      <p>Have the functions not participate in overload resolution (instead of being defined as deleted) if there is no strong order available.</p>
    </ul>
-   <h3 class="heading settled" data-level="7.3" id="propose-iec559"><span class="secno">7.3. </span><span class="content">Replace the iec559 rule in <code class="highlight"><c- n>strong_order</c-></code> with separate overloads</span><a class="self-link" href="#propose-iec559"></a></h3>
+   <h3 class="heading settled" data-level="7.3" id="proposal-iec559"><span class="secno">7.3. </span><span class="content">Replace the iec559 rule in <code class="highlight"><c- n>strong_order</c-></code> with separate overloads</span><a class="self-link" href="#proposal-iec559"></a></h3>
    <p>Since <code class="highlight"><c- n>strong_order</c-></code> as a customisation point, the strong order for floating
 point types should be provided as overloads of <code class="highlight"><c- n>strong_order</c-></code> rather than being
 baked into the generic <code class="highlight"><c- n>strong_order</c-></code> function.</p>
@@ -1810,7 +1810,7 @@ baked into the generic <code class="highlight"><c- n>strong_order</c-></code> fu
    </ul>
    <p>These overloads should implement the <code class="highlight"><c- n>totalOrder</c-></code> operation as specified in
 ISO/IEC/IEEE 60559, and should not participate in overload resolution if <code class="highlight"><c- n>numeric_limts</c-><c- o>&lt;</c-><c- n>T</c-><c- o>>::</c-><c- n>is_iec559</c-></code> is false for the type of their arguments.</p>
-   <h3 class="heading settled" data-level="7.4" id="propose-weakening"><span class="secno">7.4. </span><span class="content">Make the weaker customization points call stronger customizatoin points</span><a class="self-link" href="#propose-weakening"></a></h3>
+   <h3 class="heading settled" data-level="7.4" id="proposal-weakening"><span class="secno">7.4. </span><span class="content">Make the weaker customization points call stronger customizatoin points</span><a class="self-link" href="#proposal-weakening"></a></h3>
    <p>To handle cases such as where a type provides a <code class="highlight"><c- n>partial_ordering</c-></code> from <code class="highlight"><c- o>&lt;=></c-></code> and a <code class="highlight"><c- n>strong_order</c-></code> overload, if a customization point cannot get an
 appropriate result from calling <code class="highlight"><c- o>&lt;=></c-></code>, it should try to call a customization
 point for an order stronger than its own. Specifically:</p>
@@ -1837,11 +1837,13 @@ customisation point.</p>
    <p>As per the original comparison algorithms, they will be defined as deleted if
 neither the corresponding customization point nor the <code class="highlight"><c- o>==</c-></code> and <code class="highlight"><c- o>&lt;</c-></code> operators
 are available.</p>
-   <p>Following the same reasoning as in <a href="#remove-equal">§7.1 Remove the strong_equal and weak_equal comparison algorithms</a>, there will be no fallback
+   <p>Following the same reasoning as in <a href="#proposal-remove-equal">§7.1 Remove the strong_equal and weak_equal comparison algorithms</a>, there will be no fallback
 functions for <code class="highlight"><c- n>strong_equality</c-></code> and <code class="highlight"><c- n>weak_equality</c-></code>.</p>
-   <p>We propose naming the fallback functions <code class="highlight"><c- n>strong_order_assume</c-></code>, <code class="highlight"><c- n>weak_order_assume</c-></code> and <code class="highlight"><c- n>partial_order_assume</c-></code>.</p>
+   <p>We propose naming the fallback functions <code class="highlight"><c- n>assumed_strong_order</c-></code>, <code class="highlight"><c- n>assumed_weak_order</c-></code> and <code class="highlight"><c- n>assumed_partial_order</c-></code>.</p>
    <p>Other options to consider:</p>
    <ul>
+    <li data-md>
+     <p><code class="highlight"><c- n>assumed_X_order</c-></code></p>
     <li data-md>
      <p><code class="highlight"><c- n>X_order_assume</c-></code></p>
     <li data-md>
