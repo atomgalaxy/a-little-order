@@ -228,15 +228,6 @@ If the answers to both of those questions are yes, then this paper follows in it
 Proposal {#proposal}
 ====================
 
-Make `strong_order` and friends customization points {#propose-customization}
------------------------------------------------------------------------------
-
-For the functions `strong_order`, `weak_order`, `partial_order`,
-`strong_equal` and `weak_equal`, we propose to:
-
-- Remove the fallbacks to `==` and `<`
-- Have the functions not participate in overload resolution (instead of being defined as deleted) if there is no strong order available.
-
 Remove the `strong_equal` and `weak_equal` comparison algorithms {#remove-equal}
 --------------------------------------------------------------------------------
 
@@ -247,6 +238,16 @@ library. However, without making assumptions about the behaviour of `==`, there
 is no way to implement `strong_equal` and `weak_equal` without calling `<=>`.
 
 Therefore, we propose removing the `strong_equal` and `weak_equal` algorithms.
+
+
+Make `strong_order` and friends customization points {#propose-customization}
+-----------------------------------------------------------------------------
+
+For the functions `strong_order`, `weak_order` and `partial_order` we propose to:
+
+- Remove the fallbacks to `==` and `<`
+- Have the functions not participate in overload resolution (instead of being defined as deleted) if there is no strong order available.
+
 
 
 Replace the iec559 rule in `strong_order` with separate overloads {#propose-iec559}
