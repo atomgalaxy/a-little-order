@@ -131,7 +131,7 @@ The arguments around whether `strong_order` should be a customization point have
 There are many algorithms and data strucutres that do not care about ordering
 per se, but do require some arbitrary order. Examples of these include `set`,
 `map`, and fast implementations of set algorithms (union, intersection,
-difference, etc), which are typically based on ordered sets.
+difference, etc), which are typically based on ordered sequences.
 
 There also exist types for which there is no natural strong ordering, such as
 `float` and `complex`. Even though these types do not have a natural strong
@@ -154,14 +154,14 @@ Having an agreed-upon customization point for an arbitrary order is long
 overdue. It is time to define what that customisation point is, so it can be
 provided and used consistently across C++ libraries and applications. That name
 should be `strong_order`, since `default_order` as a distinct customization
-point being rejected by LEWG in San Diego in favor of the design in R0 of this
+point was rejected by LEWG in San Diego in favor of the design in R0 of this
 paper.
 
 ### Given that it is viral, is it worth the implementation effort? ### {#impl-effort}
 
 Given that any customization point we designate has to potentially be overloaded for all the generic wrappers in the standard library, is it worth the effort of defining them?
 
-This paper does not propose any such wrappers, because the standard library does not even support `operator <=>` for such wrapper types yet. The authors only mean to propose `strong_order` be established as a customisation point.
+This paper does not propose any such wrappers, because the standard library does not even support `operator <=>` for such wrapper types yet. This paper only proposes that `strong_order` be established as a customisation point.
 
 ### How can I teach this? ### {#faq-teaching}
 
@@ -173,7 +173,7 @@ For types that endeavour to be *Regular* or something like it (as in, have sane 
 - if `(x <=> y) == 0` if and only if `x == y`, then `operator<=>` should return `strong_ordering`, otherwise it should return `weak_ordering` (unless it only defines a partial order, and then it must return `partial_ordering` anyway).
 - If your type does not provide an order, you should still provide an overload of `strong_order` that defines an arbitrary order consistent with `==`.
 - If you are obeying the rule of zero, writing `auto operator<=>(...) = default` will give you the correct `==` and `<=>` without any additional work. In most cases, this should already be enough, since `<=>` will result in a `strong_ordering`.
-- if writing a generic wrapper, or your constituent types have an overloaded `strong_order`, you must then also define `strong_order` to be:
+- If you are writing a generic wrapper, or your constituent types have an overloaded `strong_order`, you must then also define `strong_order` to be:
 
 ```
 strong_ordering strong_order(T x, T y) {
@@ -183,15 +183,11 @@ strong_ordering strong_order(T x, T y) {
   return strong_ordering::equal;
 }
 ```
-or, hopefully, when we get reflection, be able to generate it.
-
 
 #### Using orderings: #### {#using-orderings}
 
-Generic algorithms in general should require and call `weak_order(x, y)`. It will either use the default (convertible-to-weak) ordering on `<=>`, so there are no surprises, or, if not usable, fall back on the hopefully provided `strong_order` which again is not surprising. It always does the right thing.
-
-Data structures that require a weak order should default to it as well.
-
+Generic algorithms should require and call `strong_order(x, y)`, `weak_order(x, y)` or `partial_order(x, y)` (depending on the ordering requirements of the algorithm) after a `using namsepace std;`.
+These will find the most appropriate ordering available, or SFINAE away if no suitable ordering is available. For example, if an algorithm calls `weak_order` on a type which has `<=>` returning `partial_order`, does not provide an overload of `weak_order`, but does overload `strong_order`, then `strong_order` will end up being called. The intent is that these "always do the right thing".
 
 Discussion of the [=Fallback=] principle {#discussion-fallback}
 ---------------------------------------------------------------
