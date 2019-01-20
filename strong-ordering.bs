@@ -421,13 +421,13 @@ From section 24.x.4, Comparison Algorithms [cmp.alg], remove `strong_equal` and 
 Then add the `strong_order` customization point object:
 
 <div class='ins'>
-(#) The name `strong_order` denotes a customization point object. The expression `strong_order(E, E')` for some subexpressions `E` and `E'` with type `T` is expression-equivalent to:
+(#) The name `strong_order` denotes a customization point object. The expression `std::strong_order(E, F)` for some subexpressions `E` and `F` with type `T` is expression-equivalent to:
 <ul style='list-style-type: none; padding-left: 0px;'>
-<li>(#.1) `strong_order(E, E')` if it is a valid expression,</li>
-<li>(#.2) Otherwise, `E <=> E'` if it is a valid expression and its type is convertible to `strong_ordering`,</li>
-<li>(#.3) Otherwise, `strong_order(E, E')` is ill-formed. [Note: This case can result in substitution failure when `strong_order(E, E')` appears in the immediate context of a template instantiation. --end note]</li>
+<li>(#.1) `strong_order(E, F)` if it is a valid expression,</li>
+<li>(#.2) Otherwise, `E <=> F` if it is a valid expression and its type is convertible to `strong_ordering`,</li>
+<li>(#.3) Otherwise, `std::strong_order(E, F)` is ill-formed. [Note: This case can result in substitution failure when `strong_order(E, F)` appears in the immediate context of a template instantiation. --end note]</li>
 </ul>
-[Note: Whenever `strong_order` is a valid expression, its type is convertible to `strong_ordering`. --end note]
+[Note: Whenever `std::strong_order` is a valid expression, its type is convertible to `strong_ordering`. --end note]
 </div>
 
 
@@ -441,28 +441,28 @@ Add overloads for IEC559 types:
 Add the `weak_order` customization point object:
 
 <div class='ins'>
-(#) The name `weak_order` denotes a customization point object. The expression `weak_order(E, E')` for some subexpressions `E` and `E'` with type `T` is expression-equivalent to:
+(#) The name `weak_order` denotes a customization point object. The expression `std::weak_order(E, F)` for some subexpressions `E` and `F` with type `T` is expression-equivalent to:
 <ul style='list-style-type: none;'>
-<li>(#.1) `weak_order(E, E')` if it is a valid expression,</li>
-<li>(#.2) Otherwise, `E <=> E'` if it is a valid expression and its type is convertible to `weak_ordering`,</li>
-<li>(#.3) Otherwise, `strong_order(E, E')` if it is a valid expression,</li>
-<li>(#.4) Otherwise, `weak_order(E, E')` is ill-formed. [Note: This case can result in substitution failure when `weak_order(E, E')` appears in the immediate context of a template instantiation. --end note]</li>
+<li>(#.1) `weak_order(E, F)` if it is a valid expression,</li>
+<li>(#.2) Otherwise, `E <=> F` if it is a valid expression and its type is convertible to `weak_ordering`,</li>
+<li>(#.3) Otherwise, `std::strong_order(E, F)` if it is a valid expression,</li>
+<li>(#.4) Otherwise, `std::weak_order(E, F)` is ill-formed. [Note: This case can result in substitution failure when `weak_order(E, F)` appears in the immediate context of a template instantiation. --end note]</li>
 </ul>
-[Note: Whenever `weak_order` is a valid expression, its type is convertible to `weak_ordering`. --end note]
+[Note: Whenever `std::weak_order` is a valid expression, its type is convertible to `weak_ordering`. --end note]
 </div>
 
 
 Add the `partial_order` customization point object:
 
 <div class='ins'>
-(#) The name `partial_order` denotes a customization point object. The expression `partial_order(E, E')` for some subexpressions `E` and `E'` with type `T` is expression-equivalent to:
+(#) The name `partial_order` denotes a customization point object. The expression `std::partial_order(E, F)` for some subexpressions `E` and `F` with type `T` is expression-equivalent to:
 <ul style='list-style-type: none;'>
-<li>(#.1) `partial_order(E, E')` if it is a valid expression,</li>
-<li>(#.2) Otherwise, `E <=> E'` if it is a valid expression and its type is convertible to `partial_ordering`,</li>
-<li>(#.3) Otherwise, `weak_order(E, E')` if it is a valid expression,</li>
-<li>(#.4) Otherwise, `partial_order(E, E')` is ill-formed. [Note: This case can result in substitution failure when `partial_order(E, E')` appears in the immediate context of a template instantiation. --end note]</li>
+<li>(#.1) `partial_order(E, F)` if it is a valid expression,</li>
+<li>(#.2) Otherwise, `E <=> F` if it is a valid expression and its type is convertible to `partial_ordering`,</li>
+<li>(#.3) Otherwise, `std::weak_order(E, F)` if it is a valid expression,</li>
+<li>(#.4) Otherwise, `std::partial_order(E, F)` is ill-formed. [Note: This case can result in substitution failure when `partial_order(E, F)` appears in the immediate context of a template instantiation. --end note]</li>
 </ul>
-[Note: Whenever `partial_order` is a valid expression, its type is convertible to `partial_ordering`. --end note]
+[Note: Whenever `std::partial_order` is a valid expression, its type is convertible to `partial_ordering`. --end note]
 </div>
 
 

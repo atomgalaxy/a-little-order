@@ -1230,7 +1230,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version 04b354547d55896d854a81cffb3965bd6f8758ec" name="generator">
   <link href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="4d438bce0fea794fb56063d7820a9ece975233e3" name="document-revision">
+  <meta content="80cb945ca2c5e94cca7677157c64f2e5825a2fb3" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1924,37 +1924,37 @@ functions for <code class="highlight"><c- n>strong_equality</c-></code> and <cod
    </div>
    <p>Then add the <code class="highlight"><c- n>strong_order</c-></code> customization point object:</p>
    <div class="ins">
-     (#) The name <code class="highlight"><c- n>strong_order</c-></code> denotes a customization point object. The expression <code class="highlight"><c- n>strong_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>E</c->'<c- p>)</c-></code> for some subexpressions <code class="highlight"><c- n>E</c-></code> and <code class="highlight"><c- n>E</c->'</code> with type <code class="highlight"><c- n>T</c-></code> is expression-equivalent to: 
+     (#) The name <code class="highlight"><c- n>strong_order</c-></code> denotes a customization point object. The expression <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> for some subexpressions <code class="highlight"><c- n>E</c-></code> and <code class="highlight"><c- n>F</c-></code> with type <code class="highlight"><c- n>T</c-></code> is expression-equivalent to: 
     <ul style="list-style-type: none; padding-left: 0px;">
-     <li>(#.1) <code class="highlight"><c- n>strong_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>E</c->'<c- p>)</c-></code> if it is a valid expression,
-     <li>(#.2) Otherwise, <code class="highlight"><c- n>E</c-> <c- o>&lt;=></c-> <c- n>E</c->'</code> if it is a valid expression and its type is convertible to <code class="highlight"><c- n>strong_ordering</c-></code>,
-     <li>(#.3) Otherwise, <code class="highlight"><c- n>strong_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>E</c->'<c- p>)</c-></code> is ill-formed. [Note: This case can result in substitution failure when <code class="highlight"><c- n>strong_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>E</c->'<c- p>)</c-></code> appears in the immediate context of a template instantiation. --end note]
+     <li>(#.1) <code class="highlight"><c- n>strong_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> if it is a valid expression,
+     <li>(#.2) Otherwise, <code class="highlight"><c- n>E</c-> <c- o>&lt;=></c-> <c- n>F</c-></code> if it is a valid expression and its type is convertible to <code class="highlight"><c- n>strong_ordering</c-></code>,
+     <li>(#.3) Otherwise, <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> is ill-formed. [Note: This case can result in substitution failure when <code class="highlight"><c- n>strong_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> appears in the immediate context of a template instantiation. --end note]
     </ul>
-     [Note: Whenever <code class="highlight"><c- n>strong_order</c-></code> is a valid expression, its type is convertible to <code class="highlight"><c- n>strong_ordering</c-></code>. --end note] 
+     [Note: Whenever <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_order</c-></code> is a valid expression, its type is convertible to <code class="highlight"><c- n>strong_ordering</c-></code>. --end note] 
    </div>
    <p>Add overloads for IEC559 types:</p>
    <div class="ins"> (#) <code class="highlight"><c- n>strong_order</c-><c- p>(</c-><c- n>T</c-><c- p>,</c-> <c- n>T</c-><c- p>)</c-></code> when <code class="highlight"><c- n>T</c-></code> is a type for which <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>numeric_limits</c-><c- o>&lt;</c-><c- n>T</c-><c- o>>::</c-><c- n>is_iec559</c-></code> is <code class="highlight">true</code> shall be a valid expression, whose value shall be consistent with the totalOrder operation as specified in ISO/IEC/IEEE 60559. </div>
    <p>Add the <code class="highlight"><c- n>weak_order</c-></code> customization point object:</p>
    <div class="ins">
-     (#) The name <code class="highlight"><c- n>weak_order</c-></code> denotes a customization point object. The expression <code class="highlight"><c- n>weak_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>E</c->'<c- p>)</c-></code> for some subexpressions <code class="highlight"><c- n>E</c-></code> and <code class="highlight"><c- n>E</c->'</code> with type <code class="highlight"><c- n>T</c-></code> is expression-equivalent to: 
+     (#) The name <code class="highlight"><c- n>weak_order</c-></code> denotes a customization point object. The expression <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>weak_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> for some subexpressions <code class="highlight"><c- n>E</c-></code> and <code class="highlight"><c- n>F</c-></code> with type <code class="highlight"><c- n>T</c-></code> is expression-equivalent to: 
     <ul style="list-style-type: none;">
-     <li>(#.1) <code class="highlight"><c- n>weak_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>E</c->'<c- p>)</c-></code> if it is a valid expression,
-     <li>(#.2) Otherwise, <code class="highlight"><c- n>E</c-> <c- o>&lt;=></c-> <c- n>E</c->'</code> if it is a valid expression and its type is convertible to <code class="highlight"><c- n>weak_ordering</c-></code>,
-     <li>(#.3) Otherwise, <code class="highlight"><c- n>strong_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>E</c->'<c- p>)</c-></code> if it is a valid expression,
-     <li>(#.4) Otherwise, <code class="highlight"><c- n>weak_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>E</c->'<c- p>)</c-></code> is ill-formed. [Note: This case can result in substitution failure when <code class="highlight"><c- n>weak_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>E</c->'<c- p>)</c-></code> appears in the immediate context of a template instantiation. --end note]
+     <li>(#.1) <code class="highlight"><c- n>weak_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> if it is a valid expression,
+     <li>(#.2) Otherwise, <code class="highlight"><c- n>E</c-> <c- o>&lt;=></c-> <c- n>F</c-></code> if it is a valid expression and its type is convertible to <code class="highlight"><c- n>weak_ordering</c-></code>,
+     <li>(#.3) Otherwise, <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> if it is a valid expression,
+     <li>(#.4) Otherwise, <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>weak_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> is ill-formed. [Note: This case can result in substitution failure when <code class="highlight"><c- n>weak_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> appears in the immediate context of a template instantiation. --end note]
     </ul>
-     [Note: Whenever <code class="highlight"><c- n>weak_order</c-></code> is a valid expression, its type is convertible to <code class="highlight"><c- n>weak_ordering</c-></code>. --end note] 
+     [Note: Whenever <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>weak_order</c-></code> is a valid expression, its type is convertible to <code class="highlight"><c- n>weak_ordering</c-></code>. --end note] 
    </div>
    <p>Add the <code class="highlight"><c- n>partial_order</c-></code> customization point object:</p>
    <div class="ins">
-     (#) The name <code class="highlight"><c- n>partial_order</c-></code> denotes a customization point object. The expression <code class="highlight"><c- n>partial_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>E</c->'<c- p>)</c-></code> for some subexpressions <code class="highlight"><c- n>E</c-></code> and <code class="highlight"><c- n>E</c->'</code> with type <code class="highlight"><c- n>T</c-></code> is expression-equivalent to: 
+     (#) The name <code class="highlight"><c- n>partial_order</c-></code> denotes a customization point object. The expression <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>partial_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> for some subexpressions <code class="highlight"><c- n>E</c-></code> and <code class="highlight"><c- n>F</c-></code> with type <code class="highlight"><c- n>T</c-></code> is expression-equivalent to: 
     <ul style="list-style-type: none;">
-     <li>(#.1) <code class="highlight"><c- n>partial_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>E</c->'<c- p>)</c-></code> if it is a valid expression,
-     <li>(#.2) Otherwise, <code class="highlight"><c- n>E</c-> <c- o>&lt;=></c-> <c- n>E</c->'</code> if it is a valid expression and its type is convertible to <code class="highlight"><c- n>partial_ordering</c-></code>,
-     <li>(#.3) Otherwise, <code class="highlight"><c- n>weak_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>E</c->'<c- p>)</c-></code> if it is a valid expression,
-     <li>(#.4) Otherwise, <code class="highlight"><c- n>partial_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>E</c->'<c- p>)</c-></code> is ill-formed. [Note: This case can result in substitution failure when <code class="highlight"><c- n>partial_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>E</c->'<c- p>)</c-></code> appears in the immediate context of a template instantiation. --end note]
+     <li>(#.1) <code class="highlight"><c- n>partial_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> if it is a valid expression,
+     <li>(#.2) Otherwise, <code class="highlight"><c- n>E</c-> <c- o>&lt;=></c-> <c- n>F</c-></code> if it is a valid expression and its type is convertible to <code class="highlight"><c- n>partial_ordering</c-></code>,
+     <li>(#.3) Otherwise, <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>weak_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> if it is a valid expression,
+     <li>(#.4) Otherwise, <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>partial_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> is ill-formed. [Note: This case can result in substitution failure when <code class="highlight"><c- n>partial_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> appears in the immediate context of a template instantiation. --end note]
     </ul>
-     [Note: Whenever <code class="highlight"><c- n>partial_order</c-></code> is a valid expression, its type is convertible to <code class="highlight"><c- n>partial_ordering</c-></code>. --end note] 
+     [Note: Whenever <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>partial_order</c-></code> is a valid expression, its type is convertible to <code class="highlight"><c- n>partial_ordering</c-></code>. --end note] 
    </div>
    <h2 class="heading settled" data-level="9" id="ack"><span class="secno">9. </span><span class="content">Acknowledgments</span><a class="self-link" href="#ack"></a></h2>
    <p>We would like to thank</p>
