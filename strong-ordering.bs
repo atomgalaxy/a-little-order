@@ -5,7 +5,7 @@ Audience: LEWG, LWG
 Editor: Gašper Ažman <gasper.azman@gmail.com>
 Editor: Jeff Snyder <jeff-isocpp@caffeinated.me.uk>
 Shortname: P0891
-Abstract: The specification of ordering algorithms at the end of [[P0768R1]] does not provide the ability to provide a default order for user-defined types (since they are specified in such a way that they are not intended to be customization points), and yet mixes in such a customization for iec559 floating point types. This paper suggests providing the functionality of both in a composable and principled way.
+Abstract: The specification of ordering algorithms at the end of [[P0768R1]] does not provide the ability to provide a default order for user-defined types (since they are specified in such a way that they are not intended to be customization points), and yet mixes in such a customization for IEC559 floating point types. This paper suggests providing the functionality of both in a composable and principled way.
 Group: WG21
 Date: 2019-01-20
 Markup Shorthands: markdown yes
@@ -73,7 +73,7 @@ This paper is a proposal to amend the *comparison algorithms* that have been vot
 
 As worded, the `strong_order` comparison algorithm provides:
 
-- a strong ordering for some types that do not have it provided by `<=>` (iec559 floating point types),
+- a strong ordering for some types that do not have it provided by `<=>` (IEC559 floating point types),
 - a way of generating a value of type `strong_ordering` by falling back to the `==` and `<` operators if `<=>` is not callable or does not result in a `strong_ordering`.
 
 However, the authors of this paper and the author of [[P0515R3]] intended for `strong_order` to be a customization point, and it is not currently usable as such.
@@ -142,8 +142,7 @@ and `map`. Having an arbitrary strong ordering is in fact so useful that
 <i>Elements of Programming</i>.
 
 In order to make it possible to use IEC559 floating-point types in `set`s and
-`map`s, the existing `strong_order` comparison algorithm includes a special
-rule for IEC559 floating point types. This works well for simple sets of
+`map`s, the existing `strong_order` comparison algorithm includes a special rule for IEC559 floating point types. This works well for simple sets of
 floating point numbers, but it breaks down quickly when we try more complicated
 examples such as `set<optional<float>>` or `set<pair<float,int>>`. To make
 these examples work, we need to *customise* `strong_order` for `optional`,
@@ -192,39 +191,27 @@ These will find the most appropriate ordering available, or SFINAE away if no su
 Discussion of the [=Fallback=] principle {#discussion-fallback}
 ---------------------------------------------------------------
 
-The arguments on whether we need to provide the fallback functions for legacy types center around:
+The arguments on whether we need to provide the fallback functions for legacy types center around a few questions:
 
-- How do we make it easy is it to define `<=>` in terms of `<` and `==` of a legacy type?
-
-[[D1186R1]] makes that trivial, without any fallbacks needed. In fact, fallbacks must be defined in terms of the `3WAY(X, Y)` expression it introduces.
-
-
-- How do we work with types that may or may not define `<=>` in generic contexts, but we know we have the requisite preconditions on `<` and `==`? {#generic-contexts}
-
-The authors can't think of a generic context where those assumptions hold reliably. `3WAY(X, Y)` and the fallbacks defined with it are useful in this scenario. However, the authors can't really think of an actual scenario where you are both in a generic context and you know the preconditions on all the possible types you might want to use there, unless you know your universe of types exactly.
-
-
+- How do we make it easy to define `<=>` for types which have members which only define `<` and `==`, but not `<=>`?
+- How should generic code work with types that may or may not define `<=>`, but are assumed to have the requisite preconditions on `<` and `==`?
 - In a context where we need to pass an ordering type as a parameter to a function, but we need to obtain it from a legacy type, how do we do that?
 
-The `3WAY(X, Y)`-derived fallback functions do that too.
+[[D1186R1]] makes the first of these trivial, and defines the algorithms necessary to make use of the legacy type's `==` and `<` operators. Helpfully, it defines the `3WAY(X, Y)` specification macro, which contains the core of its fallback logic.
 
-Basically, we need fallbacks for the reasons listed above. However, one should remember:
-- in generic contexts, we usually do not know the preconditions. We should use the `weak_order` customization point.
+The second two questions boil down to the same thing: if we have a type that implements `==` and `<`, and we know it has a particular ordering, how do we convert that into a value of the appropriate `X_ordering` type? We expect this to become a common problem, and therefore the standard should provide convenience functions that call `==` and `<` and return an `X_ordering` value representing the result.  In specifying these functions, we can re-use the `3WAY(X, Y)` from [[D1186R1]], both for convenience and consistency.
 
-Since `weak_order` and `strong_order` are bound to be used far more, since they are always correct, with the fallbacks only being needed in the medium term when `<=>` is not consistently adopted yet, the customziation functions should get the `X_order` names, and we should find new ones for fallbacks.
+However, as C++ applications and libraries are updated to implement `operator <=>` for their types, the need for these fallback functions should diminish. On the other hand, the customisation points are a feature with permenant utility. Due to customziation points having a longer term utility, they should get the `X_order` names, and we should find new names for fallback functions.
 
 Questions for LEWG: {#lewg-questions}
 =====================================
 
 1. Is there consensus that the [=Customization=] premise (as above) is correct and should be adopted?
-    - If not, then should the iec559 exception bullet in the current working draft be removed?
+    - If not, then should the IEC559 exception bullet in the current working draft be removed?
 2. Is there consensus that the [=Fallback=] premise (as above) is correct and should be adopted?
     - Rejecting this means that we are rejecting the rationale for their inclusion in the current working draft and that they should be removed.
 
 (The [=Consistency=], [=Weakening=] and [=Ambiguity of Legacy=] are true from a good design, mathematical, and empirical point of view, respectively, so they are not subject to poll).
-
-If the answers to both of those questions are yes, then this paper follows in its entirety.
-
 
 Proposal {#proposal}
 ====================
@@ -250,14 +237,14 @@ For the functions `strong_order`, `weak_order` and `partial_order` we propose to
 - Have the functions not participate in overload resolution (instead of being defined as deleted) if there is no strong order available.
 
 
-Replace the iec559 rule in `strong_order` with separate overloads {#proposal-iec559}
+Replace the IEC559 rule in `strong_order` with separate overloads {#proposal-iec559}
 ------------------------------------------------------------------------------------
 
 Since `strong_order` is a customisation point, the strong order for floating
 point types should be provided as overloads of `strong_order` rather than being
 baked into the generic `strong_order` function.
 
-We propose that the bullet point regarding `iec559` be removed from the
+We propose that the bullet point regarding `IEC559` be removed from the
 `strong_order` algorithm, and that the following three overloads for
 `strong_order` are added:
 

@@ -1227,10 +1227,10 @@ Possible extra rowspan handling
       text-align: center;
     }
   </style>
-  <meta content="Bikeshed version 04b354547d55896d854a81cffb3965bd6f8758ec" name="generator">
+  <meta content="Bikeshed version 9c6ae748322940994300e90a77c34437364b40a6" name="generator">
   <link href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="b1c087f95b0e77d4c263d48b6cfec7e4ec660ae1" name="document-revision">
+  <meta content="f2fd920ce3e3d8d5410201731cfb8519d6059cfa" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1517,7 +1517,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   </div>
   <div class="p-summary" data-fill-with="abstract">
    <h2 class="no-num no-toc no-ref heading settled" id="abstract"><span class="content">Abstract</span></h2>
-   <p>The specification of ordering algorithms at the end of <a data-link-type="biblio" href="#biblio-p0768r1">[P0768R1]</a> does not provide the ability to provide a default order for user-defined types (since they are specified in such a way that they are not intended to be customization points), and yet mixes in such a customization for iec559 floating point types. This paper suggests providing the functionality of both in a composable and principled way.</p>
+   <p>The specification of ordering algorithms at the end of <a data-link-type="biblio" href="#biblio-p0768r1">[P0768R1]</a> does not provide the ability to provide a default order for user-defined types (since they are specified in such a way that they are not intended to be customization points), and yet mixes in such a customization for IEC559 floating point types. This paper suggests providing the functionality of both in a composable and principled way.</p>
   </div>
   <nav data-fill-with="table-of-contents" id="toc">
    <h2 class="no-num no-toc no-ref" id="contents">Table of Contents</h2>
@@ -1554,7 +1554,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <ol class="toc">
       <li><a href="#proposal-remove-equal"><span class="secno">7.1</span> <span class="content">Remove the <code class="highlight"><c- n>strong_equal</c-></code> and <code class="highlight"><c- n>weak_equal</c-></code> comparison algorithms</span></a>
       <li><a href="#proposal-customization"><span class="secno">7.2</span> <span class="content">Make <code class="highlight"><c- n>strong_order</c-></code> and friends customization points</span></a>
-      <li><a href="#proposal-iec559"><span class="secno">7.3</span> <span class="content">Replace the iec559 rule in <code class="highlight"><c- n>strong_order</c-></code> with separate overloads</span></a>
+      <li><a href="#proposal-iec559"><span class="secno">7.3</span> <span class="content">Replace the IEC559 rule in <code class="highlight"><c- n>strong_order</c-></code> with separate overloads</span></a>
       <li><a href="#proposal-weakening"><span class="secno">7.4</span> <span class="content">Make the weaker customization points call stronger customizatoin points</span></a>
       <li><a href="#proposal-fallback"><span class="secno">7.5</span> <span class="content">Add fallback functions</span></a>
      </ol>
@@ -1615,7 +1615,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p>As worded, the <code class="highlight"><c- n>strong_order</c-></code> comparison algorithm provides:</p>
    <ul>
     <li data-md>
-     <p>a strong ordering for some types that do not have it provided by <code class="highlight"><c- o>&lt;=></c-></code> (iec559 floating point types),</p>
+     <p>a strong ordering for some types that do not have it provided by <code class="highlight"><c- o>&lt;=></c-></code> (IEC559 floating point types),</p>
     <li data-md>
      <p>a way of generating a value of type <code class="highlight"><c- n>strong_ordering</c-></code> by falling back to the <code class="highlight"><c- o>==</c-></code> and <code class="highlight"><c- o>&lt;</c-></code> operators if <code class="highlight"><c- o>&lt;=></c-></code> is not callable or does not result in a <code class="highlight"><c- n>strong_ordering</c-></code>.</p>
    </ul>
@@ -1680,12 +1680,11 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <h4 class="heading settled" data-level="5.1.1" id="but-is-it-legal-ill-make-it-legal"><span class="secno">5.1.1. </span><span class="content">Is it useful?</span><a class="self-link" href="#but-is-it-legal-ill-make-it-legal"></a></h4>
    <p>There are many algorithms and data strucutres that do not care about ordering
 per se, but do require some arbitrary order. Examples of these include <code class="highlight"><c- n>set</c-></code>, <code class="highlight"><c- n>map</c-></code>, and fast implementations of set algorithms (union, intersection,
-difference, etc), which are typically based on ordered sets.</p>
+difference, etc), which are typically based on ordered sequences.</p>
    <p>There also exist types for which there is no natural strong ordering, such as <code class="highlight"><c- b>float</c-></code> and <code class="highlight"><c- n>complex</c-></code>. Even though these types do not have a natural strong
 ordering, it is nevertheless very useful to provide an arbitrary strong
 ordering for them, e.g. so that they can be used in containers such as <code class="highlight"><c- n>set</c-></code> and <code class="highlight"><c- n>map</c-></code>. Having an arbitrary strong ordering is in fact so useful that <em>Stepanov</em> and <em>Mc Jones</em> included it it in their definition of <em>Regular</em> in <i>Elements of Programming</i>.</p>
-   <p>In order to make it possible to use IEC559 floating-point types in <code class="highlight"><c- n>set</c-></code>s and <code class="highlight"><c- n>map</c-></code>s, the existing <code class="highlight"><c- n>strong_order</c-></code> comparison algorithm includes a special
-rule for IEC559 floating point types. This works well for simple sets of
+   <p>In order to make it possible to use IEC559 floating-point types in <code class="highlight"><c- n>set</c-></code>s and <code class="highlight"><c- n>map</c-></code>s, the existing <code class="highlight"><c- n>strong_order</c-></code> comparison algorithm includes a special rule for IEC559 floating point types. This works well for simple sets of
 floating point numbers, but it breaks down quickly when we try more complicated
 examples such as <code class="highlight"><c- n>set</c-><c- o>&lt;</c-><c- n>optional</c-><c- o>&lt;</c-><c- b>float</c-><c- o>>></c-></code> or <code class="highlight"><c- n>set</c-><c- o>&lt;</c-><c- n>pair</c-><c- o>&lt;</c-><c- b>float</c-><c- p>,</c-><c- b>int</c-><c- o>>></c-></code>. To make
 these examples work, we need to <em>customise</em> <code class="highlight"><c- n>strong_order</c-></code> for <code class="highlight"><c- n>optional</c-></code>, <code class="highlight"><c- n>pair</c-></code> and other container types, and for that to be permitted <code class="highlight"><c- n>strong_order</c-></code> must be a customisation point.</p>
@@ -1693,11 +1692,11 @@ these examples work, we need to <em>customise</em> <code class="highlight"><c- n
 overdue. It is time to define what that customisation point is, so it can be
 provided and used consistently across C++ libraries and applications. That name
 should be <code class="highlight"><c- n>strong_order</c-></code>, since <code class="highlight"><c- n>default_order</c-></code> as a distinct customization
-point being rejected by LEWG in San Diego in favor of the design in R0 of this
+point was rejected by LEWG in San Diego in favor of the design in R0 of this
 paper.</p>
    <h4 class="heading settled" data-level="5.1.2" id="impl-effort"><span class="secno">5.1.2. </span><span class="content">Given that it is viral, is it worth the implementation effort?</span><a class="self-link" href="#impl-effort"></a></h4>
    <p>Given that any customization point we designate has to potentially be overloaded for all the generic wrappers in the standard library, is it worth the effort of defining them?</p>
-   <p>This paper does not propose any such wrappers, because the standard library does not even support <code class="highlight"><c- k>operator</c-> <c- o>&lt;=></c-></code> for such wrapper types yet. The authors only mean to propose <code class="highlight"><c- n>strong_order</c-></code> be established as a customisation point.</p>
+   <p>This paper does not propose any such wrappers, because the standard library does not even support <code class="highlight"><c- k>operator</c-> <c- o>&lt;=></c-></code> for such wrapper types yet. This paper only proposes that <code class="highlight"><c- n>strong_order</c-></code> be established as a customisation point.</p>
    <h4 class="heading settled" data-level="5.1.3" id="faq-teaching"><span class="secno">5.1.3. </span><span class="content">How can I teach this?</span><a class="self-link" href="#faq-teaching"></a></h4>
    <p>For types that endeavour to be <em>Regular</em> or something like it (as in, have sane value semantics), do the following.</p>
    <h5 class="heading settled" data-level="5.1.3.1" id="wrinting-new"><span class="secno">5.1.3.1. </span><span class="content">Writing new types:</span><a class="self-link" href="#wrinting-new"></a></h5>
@@ -1711,7 +1710,7 @@ paper.</p>
     <li data-md>
      <p>If you are obeying the rule of zero, writing <code class="highlight"><c- k>auto</c-> <c- k>operator</c-><c- o>&lt;=></c-><c- p>(...)</c-> <c- o>=</c-> <c- k>default</c-></code> will give you the correct <code class="highlight"><c- o>==</c-></code> and <code class="highlight"><c- o>&lt;=></c-></code> without any additional work. In most cases, this should already be enough, since <code class="highlight"><c- o>&lt;=></c-></code> will result in a <code class="highlight"><c- n>strong_ordering</c-></code>.</p>
     <li data-md>
-     <p>if writing a generic wrapper, or your constituent types have an overloaded <code class="highlight"><c- n>strong_order</c-></code>, you must then also define <code class="highlight"><c- n>strong_order</c-></code> to be:</p>
+     <p>If you are writing a generic wrapper, or your constituent types have an overloaded <code class="highlight"><c- n>strong_order</c-></code>, you must then also define <code class="highlight"><c- n>strong_order</c-></code> to be:</p>
    </ul>
 <pre class="highlight"><c- n>strong_ordering</c-> <c- nf>strong_order</c-><c- p>(</c-><c- n>T</c-> <c- n>x</c-><c- p>,</c-> <c- n>T</c-> <c- n>y</c-><c- p>)</c-> <c- p>{</c->
   <c- k>if</c-> <c- p>(</c-><c- k>auto</c-> <c- n>ord</c-> <c- o>=</c-> <c- n>strong_order</c-><c- p>(</c-><c- n>x</c-><c- p>.</c-><c- n>a</c-><c- p>,</c-> <c- n>y</c-><c- p>.</c-><c- n>a</c-><c- p>);</c-> <c- n>is_neq</c-><c- p>(</c-><c- n>ord</c-><c- p>))</c-> <c- p>{</c-> <c- k>return</c-> <c- n>ord</c-><c- p>;</c-> <c- p>}</c->
@@ -1720,40 +1719,29 @@ paper.</p>
   <c- k>return</c-> <c- n>strong_ordering</c-><c- o>::</c-><c- n>equal</c-><c- p>;</c->
 <c- p>}</c->
 </pre>
-   or, hopefully, when we get reflection, be able to generate it. 
    <h5 class="heading settled" data-level="5.1.3.2" id="using-orderings"><span class="secno">5.1.3.2. </span><span class="content">Using orderings:</span><a class="self-link" href="#using-orderings"></a></h5>
-   <p>Generic algorithms in general should require and call <code class="highlight"><c- n>weak_order</c-><c- p>(</c-><c- n>x</c-><c- p>,</c-> <c- n>y</c-><c- p>)</c-></code>. It will either use the default (convertible-to-weak) ordering on <code class="highlight"><c- o>&lt;=></c-></code>, so there are no surprises, or, if not usable, fall back on the hopefully provided <code class="highlight"><c- n>strong_order</c-></code> which again is not surprising. It always does the right thing.</p>
-   <p>Data structures that require a weak order should default to it as well.</p>
+   <p>Generic algorithms should require and call <code class="highlight"><c- n>strong_order</c-><c- p>(</c-><c- n>x</c-><c- p>,</c-> <c- n>y</c-><c- p>)</c-></code>, <code class="highlight"><c- n>weak_order</c-><c- p>(</c-><c- n>x</c-><c- p>,</c-> <c- n>y</c-><c- p>)</c-></code> or <code class="highlight"><c- n>partial_order</c-><c- p>(</c-><c- n>x</c-><c- p>,</c-> <c- n>y</c-><c- p>)</c-></code> (depending on the ordering requirements of the algorithm) after a <code class="highlight"><c- k>using</c-> <c- n>namsepace</c-> <c- n>std</c-><c- p>;</c-></code>.
+These will find the most appropriate ordering available, or SFINAE away if no suitable ordering is available. For example, if an algorithm calls <code class="highlight"><c- n>weak_order</c-></code> on a type which has <code class="highlight"><c- o>&lt;=></c-></code> returning <code class="highlight"><c- n>partial_order</c-></code>, does not provide an overload of <code class="highlight"><c- n>weak_order</c-></code>, but does overload <code class="highlight"><c- n>strong_order</c-></code>, then <code class="highlight"><c- n>strong_order</c-></code> will end up being called. The intent is that these "always do the right thing".</p>
    <h3 class="heading settled" data-level="5.2" id="discussion-fallback"><span class="secno">5.2. </span><span class="content">Discussion of the <a data-link-type="dfn" href="#fallback" id="ref-for-fallback②">Fallback</a> principle</span><a class="self-link" href="#discussion-fallback"></a></h3>
-   <p>The arguments on whether we need to provide the fallback functions for legacy types center around:</p>
+   <p>The arguments on whether we need to provide the fallback functions for legacy types center around a few questions:</p>
    <ul>
     <li data-md>
-     <p>How do we make it easy is it to define <code class="highlight"><c- o>&lt;=></c-></code> in terms of <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code> of a legacy type?</p>
-   </ul>
-   <p><a data-link-type="biblio" href="#biblio-d1186r1">[D1186R1]</a> makes that trivial, without any fallbacks needed. In fact, fallbacks must be defined in terms of the <code class="highlight"><c- mi>3</c-><c- n>WAY</c-><c- p>(</c-><c- n>X</c-><c- p>,</c-> <c- n>Y</c-><c- p>)</c-></code> expression it introduces.</p>
-   <ul>
+     <p>How do we make it easy to define <code class="highlight"><c- o>&lt;=></c-></code> for types which have members which only define <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code>, but not <code class="highlight"><c- o>&lt;=></c-></code>?</p>
     <li data-md>
-     <p>How do we work with types that may or may not define <code class="highlight"><c- o>&lt;=></c-></code> in generic contexts, but we know we have the requisite preconditions on <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code>? {#generic-contexts}</p>
-   </ul>
-   <p>The authors can’t think of a generic context where those assumptions hold reliably. <code class="highlight"><c- mi>3</c-><c- n>WAY</c-><c- p>(</c-><c- n>X</c-><c- p>,</c-> <c- n>Y</c-><c- p>)</c-></code> and the fallbacks defined with it are useful in this scenario. However, the authors can’t really think of an actual scenario where you are both in a generic context and you know the preconditions on all the possible types you might want to use there, unless you know your universe of types exactly.</p>
-   <ul>
+     <p>How should generic code work with types that may or may not define <code class="highlight"><c- o>&lt;=></c-></code>, but are assumed to have the requisite preconditions on <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code>?</p>
     <li data-md>
      <p>In a context where we need to pass an ordering type as a parameter to a function, but we need to obtain it from a legacy type, how do we do that?</p>
    </ul>
-   <p>The <code class="highlight"><c- mi>3</c-><c- n>WAY</c-><c- p>(</c-><c- n>X</c-><c- p>,</c-> <c- n>Y</c-><c- p>)</c-></code>-derived fallback functions do that too.</p>
-   <p>Basically, we need fallbacks for the reasons listed above. However, one should remember:</p>
-   <ul>
-    <li data-md>
-     <p>in generic contexts, we usually do not know the preconditions. We should use the <code class="highlight"><c- n>weak_order</c-></code> customization point.</p>
-   </ul>
-   <p>Since <code class="highlight"><c- n>weak_order</c-></code> and <code class="highlight"><c- n>strong_order</c-></code> are bound to be used far more, since they are always correct, with the fallbacks only being needed in the medium term when <code class="highlight"><c- o>&lt;=></c-></code> is not consistently adopted yet, the customziation functions should get the <code class="highlight"><c- n>X_order</c-></code> names, and we should find new ones for fallbacks.</p>
+   <p><a data-link-type="biblio" href="#biblio-d1186r1">[D1186R1]</a> makes the first of these trivial, and defines the algorithms necessary to make use of the legacy type’s <code class="highlight"><c- o>==</c-></code> and <code class="highlight"><c- o>&lt;</c-></code> operators. Helpfully, it defines the <code class="highlight"><c- mi>3</c-><c- n>WAY</c-><c- p>(</c-><c- n>X</c-><c- p>,</c-> <c- n>Y</c-><c- p>)</c-></code> specification macro, which contains the core of its fallback logic.</p>
+   <p>The second two questions boil down to the same thing: if we have a type that implements <code class="highlight"><c- o>==</c-></code> and <code class="highlight"><c- o>&lt;</c-></code>, and we know it has a particular ordering, how do we convert that into a value of the appropriate <code class="highlight"><c- n>X_ordering</c-></code> type? We expect this to become a common problem, and therefore the standard should provide convenience functions that call <code class="highlight"><c- o>==</c-></code> and <code class="highlight"><c- o>&lt;</c-></code> and return an <code class="highlight"><c- n>X_ordering</c-></code> value representing the result.  In specifying these functions, we can re-use the <code class="highlight"><c- mi>3</c-><c- n>WAY</c-><c- p>(</c-><c- n>X</c-><c- p>,</c-> <c- n>Y</c-><c- p>)</c-></code> from <a data-link-type="biblio" href="#biblio-d1186r1">[D1186R1]</a>, both for convenience and consistency.</p>
+   <p>However, as C++ applications and libraries are updated to implement <code class="highlight"><c- k>operator</c-> <c- o>&lt;=></c-></code> for their types, the need for these fallback functions should diminish. On the other hand, the customisation points are a feature with permenant utility. Due to customziation points having a longer term utility, they should get the <code class="highlight"><c- n>X_order</c-></code> names, and we should find new names for fallback functions.</p>
    <h2 class="heading settled" data-level="6" id="lewg-questions"><span class="secno">6. </span><span class="content">Questions for LEWG:</span><a class="self-link" href="#lewg-questions"></a></h2>
    <ol>
     <li data-md>
      <p>Is there consensus that the <a data-link-type="dfn" href="#customization" id="ref-for-customization③">Customization</a> premise (as above) is correct and should be adopted?</p>
      <ul>
       <li data-md>
-       <p>If not, then should the iec559 exception bullet in the current working draft be removed?</p>
+       <p>If not, then should the IEC559 exception bullet in the current working draft be removed?</p>
      </ul>
     <li data-md>
      <p>Is there consensus that the <a data-link-type="dfn" href="#fallback" id="ref-for-fallback③">Fallback</a> premise (as above) is correct and should be adopted?</p>
@@ -1763,7 +1751,6 @@ paper.</p>
      </ul>
    </ol>
    <p>(The <a data-link-type="dfn" href="#consistency" id="ref-for-consistency④">Consistency</a>, <a data-link-type="dfn" href="#weakening" id="ref-for-weakening①">Weakening</a> and <a data-link-type="dfn" href="#ambiguity-of-legacy" id="ref-for-ambiguity-of-legacy①">Ambiguity of Legacy</a> are true from a good design, mathematical, and empirical point of view, respectively, so they are not subject to poll).</p>
-   <p>If the answers to both of those questions are yes, then this paper follows in its entirety.</p>
    <h2 class="heading settled" data-level="7" id="proposal"><span class="secno">7. </span><span class="content">Proposal</span><a class="self-link" href="#proposal"></a></h2>
    <h3 class="heading settled" data-level="7.1" id="proposal-remove-equal"><span class="secno">7.1. </span><span class="content">Remove the <code class="highlight"><c- n>strong_equal</c-></code> and <code class="highlight"><c- n>weak_equal</c-></code> comparison algorithms</span><a class="self-link" href="#proposal-remove-equal"></a></h3>
    <p>If we accept <a data-link-type="biblio" href="#biblio-p1185r0">[P1185R0]</a>'s rationale for not calling <code class="highlight"><c- o>&lt;=></c-></code> when the user only
@@ -1779,11 +1766,11 @@ is no way to implement <code class="highlight"><c- n>strong_equal</c-></code> an
     <li data-md>
      <p>Have the functions not participate in overload resolution (instead of being defined as deleted) if there is no strong order available.</p>
    </ul>
-   <h3 class="heading settled" data-level="7.3" id="proposal-iec559"><span class="secno">7.3. </span><span class="content">Replace the iec559 rule in <code class="highlight"><c- n>strong_order</c-></code> with separate overloads</span><a class="self-link" href="#proposal-iec559"></a></h3>
+   <h3 class="heading settled" data-level="7.3" id="proposal-iec559"><span class="secno">7.3. </span><span class="content">Replace the IEC559 rule in <code class="highlight"><c- n>strong_order</c-></code> with separate overloads</span><a class="self-link" href="#proposal-iec559"></a></h3>
    <p>Since <code class="highlight"><c- n>strong_order</c-></code> is a customisation point, the strong order for floating
 point types should be provided as overloads of <code class="highlight"><c- n>strong_order</c-></code> rather than being
 baked into the generic <code class="highlight"><c- n>strong_order</c-></code> function.</p>
-   <p>We propose that the bullet point regarding <code class="highlight"><c- n>iec559</c-></code> be removed from the <code class="highlight"><c- n>strong_order</c-></code> algorithm, and that the following three overloads for <code class="highlight"><c- n>strong_order</c-></code> are added:</p>
+   <p>We propose that the bullet point regarding <code class="highlight"><c- n>IEC559</c-></code> be removed from the <code class="highlight"><c- n>strong_order</c-></code> algorithm, and that the following three overloads for <code class="highlight"><c- n>strong_order</c-></code> are added:</p>
    <ul>
     <li data-md>
      <p><code class="highlight"><c- n>strong_order</c-><c- p>(</c-><c- b>float</c-><c- p>,</c-> <c- b>float</c-><c- p>);</c-></code></p>
