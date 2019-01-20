@@ -1230,7 +1230,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version 04b354547d55896d854a81cffb3965bd6f8758ec" name="generator">
   <link href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="a01106c944c335ba4b414c077c082bb216ccf9bf" name="document-revision">
+  <meta content="b1c087f95b0e77d4c263d48b6cfec7e4ec660ae1" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1678,47 +1678,26 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <p>How can this be taught?</p>
    </ul>
    <h4 class="heading settled" data-level="5.1.1" id="but-is-it-legal-ill-make-it-legal"><span class="secno">5.1.1. </span><span class="content">Is it useful?</span><a class="self-link" href="#but-is-it-legal-ill-make-it-legal"></a></h4>
-   <p>The iec559 exception seemed useful enough until it was merged. The issue is that any time one would want to put an iec559 type into a container, say, optional or a tuple, they would have to define <code class="highlight"><c- n>strong_order</c-></code> for that container type. However, the current wording disallows that completely. As an example, it is impossible to define <code class="highlight"><c- n>strong_order</c-></code> for <code class="highlight"><c- n>complex</c-><c- o>&lt;</c-><c- b>float</c-><c- o>></c-></code> (e.g. as a lexicographic ordering) with the current wording, even though that’s what it should be for speed (but there should not be a <code class="highlight"><c- o>&lt;</c-></code> for complex).</p>
-   <p>Having a customization point is useful for any type that does not provide a strong <code class="highlight"><c- k>operator</c-> <c- o>&lt;=></c-></code>, but wants to enable use of <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>unique</c-></code> on sequences of it. Such types don’t care about the order; they care about <code class="highlight"><c- o>==</c-></code>, but the function that establishes the precondition to <code class="highlight"><c- n>unique</c-></code>, <code class="highlight"><c- n>sort</c-></code> <em>does</em> care about an order that’s compatible with <code class="highlight"><c- o>==</c-></code>, which is <code class="highlight"><c- n>strong_order</c-></code>, and by premise, not <code class="highlight"><c- o>&lt;=></c-></code>. Same goes for putting it in a <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>set</c-></code> or <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>map</c-></code> wherever defining <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>hash</c-></code> is not an obvious exercise, eliminating the unordered containers as an option.</p>
-   <p>It’s useful enough for <em>Stepanov</em> and <em>Mc Jones</em> to include it in <em>Regular</em> in <i>Elements of Programming</i>.</p>
-   <blockquote>
-    <p>"Every place I go one of the first things I end up writing is <code class="highlight"><c- n>sorted_vector</c-></code>."<br>     -- Tony Van Eerd</p>
-   </blockquote>
-   <p>This is a short list of the most obvious algorithms and data structures that require an arbitrary order to work:</p>
-   <ul>
-    <li data-md>
-     <p><code class="highlight"><c- n>unique</c-></code> (via <code class="highlight"><c- n>sort</c-></code>)</p>
-    <li data-md>
-     <p><code class="highlight"><c- n>set</c-></code></p>
-    <li data-md>
-     <p><code class="highlight"><c- n>map</c-></code></p>
-    <li data-md>
-     <p><code class="highlight"><c- n>sorted_vector</c-></code></p>
-    <li data-md>
-     <p><code class="highlight"><c- n>lower_bound</c-></code>, <code class="highlight"><c- n>upper_bound</c-></code>, <code class="highlight"><c- n>equal_range</c-></code>, <code class="highlight"><c- n>binary_search</c-></code></p>
-    <li data-md>
-     <p><code class="highlight"><c- n>heap</c-></code> (needs a weak order, but the order is rarely the default)</p>
-    <li data-md>
-     <p><code class="highlight"><c- n>priority_queue</c-></code> (just needs a weak order, and the order is rarely the default)</p>
-    <li data-md>
-     <p>Fast implementations of set algorithms (union, multiunion, intersection, difference, symmetric difference)</p>
-    <li data-md>
-     <p>Algebraic Structure Algorithms (think polynomials and generalized domains, used in number theory):</p>
-     <ul>
-      <li data-md>
-       <p>Fast Quotient/Remainder</p>
-      <li data-md>
-       <p>Greatest Common Divisor</p>
-      <li data-md>
-       <p>Generalized Euclidean Algorithm</p>
-     </ul>
-   </ul>
-   <p>Please note that for a fair number of these, the order on the type needs absolutely no meaning other than establishing a global ordering relation on elements for the purpose of performance. This is definitely not just about hash maps.</p>
-   <p>If set operations are a bottleneck in your program (web search is one such application), hashed containers are the absolute worst possible implementations due to poor cache locality (the whole point of hashing is to spread values around). Sorted vectors are far faster due to being accessed in memory order.</p>
-   <p>The point is, yes, having an agreed-upon customization point for an arbitrary order is long overdue. It is time to define it, so it can provided and be used consistently by all C++ programs and types henceforth by agreeing on a name for it. That name is <code class="highlight"><c- n>strong_order</c-></code>, by virtue of <code class="highlight"><c- n>default_order</c-></code> as a distinct customization point being rejected by LEWG in San Diego in favor of the R0 design.</p>
+   <p>There are many algorithms and data strucutres that do not care about ordering
+per se, but do require some arbitrary order. Examples of these include <code class="highlight"><c- n>set</c-></code>, <code class="highlight"><c- n>map</c-></code>, and fast implementations of set algorithms (union, intersection,
+difference, etc), which are typically based on ordered sets.</p>
+   <p>There also exist types for which there is no natural strong ordering, such as <code class="highlight"><c- b>float</c-></code> and <code class="highlight"><c- n>complex</c-></code>. Even though these types do not have a natural strong
+ordering, it is nevertheless very useful to provide an arbitrary strong
+ordering for them, e.g. so that they can be used in containers such as <code class="highlight"><c- n>set</c-></code> and <code class="highlight"><c- n>map</c-></code>. Having an arbitrary strong ordering is in fact so useful that <em>Stepanov</em> and <em>Mc Jones</em> included it it in their definition of <em>Regular</em> in <i>Elements of Programming</i>.</p>
+   <p>In order to make it possible to use IEC559 floating-point types in <code class="highlight"><c- n>set</c-></code>s and <code class="highlight"><c- n>map</c-></code>s, the existing <code class="highlight"><c- n>strong_order</c-></code> comparison algorithm includes a special
+rule for IEC559 floating point types. This works well for simple sets of
+floating point numbers, but it breaks down quickly when we try more complicated
+examples such as <code class="highlight"><c- n>set</c-><c- o>&lt;</c-><c- n>optional</c-><c- o>&lt;</c-><c- b>float</c-><c- o>>></c-></code> or <code class="highlight"><c- n>set</c-><c- o>&lt;</c-><c- n>pair</c-><c- o>&lt;</c-><c- b>float</c-><c- p>,</c-><c- b>int</c-><c- o>>></c-></code>. To make
+these examples work, we need to <em>customise</em> <code class="highlight"><c- n>strong_order</c-></code> for <code class="highlight"><c- n>optional</c-></code>, <code class="highlight"><c- n>pair</c-></code> and other container types, and for that to be permitted <code class="highlight"><c- n>strong_order</c-></code> must be a customisation point.</p>
+   <p>Having an agreed-upon customization point for an arbitrary order is long
+overdue. It is time to define what that customisation point is, so it can be
+provided and used consistently across C++ libraries and applications. That name
+should be <code class="highlight"><c- n>strong_order</c-></code>, since <code class="highlight"><c- n>default_order</c-></code> as a distinct customization
+point being rejected by LEWG in San Diego in favor of the design in R0 of this
+paper.</p>
    <h4 class="heading settled" data-level="5.1.2" id="impl-effort"><span class="secno">5.1.2. </span><span class="content">Given that it is viral, is it worth the implementation effort?</span><a class="self-link" href="#impl-effort"></a></h4>
-   <p>Given that any customization point we designate has to potentially be overloaded for all the generic wrappers in the standard library, is it even worth the effort defining them?</p>
-   <p>This paper does not propose any such wrappers, because the standard library doesn’t even have <code class="highlight"><c- o>&lt;=></c-></code> yet, but the authors only mean to propose <code class="highlight"><c- n>strong_order</c-></code> be implemented, as that is the only one they’ve ever needed.</p>
+   <p>Given that any customization point we designate has to potentially be overloaded for all the generic wrappers in the standard library, is it worth the effort of defining them?</p>
+   <p>This paper does not propose any such wrappers, because the standard library does not even support <code class="highlight"><c- k>operator</c-> <c- o>&lt;=></c-></code> for such wrapper types yet. The authors only mean to propose <code class="highlight"><c- n>strong_order</c-></code> be established as a customisation point.</p>
    <h4 class="heading settled" data-level="5.1.3" id="faq-teaching"><span class="secno">5.1.3. </span><span class="content">How can I teach this?</span><a class="self-link" href="#faq-teaching"></a></h4>
    <p>For types that endeavour to be <em>Regular</em> or something like it (as in, have sane value semantics), do the following.</p>
    <h5 class="heading settled" data-level="5.1.3.1" id="wrinting-new"><span class="secno">5.1.3.1. </span><span class="content">Writing new types:</span><a class="self-link" href="#wrinting-new"></a></h5>

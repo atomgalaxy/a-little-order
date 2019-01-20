@@ -128,42 +128,40 @@ The arguments around whether `strong_order` should be a customization point have
 
 ### Is it useful? ### {#but-is-it-legal-ill-make-it-legal}
 
-The iec559 exception seemed useful enough until it was merged. The issue is that any time one would want to put an iec559 type into a container, say, optional or a tuple, they would have to define `strong_order` for that container type. However, the current wording disallows that completely. As an example, it is impossible to define `strong_order` for `complex<float>` (e.g. as a lexicographic ordering) with the current wording, even though that's what it should be for speed (but there should not be a `<` for complex).
+There are many algorithms and data strucutres that do not care about ordering
+per se, but do require some arbitrary order. Examples of these include `set`,
+`map`, and fast implementations of set algorithms (union, intersection,
+difference, etc), which are typically based on ordered sets.
 
-Having a customization point is useful for any type that does not provide a strong `operator <=>`, but wants to enable use of `std::unique` on sequences of it. Such types don't care about the order; they care about `==`, but the function that establishes the precondition to `unique`, `sort` *does* care about an order that's compatible with `==`, which is `strong_order`, and by premise, not `<=>`. Same goes for putting it in a `std::set` or `std::map` wherever defining `std::hash` is not an obvious exercise, eliminating the unordered containers as an option.
+There also exist types for which there is no natural strong ordering, such as
+`float` and `complex`. Even though these types do not have a natural strong
+ordering, it is nevertheless very useful to provide an arbitrary strong
+ordering for them, e.g. so that they can be used in containers such as `set`
+and `map`. Having an arbitrary strong ordering is in fact so useful that
+*Stepanov* and *Mc Jones* included it it in their definition of *Regular* in
+<i>Elements of Programming</i>.
 
-It's useful enough for *Stepanov* and *Mc Jones* to include it in *Regular* in <i>Elements of Programming</i>.
+In order to make it possible to use IEC559 floating-point types in `set`s and
+`map`s, the existing `strong_order` comparison algorithm includes a special
+rule for IEC559 floating point types. This works well for simple sets of
+floating point numbers, but it breaks down quickly when we try more complicated
+examples such as `set<optional<float>>` or `set<pair<float,int>>`. To make
+these examples work, we need to *customise* `strong_order` for `optional`,
+`pair` and other container types, and for that to be permitted `strong_order`
+must be a customisation point.
 
-> "Every place I go one of the first things I end up writing is `sorted_vector`."<br>
-> &nbsp;&nbsp;&nbsp;&nbsp;-- Tony Van Eerd
-
-This is a short list of the most obvious algorithms and data structures that require an arbitrary order to work:
-- `unique` (via `sort`)
-- `set`
-- `map`
-- `sorted_vector`
-- `lower_bound`, `upper_bound`, `equal_range`, `binary_search`
-- `heap` (needs a weak order, but the order is rarely the default)
-- `priority_queue` (just needs a weak order, and the order is rarely the default)
-- Fast implementations of set algorithms (union, multiunion, intersection, difference, symmetric difference)
-- Algebraic Structure Algorithms (think polynomials and generalized domains, used in number theory):
-    - Fast Quotient/Remainder
-    - Greatest Common Divisor
-    - Generalized Euclidean Algorithm
-
-Please note that for a fair number of these, the order on the type needs absolutely no meaning other than establishing a global ordering relation on elements for the purpose of performance. This is definitely not just about hash maps.
-
-If set operations are a bottleneck in your program (web search is one such application), hashed containers are the absolute worst possible implementations due to poor cache locality (the whole point of hashing is to spread values around). Sorted vectors are far faster due to being accessed in memory order.
-
-The point is, yes, having an agreed-upon customization point for an arbitrary order is long overdue. It is time to define it, so it can provided and be used consistently by all C++ programs and types henceforth by agreeing on a name for it. That name is `strong_order`, by virtue of `default_order` as a distinct customization point being rejected by LEWG in San Diego in favor of the R0 design.
-
+Having an agreed-upon customization point for an arbitrary order is long
+overdue. It is time to define what that customisation point is, so it can be
+provided and used consistently across C++ libraries and applications. That name
+should be `strong_order`, since `default_order` as a distinct customization
+point being rejected by LEWG in San Diego in favor of the design in R0 of this
+paper.
 
 ### Given that it is viral, is it worth the implementation effort? ### {#impl-effort}
 
-Given that any customization point we designate has to potentially be overloaded for all the generic wrappers in the standard library, is it even worth the effort defining them?
+Given that any customization point we designate has to potentially be overloaded for all the generic wrappers in the standard library, is it worth the effort of defining them?
 
-This paper does not propose any such wrappers, because the standard library doesn't even have `<=>` yet, but the authors only mean to propose `strong_order` be implemented, as that is the only one they've ever needed.
-
+This paper does not propose any such wrappers, because the standard library does not even support `operator <=>` for such wrapper types yet. The authors only mean to propose `strong_order` be established as a customisation point.
 
 ### How can I teach this? ### {#faq-teaching}
 
