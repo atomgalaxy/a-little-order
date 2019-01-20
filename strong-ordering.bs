@@ -202,7 +202,7 @@ The arguments on whether we need to provide the fallback functions for legacy ty
 
 - How do we work with types that may or may not define `<=>` in generic contexts, but we know we have the requisite preconditions on `<` and `==`? {#generic-contexts}
 
-The authors can't think of a generic context where those assumptions hold reliably. `3WAY(X, Y)` and the fallbacks defined with it are useful in this scenario. However, the authors can't really think of an actual scenario where you are both in a generic context and you know the preconditions on all the possible types you might want to use there.
+The authors can't think of a generic context where those assumptions hold reliably. `3WAY(X, Y)` and the fallbacks defined with it are useful in this scenario. However, the authors can't really think of an actual scenario where you are both in a generic context and you know the preconditions on all the possible types you might want to use there, unless you know your universe of types exactly.
 
 
 - In a context where we need to pass an ordering type as a parameter to a function, but we need to obtain it from a legacy type, how do we do that?
@@ -211,6 +211,8 @@ The `3WAY(X, Y)`-derived fallback functions do that too.
 
 Basically, we need fallbacks for the reasons listed above. However, one should remember:
 - in generic contexts, we usually do not know the preconditions. We should use the `weak_order` customization point.
+
+Since `weak_order` and `strong_order` are bound to be used far more, since they are always correct, with the fallbacks only being needed in the medium term when `<=>` is not consistently adopted yet, the customziation functions should get the `X_order` names, and we should find new ones for fallbacks.
 
 Questions for LEWG: {#lewg-questions}
 =====================================
@@ -266,7 +268,7 @@ We propose that the bullet point regarding `iec559` be removed from the
 
 These overloads should implement the `totalOrder` operation as specified in
 ISO/IEC/IEEE 60559, and should not participate in overload resolution if
-`numeric_limts<T>::is_iec559` is false for the type of their arguments.
+`numeric_limts<T>::is_iec559` is `false` for the type of their arguments.
 
 
 Make the weaker customization points call stronger customizatoin points {#propose-weakening}
@@ -309,6 +311,8 @@ Other options to consider:
  - `assume_X_order`
  - `fallback_X_order`
  - `X_order_fallback`
+
+See the [=fallback=] discussion on why the `X_order` names should be given to the customization points.
 
 
 On Compatibility Between the Natural and Default Orderings {#compat}

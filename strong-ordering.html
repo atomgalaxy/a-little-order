@@ -1230,7 +1230,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version 04b354547d55896d854a81cffb3965bd6f8758ec" name="generator">
   <link href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="edbc3ec370e102587dd2808a315d3b6beb17ce29" name="document-revision">
+  <meta content="c0ba281cc000797ebdd93eee04a1c83dd4e5118c" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1752,7 +1752,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p>How do we work with types that may or may not define <code class="highlight"><c- o>&lt;=></c-></code> in generic contexts, but we know we have the requisite preconditions on <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code>? {#generic-contexts}</p>
    </ul>
-   <p>The authors can’t think of a generic context where those assumptions hold reliably. <code class="highlight"><c- mi>3</c-><c- n>WAY</c-><c- p>(</c-><c- n>X</c-><c- p>,</c-> <c- n>Y</c-><c- p>)</c-></code> and the fallbacks defined with it are useful in this scenario. However, the authors can’t really think of an actual scenario where you are both in a generic context and you know the preconditions on all the possible types you might want to use there.</p>
+   <p>The authors can’t think of a generic context where those assumptions hold reliably. <code class="highlight"><c- mi>3</c-><c- n>WAY</c-><c- p>(</c-><c- n>X</c-><c- p>,</c-> <c- n>Y</c-><c- p>)</c-></code> and the fallbacks defined with it are useful in this scenario. However, the authors can’t really think of an actual scenario where you are both in a generic context and you know the preconditions on all the possible types you might want to use there, unless you know your universe of types exactly.</p>
    <ul>
     <li data-md>
      <p>In a context where we need to pass an ordering type as a parameter to a function, but we need to obtain it from a legacy type, how do we do that?</p>
@@ -1763,6 +1763,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p>in generic contexts, we usually do not know the preconditions. We should use the <code class="highlight"><c- n>weak_order</c-></code> customization point.</p>
    </ul>
+   <p>Since <code class="highlight"><c- n>weak_order</c-></code> and <code class="highlight"><c- n>strong_order</c-></code> are bound to be used far more, since they are always correct, with the fallbacks only being needed in the medium term when <code class="highlight"><c- o>&lt;=></c-></code> is not consistently adopted yet, the customziation functions should get the <code class="highlight"><c- n>X_order</c-></code> names, and we should find new ones for fallbacks.</p>
    <h2 class="heading settled" data-level="6" id="lewg-questions"><span class="secno">6. </span><span class="content">Questions for LEWG:</span><a class="self-link" href="#lewg-questions"></a></h2>
    <ol>
     <li data-md>
@@ -1809,7 +1810,7 @@ baked into the generic <code class="highlight"><c- n>strong_order</c-></code> fu
      <p><code class="highlight"><c- n>strong_order</c-><c- p>(</c-><c- b>long</c-> <c- b>double</c-><c- p>,</c-> <c- b>long</c-> <c- b>double</c-><c- p>);</c-></code></p>
    </ul>
    <p>These overloads should implement the <code class="highlight"><c- n>totalOrder</c-></code> operation as specified in
-ISO/IEC/IEEE 60559, and should not participate in overload resolution if <code class="highlight"><c- n>numeric_limts</c-><c- o>&lt;</c-><c- n>T</c-><c- o>>::</c-><c- n>is_iec559</c-></code> is false for the type of their arguments.</p>
+ISO/IEC/IEEE 60559, and should not participate in overload resolution if <code class="highlight"><c- n>numeric_limts</c-><c- o>&lt;</c-><c- n>T</c-><c- o>>::</c-><c- n>is_iec559</c-></code> is <code class="highlight">false</code> for the type of their arguments.</p>
    <h3 class="heading settled" data-level="7.4" id="propose-weakening"><span class="secno">7.4. </span><span class="content">Make the weaker customization points call stronger customizatoin points</span><a class="self-link" href="#propose-weakening"></a></h3>
    <p>To handle cases such as where a type provides a <code class="highlight"><c- n>partial_ordering</c-></code> from <code class="highlight"><c- o>&lt;=></c-></code> and a <code class="highlight"><c- n>strong_order</c-></code> overload, if a customization point cannot get an
 appropriate result from calling <code class="highlight"><c- o>&lt;=></c-></code>, it should try to call a customization
@@ -1851,6 +1852,7 @@ functions for <code class="highlight"><c- n>strong_equality</c-></code> and <cod
     <li data-md>
      <p><code class="highlight"><c- n>X_order_fallback</c-></code></p>
    </ul>
+   <p>See the <a data-link-type="dfn" href="#fallback" id="ref-for-fallback④">fallback</a> discussion on why the <code class="highlight"><c- n>X_order</c-></code> names should be given to the customization points.</p>
    <h2 class="heading settled" data-level="8" id="compat"><span class="secno">8. </span><span class="content">On Compatibility Between the Natural and Default Orderings</span><a class="self-link" href="#compat"></a></h2>
    <p><em>Elements of Programming</em> specifies that for types where the natural and default orderings differ, the default ordering should be <em>finer</em> than the natural one: that is, if <code class="highlight"><c- n>a</c-></code> and <code class="highlight"><c- n>b</c-></code> are <em>comparable</em> and compare unequal under <code class="highlight"><c- o>&lt;=></c-></code>, the default order produces the same result (less or greater).</p>
    <p>It is the opinion of the authors that requiring this in the language of the standard library as a mandatory semantic constraint seems like a bad idea.</p>
@@ -2167,6 +2169,7 @@ functions for <code class="highlight"><c- n>strong_equality</c-></code> and <cod
     <li><a href="#ref-for-fallback">4. Principles</a> <a href="#ref-for-fallback①">(2)</a>
     <li><a href="#ref-for-fallback②">5.2. Discussion of the Fallback principle</a>
     <li><a href="#ref-for-fallback③">6. Questions for LEWG:</a>
+    <li><a href="#ref-for-fallback④">7.5. Add fallback functions</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="corollary-4">
