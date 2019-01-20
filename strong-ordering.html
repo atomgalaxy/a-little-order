@@ -1227,10 +1227,10 @@ Possible extra rowspan handling
       text-align: center;
     }
   </style>
-  <meta content="Bikeshed version 04b354547d55896d854a81cffb3965bd6f8758ec" name="generator">
+  <meta content="Bikeshed version 9c6ae748322940994300e90a77c34437364b40a6" name="generator">
   <link href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="ed994fd26b7f399c3c0941c6de77a8a32213a401" name="document-revision">
+  <meta content="c341356933036e95d949408fcc1b4ba3f5037df5" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1728,7 +1728,7 @@ These will find the most appropriate ordering available, or SFINAE away if no su
     <li data-md>
      <p>How do we make it easy to define <code class="highlight"><c- o>&lt;=></c-></code> for types which have members which only define <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code>, but not <code class="highlight"><c- o>&lt;=></c-></code>?</p>
     <li data-md>
-     <p>How should generic code work with types that may or may not define <code class="highlight"><c- o>&lt;=></c-></code>, but are assumed to have the requisite preconditions on <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code>?</p>
+     <p>How should generic code work with types that may or may not define <code class="highlight"><c- o>&lt;=></c-></code>, <em>but are assumed to have the requisite preconditions on</em> <code class="highlight"><c- o>&lt;</c-></code> <em>and</em> <code class="highlight"><c- o>==</c-></code>?</p>
     <li data-md>
      <p>In a context where we need to pass an ordering type as a parameter to a function, but we need to obtain it from a legacy type, how do we do that?</p>
    </ul>

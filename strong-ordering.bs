@@ -194,7 +194,7 @@ Discussion of the [=Fallback=] principle {#discussion-fallback}
 The arguments on whether we need to provide the fallback functions for legacy types center around a few questions:
 
 - How do we make it easy to define `<=>` for types which have members which only define `<` and `==`, but not `<=>`?
-- How should generic code work with types that may or may not define `<=>`, but are assumed to have the requisite preconditions on `<` and `==`?
+- How should generic code work with types that may or may not define `<=>`, *but are assumed to have the requisite preconditions on* `<` *and* `==`?
 - In a context where we need to pass an ordering type as a parameter to a function, but we need to obtain it from a legacy type, how do we do that?
 
 [[D1186R1]] makes the first of these trivial, and defines the algorithms necessary to make use of the legacy type's `==` and `<` operators. Helpfully, it defines the `3WAY(X, Y)` specification macro, which contains the core of its fallback logic.
