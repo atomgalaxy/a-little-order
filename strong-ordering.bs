@@ -197,9 +197,9 @@ The arguments on whether we need to provide the fallback functions for legacy ty
 - How should generic code work with types that may or may not define `<=>`, *but are assumed to have the requisite preconditions on* `<` *and* `==`?
 - In a context where we need to pass an ordering type as a parameter to a function, but we need to obtain it from a legacy type, how do we do that?
 
-[[D1186R1]] makes the first of these trivial, and defines the algorithms necessary to make use of the legacy type's `==` and `<` operators. Helpfully, it defines the `3WAY(X, Y)` specification macro, which contains the core of its fallback logic.
+[[D1186R1]] makes the first of these trivial, and defines the algorithms necessary to make use of the legacy type's `==` and `<` operators. Helpfully, it defines the `3WAY<>(X, Y)` specification macro, which contains the core of its fallback logic.
 
-The second two questions boil down to the same thing: if we have a type that implements `==` and `<`, and we know it has a particular ordering, how do we convert that into a value of the appropriate `X_ordering` type? We expect this to become a common problem, and therefore the standard should provide convenience functions that call `==` and `<` and return an `X_ordering` value representing the result.  In specifying these functions, we can re-use the `3WAY(X, Y)` from [[D1186R1]], both for convenience and consistency.
+The second two questions boil down to the same thing: if we have a type that implements `==` and `<`, and we know it has a particular ordering, how do we convert that into a value of the appropriate `X_ordering` type? We expect this to become a common problem, and therefore the standard should provide convenience functions that call `==` and `<` and return an `X_ordering` value representing the result.  In specifying these functions, we can re-use the `3WAY<>(X, Y)` from [[D1186R1]], both for convenience and consistency.
 
 However, as C++ applications and libraries are updated to implement `operator <=>` for their types, the need for these fallback functions should diminish. On the other hand, the customisation points are a feature with permenant utility. Due to customziation points having a longer term utility, they should get the `X_order` names, and we should find new names for fallback functions.
 
