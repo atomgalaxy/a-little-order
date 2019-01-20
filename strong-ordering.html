@@ -1762,6 +1762,8 @@ is no way to implement <code class="highlight"><c- n>strong_equal</c-></code> an
    <p>For the functions <code class="highlight"><c- n>strong_order</c-></code>, <code class="highlight"><c- n>weak_order</c-></code> and <code class="highlight"><c- n>partial_order</c-></code> we propose to:</p>
    <ul>
     <li data-md>
+     <p>Replace the functions with Customsation Point Objects</p>
+    <li data-md>
      <p>Remove the fallbacks to <code class="highlight"><c- o>==</c-></code> and <code class="highlight"><c- o>&lt;</c-></code></p>
     <li data-md>
      <p>Have the functions not participate in overload resolution (instead of being defined as deleted) if there is no strong order available.</p>

@@ -233,9 +233,9 @@ Make `strong_order` and friends customisation points {#proposal-customisation}
 
 For the functions `strong_order`, `weak_order` and `partial_order` we propose to:
 
+- Replace the functions with Customsation Point Objects
 - Remove the fallbacks to `==` and `<`
 - Have the functions not participate in overload resolution (instead of being defined as deleted) if there is no strong order available.
-
 
 Replace the IEC559 rule in `strong_order` with separate overloads {#proposal-iec559}
 ------------------------------------------------------------------------------------
