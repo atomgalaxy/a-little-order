@@ -477,7 +477,7 @@ We would like to thank
   - **Herb Sutter and Walter Brown** for providing (mutually opposing) guidance on customization points.
   - **Louis Dionne** for great comments on the structure of the paper and how to bring the focus where it needs to be;
   - **Walter Brown** for representing the paper at a committee meeting when Gašper could not make it in person, and guidance with direction;
-  - **Barry Revzin** for representing the paper at a committee meeting when Gašper could not make it in person, and his various papers that touch ours;
+  - **Barry Revzin** for representing the paper at a committee meeting when Gašper could not make it in person, and his various papers that touch ours, and for pre-reviewing our wording and suggesting we make the customization points CPOs, and reworking his paper to support the `3WAY<strength>(x, y)` syntax.
   - **Herb Sutter** for his comments and support for getting ordering right.
 
 And, *again*, a special thank-you to Walter Brown, who, with his final lightning talk in Bellevue, reminded us to remember whose shoulders we are standing on.
