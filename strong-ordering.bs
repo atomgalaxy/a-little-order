@@ -1,5 +1,5 @@
 <pre class='metadata'>
-Title: Everyone Deserves a Little Order
+Title: Make `strong_order` a Customization Point!
 Status: P
 Audience: LEWG, LWG
 Editor: Gašper Ažman <gasper.azman@gmail.com>
