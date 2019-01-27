@@ -1,6 +1,6 @@
 <pre class='metadata'>
 Title: Make strong_order a Customization Point!
-Status: P
+Status: D
 Audience: LEWG, LWG
 Editor: Gašper Ažman <gasper.azman@gmail.com>
 Editor: Jeff Snyder <jeff-isocpp@caffeinated.me.uk>
@@ -9,7 +9,7 @@ Abstract: The specification of ordering algorithms at the end of [[P0768R1]] doe
 Group: WG21
 Date: 2019-01-20
 Markup Shorthands: markdown yes
-Revision: 2
+Revision: 3
 ED: https://github.com/atomgalaxy/a-little-order/strong-ordering.bs
 </pre>
 
@@ -187,7 +187,8 @@ strong_ordering strong_order(T x, T y) {
 
 #### Using orderings: #### {#using-orderings}
 
-Generic algorithms should require and call `strong_order(x, y)`, `weak_order(x, y)` or `partial_order(x, y)` (depending on the ordering requirements of the algorithm) after a `using namsepace std;`.
+Generic algorithms should require and call `std::strong_order(x, y)`, `std::weak_order(x, y)` or `std::partial_order(x, y)` (depending on the ordering requirements of the algorithm). These customisation point objects will dispatch to the appropriate implementation.
+
 These will find the most appropriate ordering available, or SFINAE away if no suitable ordering is available. For example, if an algorithm calls `weak_order` on a type which has `<=>` returning `partial_order`, does not provide an overload of `weak_order`, but does overload `strong_order`, then `strong_order` will end up being called. The intent is that these "always do the right thing".
 
 Discussion of the [=Fallback=] principle {#discussion-fallback}

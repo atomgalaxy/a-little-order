@@ -2,7 +2,7 @@
  <head>
   <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
   <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
-  <title>P0891R2: Make strong_order a Customization Point!</title>
+  <title>P0891R3: Make strong_order a Customization Point!</title>
 <style data-fill-with="stylesheet">/******************************************************************************
  *                   Style sheet for the W3C specifications                   *
  *
@@ -1230,7 +1230,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version 04b354547d55896d854a81cffb3965bd6f8758ec" name="generator">
   <link href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="a6d7d1a4a6ce1cc66ff037416f488cf24989d05f" name="document-revision">
+  <meta content="9567408d13070bd002cb3dfdf2646647ed06e211" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1495,8 +1495,8 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
  <body class="h-entry">
   <div class="head">
    <p data-fill-with="logo"></p>
-   <h1 class="p-name no-ref" id="title">P0891R2<br>Make strong_order a Customization Point!</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Published Proposal, <time class="dt-updated" datetime="2019-01-20">2019-01-20</time></span></h2>
+   <h1 class="p-name no-ref" id="title">P0891R3<br>Make strong_order a Customization Point!</h1>
+   <h2 class="no-num no-toc no-ref heading settled" id="subtitle"><span class="content">Draft Proposal, <time class="dt-updated" datetime="2019-01-20">2019-01-20</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt>This version:
@@ -1720,8 +1720,8 @@ paper.</p>
 <c- p>}</c->
 </pre>
    <h5 class="heading settled" data-level="5.1.3.2" id="using-orderings"><span class="secno">5.1.3.2. </span><span class="content">Using orderings:</span><a class="self-link" href="#using-orderings"></a></h5>
-   <p>Generic algorithms should require and call <code class="highlight"><c- n>strong_order</c-><c- p>(</c-><c- n>x</c-><c- p>,</c-> <c- n>y</c-><c- p>)</c-></code>, <code class="highlight"><c- n>weak_order</c-><c- p>(</c-><c- n>x</c-><c- p>,</c-> <c- n>y</c-><c- p>)</c-></code> or <code class="highlight"><c- n>partial_order</c-><c- p>(</c-><c- n>x</c-><c- p>,</c-> <c- n>y</c-><c- p>)</c-></code> (depending on the ordering requirements of the algorithm) after a <code class="highlight"><c- k>using</c-> <c- n>namsepace</c-> <c- n>std</c-><c- p>;</c-></code>.
-These will find the most appropriate ordering available, or SFINAE away if no suitable ordering is available. For example, if an algorithm calls <code class="highlight"><c- n>weak_order</c-></code> on a type which has <code class="highlight"><c- o>&lt;=></c-></code> returning <code class="highlight"><c- n>partial_order</c-></code>, does not provide an overload of <code class="highlight"><c- n>weak_order</c-></code>, but does overload <code class="highlight"><c- n>strong_order</c-></code>, then <code class="highlight"><c- n>strong_order</c-></code> will end up being called. The intent is that these "always do the right thing".</p>
+   <p>Generic algorithms should require and call <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_order</c-><c- p>(</c-><c- n>x</c-><c- p>,</c-> <c- n>y</c-><c- p>)</c-></code>, <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>weak_order</c-><c- p>(</c-><c- n>x</c-><c- p>,</c-> <c- n>y</c-><c- p>)</c-></code> or <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>partial_order</c-><c- p>(</c-><c- n>x</c-><c- p>,</c-> <c- n>y</c-><c- p>)</c-></code> (depending on the ordering requirements of the algorithm). These customisation point objects will dispatch to the appropriate implementation.</p>
+   <p>These will find the most appropriate ordering available, or SFINAE away if no suitable ordering is available. For example, if an algorithm calls <code class="highlight"><c- n>weak_order</c-></code> on a type which has <code class="highlight"><c- o>&lt;=></c-></code> returning <code class="highlight"><c- n>partial_order</c-></code>, does not provide an overload of <code class="highlight"><c- n>weak_order</c-></code>, but does overload <code class="highlight"><c- n>strong_order</c-></code>, then <code class="highlight"><c- n>strong_order</c-></code> will end up being called. The intent is that these "always do the right thing".</p>
    <h3 class="heading settled" data-level="5.2" id="discussion-fallback"><span class="secno">5.2. </span><span class="content">Discussion of the <a data-link-type="dfn" href="#fallback" id="ref-for-fallback②">Fallback</a> principle</span><a class="self-link" href="#discussion-fallback"></a></h3>
    <p>The arguments on whether we need to provide the fallback functions for legacy types center around a few questions:</p>
    <ul>
