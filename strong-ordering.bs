@@ -1,8 +1,9 @@
 <pre class='metadata'>
-Title: Make strong_order a Customization Point!
+Title: Make strong_order a Customisation Point!
 Status: D
 Audience: LEWG, LWG
 Editor: Gašper Ažman <gasper.azman@gmail.com>
+Editor: Barry Revzin <barry dot revzin at gmail dot com>
 Editor: Jeff Snyder <jeff-isocpp@caffeinated.me.uk>
 Shortname: P0891
 Abstract: The specification of ordering algorithms at the end of [[P0768R1]] does not provide the ability to provide a default order for user-defined types (since they are specified in such a way that they are not intended to be customisation points), and yet mixes in such a customisation for IEC559 floating point types. This paper suggests providing the functionality of both in a composable and principled way.
@@ -60,10 +61,51 @@ Feedback in San Diego was:
 - We want `strong_order` to be the customisation point (Herb's proposed poll) - never taken.
 
 
+R3: Incorporated feedback from LEWG meeting in Kona
+---------------------------------------------------
+
+Paper was reviewed in parallel with [[P1188R0]] and [[P1154R1]]. Recording polls for all papers to ease reading the addenda to this one.
+
+Polls and instructions for [[P1188R0]] (not this paper), round 1:
+
+- Change name from `compare_3way_type_t` to `compare_3way_result_t`? (7/6/1/0/0) (SF/F/N/A/SA) [adopt]
+- Clean up all spellings of `3way` to `three_way`/`ThreeWay`? (2/6/6/1/0) [adopt]
+- Do above and also:
+    - replace `compare_3way` with a comparison object that invokes just invokes `<=>`.
+    - introduce `compare_three_way_fallback`
+    - (3/8/2/0/0) [adopted]
+- Threeway is one word (0/3/6/5/2) [refused]
+
+
+Polls and instructions for [[P0891R2]] (this paper):
+
+- We want to make `strong_order` and friends customisation points, and remove `strong_equals`, `weak_equals`? (2/8/1/0/1) [adopted]
+- Do we want the `assume_*_order` functions? (1/3/4/1/1), after discussion repeat (1/0/3/5/1) [(refused in favor of name `compare_three_way_fallback`)]
+
+
+Polls and instructions for [[P1188R0]] (not this paper), round 2:
+
+- In light of naot wanting the `assumed_*_order` functions in [[P0891R2]], do we continue to want `compare_three_way_fallback`? (1/3/5/1/1) [adopted]
+- We want a fallback/bridging mechanism, we want it to obey the `strong_order` customisation point family, we tentatively like the ordering being provided by a template parameter? (1/12/0/0/0) [adopted]
+
+
+Polls and instructions for [[P1154R1]]:
+
+- We want all of the traits (rather than just strong structural equality) (0/2/4/0/3) [refused]
+- Drop everything bu `has_strong_structural_equality<T>`, make sure to coordinate with [[P1185R1]] and forward to LWG for C++20? (3/5/1/0/0) [adopted]
+
+
+R3 of this paper contains the requested edits:
+
+- Removal of fallback functions (in favor of the name `compare_three_way_fallback`) with the semantics given in this paper;
+- Added `compare_three_way_fallback` to this paper to replace the proposed fallbacks.
+
+
+
 Status of this paper {#sup}
 ===========================
 
-R2 of this paper is a merge of its R1 and Jeff Snyder's [[P0863R1]], and is synchronized with Barry Revzin's [[D1186R1]]. It incorporates all feedback for R0 and R1, and presents a coherent design for the library components of `<=>`.
+R3 of this paper is a merge of its R1 and Jeff Snyder's [[P0863R1]], and is synchronized with Barry Revzin's [[D1186R1]]. It incorporates all feedback for R0 and R1, and presents a coherent design for the library components of `<=>`. It has been amended slightly from R2 in light of the polls.
 
 
 Problem Description {#problem}
@@ -230,15 +272,20 @@ is no way to implement `strong_equal` and `weak_equal` without calling `<=>`.
 
 Therefore, we propose removing the `strong_equal` and `weak_equal` algorithms.
 
+(Adopted in Kona 2019).
+
 
 Make `strong_order` and friends customisation points {#proposal-customisation}
 ------------------------------------------------------------------------------
 
 For the functions `strong_order`, `weak_order` and `partial_order` we propose to:
 
-- Replace the functions with [Customsation Point Objects](http://eel.is/c++draft/customization.point.object).
+- Replace the functions with [Customsation Point Objects](http://eel.is/c++draft/customisation.point.object).
 - Remove the fallbacks to `==` and `<`
 - Have the functions not participate in overload resolution (instead of being defined as deleted) if there is no strong order available.
+
+(Adopted in Kona 2019)
+
 
 Replace the IEC559 rule in `strong_order` with separate overloads {#proposal-iec559}
 ------------------------------------------------------------------------------------
@@ -260,7 +307,7 @@ ISO/IEC/IEEE 60559, and should not participate in overload resolution if
 `numeric_limts<T>::is_iec559` is `false` for the type of their arguments.
 
 
-Make the weaker customisation points call stronger customizatoin points {#proposal-weakening}
+Make the weaker customisation points call stronger customisation points {#proposal-weakening}
 ---------------------------------------------------------------------------------------------
 
 To handle cases such as where a type provides a `partial_ordering` from `<=>`
@@ -272,35 +319,28 @@ point for an order stronger than its own. Specifically:
 - `partial_order` should fall back to calling `weak_order`
 
 
-Add fallback functions {#proposal-fallback}
--------------------------------------------
+Add the `compare_three_way_fallback` function template {#proposal-fallback}
+---------------------------------------------------------------------------
 
 To avoid losing the functionality of the existing comparison algorithms, we
-propose to keep them under new names, with the following changes to their
-behaviour:
+propose to group them into a function template, with the following changes to
+their behaviour:
 
-- They will, in preference to anything else, return the
+- It will, in preference to anything else, return the
     result of calling the corresponding customisation point.
-- They will not attempt to call `<=>` directly, as this is called by the
+- It will not attempt to call `<=>` directly, as this is called by the
     customisation point.
-- They will fall back to `==` and `<` using the language mechanism proposed by
+- It will fall back to `==` and `<` using the language mechanism proposed by
     [[!D1186R1]] instead of calling `==` and `<` directly.
 
-As per the original comparison algorithms, they will be defined as deleted if
+As per the original comparison algorithms, it will be defined as deleted if
 neither the corresponding customisation point nor the `==` and `<` operators
 are available.
 
 Following the same reasoning as in [[#proposal-remove-equal]], there will be no fallback
 functions for `strong_equality` and `weak_equality`.
 
-We propose naming the fallback functions `assumed_strong_order`, `assumed_weak_order` and `assumed_partial_order`.
-
-Other options to consider:
- - `assumed_X_order`
- - `X_order_assume`
- - `assume_X_order`
- - `fallback_X_order`
- - `X_order_fallback`
+The fallback function shall be named `template <typename Ordering, typename T> Ordering compare_three_way_fallback<Ordering>(T const& x, T const& y)`, and specialized exactly for `std::strong_ordering`, `std::weak_ordering` and `std::partial_ordering`.
 
 See the [=fallback=] discussion on why the `X_order` names should be given to the customisation points.
 
@@ -308,18 +348,15 @@ See the [=fallback=] discussion on why the `X_order` names should be given to th
 Proposed Wording {#wording}
 ===========================
 
-Change the current `strong_order` to `assumed_strong_order` (but see bikeshedding section):
+Remove the sections on `strong_order`, `weak_order` and `partial_order` completely from 16.11.4:
 
 
-`template<class T> constexpr strong_ordering` <span class='ins'>`assumed`</span>`_strong_order(const T& a, const T& b);`
-
-<ul class='std ins'>
-<li># Effects: Compares two values and produces a result of type `strong_ordering`:</li>
+<div class='del'>`template<class T> constexpr strong_ordering strong_order(const T& a, const T& b);`</div>
+<ul class='std del'>
+<li>1 Effects: Compares two values and produces a result of type `strong_ordering`:</li>
 <ul>
 <li class='del'>(1.1) If `numeric_limits<T>::is_iec559` is true, returns a result of type `strong_ordering` that is consistent with the totalOrder operation as specified in ISO/IEC/IEEE 60559.</li>
-<li>(#.1) If the expression `strong_order(a, b)` is well-formed and convertible to `strong_ordering`, return the result of the expression,</li>
 <li class='del'>(1.2) Otherwise, returns `a <=> b` if that expression is well-formed and convertible to `strong_ordering`.</li>
-<li>(#.2) Otherwise, if the expression `3WAY<strong_ordering>(a, b)` is well-formed, return the result of the expression,</li>
 <li class='del'>(1.3) Otherwise, if the expression a <=> b is well-formed, then the function is defined as deleted.</li>
 <li class='del'>(1.4) Otherwise, if the expressions a == b and a < b are each well-formed and convertible to bool, then</li>
 <ul>
@@ -327,20 +364,16 @@ Change the current `strong_order` to `assumed_strong_order` (but see bikesheddin
 <li class='del'>(1.4.2) otherwise, if a < b is true, returns `strong_ordering::less`;</li>
 <li class='del'>(1.4.3) otherwise, returns `strong_ordering::greater`.</li>
 </ul>
-<li>(#.<span class='del'>5</span>3) Otherwise, the function shall be defined as deleted.</li>
+<li>(1.5) Otherwise, the function shall be defined as deleted.</li>
 </ul>
 </ul>
 
-Change the current `weak_order` to `assumed_weak_order` (but see bikeshedding section):
+<div class='del'>`template<class T> constexpr weak_ordering weak_order(const T& a, const T& b);`</div>
 
-`template<class T> constexpr weak_ordering` <span class='ins'>`assumed`</span>`_weak_order(const T& a, const T& b);`
-
-<ul class='std ins'>
-<li># Effects: Compares two values and produces a result of type `weak_ordering`:</li>
+<ul class='std del'>
+<li>2 Effects: Compares two values and produces a result of type `weak_ordering`:</li>
 <ul>
-<li>(#.1) If the expression `weak_order(a, b)` is well-formed and convertible to `weak_ordering`, return the result of the expression,</li>
 <li class='del'>(2.1) Returns `a <=> b` if that expression is well-formed and convertible to `weak_ordering`.</li>
-<li>(#.2) Otherwise, if the expression `3WAY<weak_ordering>(a, b)` is well-formed, return the result of the expression,</li>
 <li class='del'>(2.2) Otherwise, if the expression a <=> b is well-formed, then the function is defined as deleted.</li>
 <li class='del'>(2.3) Otherwise, if the expressions a == b and a < b are each well-formed and convertible to bool, then</li>
 <ul>
@@ -348,31 +381,57 @@ Change the current `weak_order` to `assumed_weak_order` (but see bikeshedding se
 <li class='del'>(2.3.2) otherwise, if a < b is true, returns `weak_ordering::less`;</li>
 <li class='del'>(2.3.3) otherwise, returns `weak_ordering::greater`.</li>
 </ul>
-<li>(#.<span class='del'>4</span>3) Otherwise, the function shall be defined as deleted.</li>
+<li>(2.5) Otherwise, the function shall be defined as deleted.</li>
+</ul>
+</ul>
+
+<div class='del'>`template<class T> constexpr partial_ordering partial_order(const T& a, const T& b);`</div>
+
+<ul class='std del'>
+<li>3 Effects: Compares two values and produces a result of type `partial_ordering`:</li>
+<ul>
+<li class='del'>(3.1) Returns `a <=> b` if that expression is well-formed and convertible to `partial_ordering`.</li>
+<li class='del'>(3.2) Otherwise, if the expression a <=> b is well-formed, then the function is defined as deleted.</li>
+<li class='del'>(3.3) Otherwise, if the expressions a == b and a < b are each well-formed and convertible to bool, then</li>
+<ul>
+<li class='del'>(3.3.1) if a == b is true, returns `partial_ordering::eqivalen`;</li>
+<li class='del'>(3.3.2) otherwise, if a < b is true, returns `partial_ordering::less`;</li>
+<li class='del'>(3.3.3) otherwise, returns `partial_ordering::greater`.</li>
+</ul>
+<li>(3.5) Otherwise, the function shall be defined as deleted.</li>
 </ul>
 </ul>
 
 
-Change the current `partial_order` to `assumed_partial_order` (but see bikeshedding section):
+Add the fallback function in their place:
 
-`template<class T> constexpr partial_ordering` <span class='ins'>`assumed`</span>`_partial_order(const T& a, const T& b);`
 
+<div class='ins'>`template<class Ordering, class T> constexpr Ordering compare_three_way_fallback(const T& a, const T& b);`</div>
 <ul class='std ins'>
-<li># Effects: Compares two values and produces a result of type `partial_ordering`:</li>
+<li># Effects: Compares two values and produces a result of type `Ordering`:</li>
 <ul>
-<li>(#.1) If the expression `partial_order(a, b)` is well-formed and convertible to `partial_ordering`, return the result of the expression,</li>
-<li class='del'>(2.1) Returns `a <=> b` if that expression is well-formed and convertible to `partial_ordering`.</li>
-<li>(#.2) Otherwise, if the expression `3WAY<partial_ordering>(a, b)` is well-formed, return the result of the expression,</li>
-<li class='del'>(2.2) Otherwise, if the expression a <=> b is well-formed, then the function is defined as deleted.</li>
-<li class='del'>(2.3) Otherwise, if the expressions a == b and a < b are each well-formed and convertible to bool, then</li>
+<li>(#.1) If Ordering is not one of `strong_ordering`, `weak_ordering` or `partial_ordering`, `compare_three_way_fallback<Ordering>(const T&, const T&)` is defined as deleted.</li>
+<li>(#.2) If Ordering is `strong_ordering`:</li>
 <ul>
-<li class='del'>(2.3.1) if a == b is true, returns `partial_ordering::eqivalen`;</li>
-<li class='del'>(2.3.2) otherwise, if a < b is true, returns `partial_ordering::less`;</li>
-<li class='del'>(2.3.3) otherwise, returns `partial_ordering::greater`.</li>
+<li>(#.2.1) If the expression `strong_order(a, b)` is well-formed and convertible to `strong_ordering`, return the result of the expression,</li>
+<li>(#.2.2) Otherwise, if the expression `3WAY<strong_ordering>(a, b)` is well-formed, return the result of the expression,</li>
+<li>(#.2.3) Otherwise, the function shall be defined as deleted.</li>
 </ul>
-<li>(#.<span class='del'>4</span>3) Otherwise, the function shall be defined as deleted.</li>
+<li>(#.2) If Ordering is `weak_ordering`:</li>
+<ul>
+<li>(#.2.1) If the expression `weak_order(a, b)` is well-formed and convertible to `weak_ordering`, return the result of the expression,</li>
+<li>(#.2.2) Otherwise, if the expression `3WAY<weak_ordering>(a, b)` is well-formed, return the result of the expression,</li>
+<li>(#.2.3) Otherwise, the function shall be defined as deleted.</li>
+</ul>
+<li>(#.2) If Ordering is `partial_ordering`:</li>
+<ul>
+<li>(#.2.1) If the expression `partial_order(a, b)` is well-formed and convertible to `partial_ordering`, return the result of the expression,</li>
+<li>(#.2.2) Otherwise, if the expression `3WAY<partial_ordering>(a, b)` is well-formed, return the result of the expression,</li>
+<li>(#.2.3) Otherwise, the function shall be defined as deleted.</li>
 </ul>
 </ul>
+</ul>
+
 
 From section 24.x.4, Comparison Algorithms [cmp.alg], remove `strong_equal` and `weak_equal`:
 
@@ -456,6 +515,9 @@ Add the `partial_order` customisation point object:
 </div>
 
 
+The team humbly petitions the Editor to make the requisite edits to the synopsis of the [compare.syn] section.
+
+
 Acknowledgments {#ack}
 ======================
 
@@ -467,7 +529,7 @@ We would like to thank
   - **Herb Sutter and Walter Brown** for providing (mutually opposing) guidance on customisation points.
   - **Louis Dionne** for great comments on the structure of the paper and how to bring the focus where it needs to be;
   - **Walter Brown** for representing the paper at a committee meeting when Gašper could not make it in person, and guidance with direction;
-  - **Barry Revzin** for representing the paper at a committee meeting when Gašper could not make it in person, and his various papers that touch ours, and for pre-reviewing our wording and suggesting we make the customisation points CPOs, and reworking his paper to support the `3WAY<strength>(x, y)` syntax.
+  - **Barry Revzin** for representing the paper at a committee meeting when Gašper could not make it in person, and his various papers that touch ours, and for pre-reviewing our wording and suggesting we make the customisation points CPOs, and reworking his paper to support the `3WAY<strength>(x, y)` syntax, and then finally becoming a co-author :).
   - **Herb Sutter** for his comments and support for getting ordering right.
 
 And, *again*, a special thank-you to Walter Brown, who, with his final lightning talk in Bellevue, reminded us to remember whose shoulders we are standing on.
@@ -547,6 +609,23 @@ bool exists(lazy<gaussian<int>> const& x,
 The std-provided `std::strong_order` is deleted because it cannot be synthesized from `gaussian`'s `operator<=>`. The reason it is chosen over the friend function, however, is because the standard template matches better than the friend which would require an implicit conversion.
 
 If the std-provided `std::strong_order` did not participate in overload resolution, however, this example would work just fine.
+
+
+Appendix B: The old bikeshedding section on names for fallbacks
+===============================================================
+
+The fallback bikeshedding section suggested the following:
+
+We propose naming the fallback functions `assumed_strong_order`, `assumed_weak_order` and `assumed_partial_order`.
+
+Other options to consider:
+ - `assumed_X_order`
+ - `X_order_assume`
+ - `assume_X_order`
+ - `fallback_X_order`
+ - `X_order_fallback`
+
+This was rejected in Kona in favor of `compare_three_way_fallback<Ordering>`.
 
 
 <!--
