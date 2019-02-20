@@ -328,11 +328,11 @@ point for an order stronger than its own. Specifically:
 - `partial_order` should fall back to calling `weak_order`
 
 
-Add the `compare_three_way_fallback` function template {#proposal-fallback}
----------------------------------------------------------------------------
+Add the `compare_three_way_fallback` customization point object template {#proposal-fallback}
+---------------------------------------------------------------------------------------------
 
 To avoid losing the functionality of the existing comparison algorithms, we
-propose to group them into a function template, with the following changes to
+propose to group them into a CPO, with the following changes to
 their behaviour:
 
 - It will, in preference to anything else, return the
@@ -349,7 +349,9 @@ are available.
 Following the same reasoning as in [[#proposal-remove-equal]], there will be no fallback
 functions for `strong_equality` and `weak_equality`.
 
-The fallback function shall be named `template <typename Ordering, typename T> Ordering compare_three_way_fallback<Ordering>(T const& x, T const& y)`, and specialized exactly for `std::strong_ordering`, `std::weak_ordering` and `std::partial_ordering`.
+The fallback CPO will be a variable template
+`template <typename Ordering> compare_three_way_fallback`, where calling it as `compare_three_way_fallback<Ordering>(T const& x, T const& y)` is expression-equivalent to
+the above sequence. The variable template will be specialized exactly for `std::strong_ordering`, `std::weak_ordering` and `std::partial_ordering`.
 
 See the [=fallback=] discussion on why the `X_order` names should be given to the customisation points.
 

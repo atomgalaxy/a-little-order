@@ -1230,7 +1230,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version 04b354547d55896d854a81cffb3965bd6f8758ec" name="generator">
   <link href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="a954b978fd62d4915ddaa3af200da7bd746d7873" name="document-revision">
+  <meta content="a9301b16963c12c70ae77f2ec50e6cd31859ffc1" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1559,7 +1559,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
       <li><a href="#proposal-customisation"><span class="secno">7.2</span> <span class="content">Make <code class="highlight"><c- n>strong_order</c-></code> and friends customisation points</span></a>
       <li><a href="#proposal-iec559"><span class="secno">7.3</span> <span class="content">Replace the IEC559 rule in <code class="highlight"><c- n>strong_order</c-></code> with separate overloads</span></a>
       <li><a href="#proposal-weakening"><span class="secno">7.4</span> <span class="content">Make the weaker customisation points call stronger customisation points</span></a>
-      <li><a href="#proposal-fallback"><span class="secno">7.5</span> <span class="content">Add the <code class="highlight"><c- n>compare_three_way_fallback</c-></code> function template</span></a>
+      <li><a href="#proposal-fallback"><span class="secno">7.5</span> <span class="content">Add the <code class="highlight"><c- n>compare_three_way_fallback</c-></code> customization point object template</span></a>
      </ol>
     <li><a href="#wording"><span class="secno">8</span> <span class="content">Proposed Wording</span></a>
     <li><a href="#ack"><span class="secno">9</span> <span class="content">Acknowledgments</span></a>
@@ -1857,9 +1857,9 @@ point for an order stronger than its own. Specifically:</p>
     <li data-md>
      <p><code class="highlight"><c- n>partial_order</c-></code> should fall back to calling <code class="highlight"><c- n>weak_order</c-></code></p>
    </ul>
-   <h3 class="heading settled" data-level="7.5" id="proposal-fallback"><span class="secno">7.5. </span><span class="content">Add the <code class="highlight"><c- n>compare_three_way_fallback</c-></code> function template</span><a class="self-link" href="#proposal-fallback"></a></h3>
+   <h3 class="heading settled" data-level="7.5" id="proposal-fallback"><span class="secno">7.5. </span><span class="content">Add the <code class="highlight"><c- n>compare_three_way_fallback</c-></code> customization point object template</span><a class="self-link" href="#proposal-fallback"></a></h3>
    <p>To avoid losing the functionality of the existing comparison algorithms, we
-propose to group them into a function template, with the following changes to
+propose to group them into a CPO, with the following changes to
 their behaviour:</p>
    <ul>
     <li data-md>
@@ -1876,7 +1876,8 @@ neither the corresponding customisation point nor the <code class="highlight"><c
 are available.</p>
    <p>Following the same reasoning as in <a href="#proposal-remove-equal">§7.1 Remove the strong_equal and weak_equal comparison algorithms</a>, there will be no fallback
 functions for <code class="highlight"><c- n>strong_equality</c-></code> and <code class="highlight"><c- n>weak_equality</c-></code>.</p>
-   <p>The fallback function shall be named <code class="highlight"><c- k>template</c-> <c- o>&lt;</c-><c- k>typename</c-> <c- n>Ordering</c-><c- p>,</c-> <c- k>typename</c-> <c- n>T</c-><c- o>></c-> <c- n>Ordering</c-> <c- n>compare_three_way_fallback</c-><c- o>&lt;</c-><c- n>Ordering</c-><c- o>></c-><c- p>(</c-><c- n>T</c-> <c- k>const</c-><c- o>&amp;</c-> <c- n>x</c-><c- p>,</c-> <c- n>T</c-> <c- k>const</c-><c- o>&amp;</c-> <c- n>y</c-><c- p>)</c-></code>, and specialized exactly for <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_ordering</c-></code>, <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>weak_ordering</c-></code> and <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>partial_ordering</c-></code>.</p>
+   <p>The fallback CPO will be a variable template <code class="highlight"><c- k>template</c-> <c- o>&lt;</c-><c- k>typename</c-> <c- n>Ordering</c-><c- o>></c-> <c- n>compare_three_way_fallback</c-></code>, where calling it as <code class="highlight"><c- n>compare_three_way_fallback</c-><c- o>&lt;</c-><c- n>Ordering</c-><c- o>></c-><c- p>(</c-><c- n>T</c-> <c- k>const</c-><c- o>&amp;</c-> <c- n>x</c-><c- p>,</c-> <c- n>T</c-> <c- k>const</c-><c- o>&amp;</c-> <c- n>y</c-><c- p>)</c-></code> is expression-equivalent to
+the above sequence. The variable template will be specialized exactly for <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_ordering</c-></code>, <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>weak_ordering</c-></code> and <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>partial_ordering</c-></code>.</p>
    <p>See the <a data-link-type="dfn" href="#fallback" id="ref-for-fallback④">fallback</a> discussion on why the <code class="highlight"><c- n>X_order</c-></code> names should be given to the customisation points.</p>
    <h2 class="heading settled" data-level="8" id="wording"><span class="secno">8. </span><span class="content">Proposed Wording</span><a class="self-link" href="#wording"></a></h2>
    <p>Remove the sections on <code class="highlight"><c- n>strong_order</c-></code>, <code class="highlight"><c- n>weak_order</c-></code> and <code class="highlight"><c- n>partial_order</c-></code> completely from 16.11.4:</p>
@@ -2296,7 +2297,7 @@ The expression <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>compare_
     <li><a href="#ref-for-fallback">4. Principles</a> <a href="#ref-for-fallback①">(2)</a>
     <li><a href="#ref-for-fallback②">5.2. Discussion of the Fallback principle</a>
     <li><a href="#ref-for-fallback③">6. Questions for LEWG:</a>
-    <li><a href="#ref-for-fallback④">7.5. Add the compare_three_way_fallback function template</a>
+    <li><a href="#ref-for-fallback④">7.5. Add the compare_three_way_fallback customization point object template</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="corollary-4">
