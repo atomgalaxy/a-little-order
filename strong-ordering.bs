@@ -14,6 +14,8 @@ Revision: 3
 ED: https://github.com/atomgalaxy/a-little-order/strong-ordering.bs
 </pre>
 
+
+
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -85,20 +87,25 @@ Polls and instructions for [[P0891R2]] (this paper):
 
 Polls and instructions for [[P1188R0]] (not this paper), round 2:
 
-- In light of naot wanting the `assumed_*_order` functions in [[P0891R2]], do we continue to want `compare_three_way_fallback`? (1/3/5/1/1) [adopted]
+- In light of not wanting the `assumed_*_order` functions in [[P0891R2]], do we continue to want `compare_three_way_fallback`? (1/3/5/1/1) [adopted]
 - We want a fallback/bridging mechanism, we want it to obey the `strong_order` customisation point family, we tentatively like the ordering being provided by a template parameter? (1/12/0/0/0) [adopted]
 
 
 Polls and instructions for [[P1154R1]]:
 
 - We want all of the traits (rather than just strong structural equality) (0/2/4/0/3) [refused]
-- Drop everything bu `has_strong_structural_equality<T>`, make sure to coordinate with [[P1185R1]] and forward to LWG for C++20? (3/5/1/0/0) [adopted]
+- Drop everything but `has_strong_structural_equality<T>`, make sure to coordinate with [[P1185R1]] and forward to LWG for C++20? (3/5/1/0/0) [adopted]
 
 
 R3 of this paper contains the requested edits:
 
 - Removal of fallback functions (in favor of the name `compare_three_way_fallback`) with the semantics given in this paper;
 - Added `compare_three_way_fallback` to this paper to replace the proposed fallbacks.
+
+In addition, it has the following changes:
+
+- Removed Appendix A. It was a verbose way to prove a fact that is now better stated in [=Ambiguity of Legacy=], and Arthur O'Dwyer also spotted some bugs in it that detract from the point.
+- Added Appendix C, due to questions received from readers.
 
 
 
@@ -124,6 +131,7 @@ In the standard, we need to provide the ability to customize `strong_order` and 
 
 [[P0891R0]] and [[P0891R1]] of this paper presented the case for having a customisation point for ordering in the language. This paper only summarizes the currently relevant bits of that discussion. For wider context, the reader should refer to the previous revisions, as well as to [[P0863R1]].
 
+This paper tries to solve a similar problem to [[P0181R1]], but without proposing changing the defaults on standard containers.
 
 Principles {#principles}
 ========================
@@ -154,7 +162,8 @@ In addition, we have made the following observations:
 
 - Given [[D1186R1]] provides a method of generating a `<=>` operator from `<` and `==`, we should (due to [=Consistency=]) defer to that method for synthesizing the fallback functions.
 - If `strong_order` is a customisation point for providing a stronger order than `<=>` does, data structures that recurse to their contents for `<=>` should also recurse for `strong_order`.
-- Given that the `<=>` operator is not being provided for any of the types in the standard library C++20, we are deferring proposing this until such time as `<=>` is proposed for them as well.
+- Given that the `<=>` operator is not being provided for any of the types in the standard library C++20, we are deferring proposing this until such time as `<=>` is proposed for them as well. However, there is the late paper of [[D1189R0]] which proposes adding these in time for C++20. If it is adopted, we'll present a paper adding the missing specializations in the next mailing.
+
 
 Discussion {#discussion}
 ========================
@@ -172,7 +181,7 @@ The arguments around whether `strong_order` should be a customisation point have
 
 ### Is it useful? ### {#but-is-it-legal-ill-make-it-legal}
 
-There are many algorithms and data strucutres that do not care about ordering
+There are many algorithms and data structures that do not care about ordering
 per se, but do require some arbitrary order. Examples of these include `set`,
 `map`, and fast implementations of set algorithms (union, intersection,
 difference, etc), which are typically based on ordered sequences.
@@ -220,8 +229,8 @@ For types that endeavour to be *Regular* or something like it (as in, have sane 
 
 ```
 strong_ordering strong_order(T x, T y) {
-  if (auto ord = strong_order(x.a, y.a); is_neq(ord)) { return ord; }
-  if (auto ord = strong_order(x.b, y.b); is_neq(ord)) { return ord; }
+  if (auto ord = std::strong_order(x.a, y.a); is_neq(ord)) { return ord; }
+  if (auto ord = std::strong_order(x.b, y.b); is_neq(ord)) { return ord; }
   // ... for all members
   return strong_ordering::equal;
 }
@@ -304,7 +313,7 @@ We propose that the bullet point regarding `IEC559` be removed from the
 
 These overloads should implement the `totalOrder` operation as specified in
 ISO/IEC/IEEE 60559, and should not participate in overload resolution if
-`numeric_limts<T>::is_iec559` is `false` for the type of their arguments.
+`numeric_limits<T>::is_iec559` is `false` for the type of their arguments.
 
 
 Make the weaker customisation points call stronger customisation points {#proposal-weakening}
@@ -403,12 +412,12 @@ Remove the sections on `strong_order`, `weak_order` and `partial_order` complete
 </ul>
 
 
-Add the fallback function in their place:
+Add the fallback CPO in their place (this **C**PO is not meant for customization):
 
 
-<div class='ins'>`template<class Ordering, class T> constexpr Ordering compare_three_way_fallback(const T& a, const T& b);`</div>
+<div class='ins'>The name `compare_three_way_fallback<Ordering>` for `Ordering` in the set of `strong_ordering`, `weak_ordering` and `partial_ordering` denotes a customization point object.
+The expression `std::compare_three_way_fallback<Ordering>(E, F)` for some subexpressions `E` and `F` with type `T` is expression-equivalent to:
 <ul class='std ins'>
-<li># Effects: Compares two values and produces a result of type `Ordering`:</li>
 <ul>
 <li>(#.1) If Ordering is not one of `strong_ordering`, `weak_ordering` or `partial_ordering`, `compare_three_way_fallback<Ordering>(const T&, const T&)` is defined as deleted.</li>
 <li>(#.2) If Ordering is `strong_ordering`:</li>
@@ -431,6 +440,8 @@ Add the fallback function in their place:
 </ul>
 </ul>
 </ul>
+[Note: the expression `compare_three_way_fallback<Ordering>(E, F)` is always type-convertible to Ordering --end note]
+</div>
 
 
 From section 24.x.4, Comparison Algorithms [cmp.alg], remove `strong_equal` and `weak_equal`:
@@ -476,11 +487,11 @@ Then add the `strong_order` customisation point object:
 <li>(#.2) Otherwise, `E <=> F` if it is a valid expression and its type is convertible to `strong_ordering`,</li>
 <li>(#.3) Otherwise, `std::strong_order(E, F)` is ill-formed. [Note: This case can result in substitution failure when `strong_order(E, F)` appears in the immediate context of a template instantiation. --end note]</li>
 </ul>
-[Note: Whenever `std::strong_order` is a valid expression, its type is convertible to `strong_ordering`. --end note]
+[Note: Whenever `std::strong_order(E, F)` is a valid expression, its type is convertible to `strong_ordering`. --end note]
 </div>
 
 
-Add overloads for IEC559 types:
+Add overloads for IEC559 types (as per [basic.fundamental]§12, these are float, double, long double):
 
 <div class='ins'>
 (#) `strong_order(T, T)` when `T` is a type for which `std::numeric_limits<T>::is_iec559` is `true` shall be a valid expression, whose value shall be consistent with the totalOrder operation as specified in ISO/IEC/IEEE 60559.
@@ -497,7 +508,7 @@ Add the `weak_order` customisation point object:
 <li>(#.3) Otherwise, `std::strong_order(E, F)` if it is a valid expression,</li>
 <li>(#.4) Otherwise, `std::weak_order(E, F)` is ill-formed. [Note: This case can result in substitution failure when `weak_order(E, F)` appears in the immediate context of a template instantiation. --end note]</li>
 </ul>
-[Note: Whenever `std::weak_order` is a valid expression, its type is convertible to `weak_ordering`. --end note]
+[Note: Whenever `std::weak_order(E, F)` is a valid expression, its type is convertible to `weak_ordering`. --end note]
 </div>
 
 
@@ -511,7 +522,7 @@ Add the `partial_order` customisation point object:
 <li>(#.3) Otherwise, `std::weak_order(E, F)` if it is a valid expression,</li>
 <li>(#.4) Otherwise, `std::partial_order(E, F)` is ill-formed. [Note: This case can result in substitution failure when `partial_order(E, F)` appears in the immediate context of a template instantiation. --end note]</li>
 </ul>
-[Note: Whenever `std::partial_order` is a valid expression, its type is convertible to `partial_ordering`. --end note]
+[Note: Whenever `std::partial_order(E, F)` is a valid expression, its type is convertible to `partial_ordering`. --end note]
 </div>
 
 
@@ -531,84 +542,16 @@ We would like to thank
   - **Walter Brown** for representing the paper at a committee meeting when Gašper could not make it in person, and guidance with direction;
   - **Barry Revzin** for representing the paper at a committee meeting when Gašper could not make it in person, and his various papers that touch ours, and for pre-reviewing our wording and suggesting we make the customisation points CPOs, and reworking his paper to support the `3WAY<strength>(x, y)` syntax, and then finally becoming a co-author :).
   - **Herb Sutter** for his comments and support for getting ordering right.
+  - **Arthur O'Dwyer** for his thorough reading of R3 before publication and raising a number of important concerns, which resulted in quite a bit of change.
 
 And, *again*, a special thank-you to Walter Brown, who, with his final lightning talk in Bellevue, reminded us to remember whose shoulders we are standing on.
 
 Thank you all!
 
+Appendix A
+==========
 
-Appendix A: Proof `strong_order` is not a valid customisation point {#example-cust-point}
-=========================================================================================
-
-Say we have a template struct representing the Gaussian integers, with a *natural order* defined by the Manhattan distance from `0+0i`. This struct still defines a `std::strong_order` to model **Regular**.
-
-Note: The **Regular** above refers to the *Elements of Programming* concept, not the ISO C++ **Regular**, which is weaker.
-
-Note: There is no natural order on Gaussian integers, but humor this example, please.
-
-```cpp
-namespace user {
-  template <typename T>
-  struct gaussian {
-    static_assert(std::is_integral_v<T>);
-    T re;
-    T im;
-
-    constexpr std::strong_equality operator==(gassian const& other) const {
-      return re == other.re && im == other.im;
-    }
-    constexpr std::weak_ordering operator<=>(gaussian const& other) const {
-      return (*this == other) ? std::weak_ordering::equal
-                              : (abs(*this) == abs(other)) ? std::weak_ordering::equivalent
-                                                           : abs(*this) <=> abs(other);
-    }
-    friend constexpr T abs(gaussian const&) {
-      using std::abs;
-      return abs(re) + abs(im);
-    }
-
-    friend constexpr std::strong_ordering strong_order(gaussian const& x,
-                                                       gaussian const& y) {
-      // compare lexicographically
-      return std::tie(x.re, x.im) <=> std::tie(y.re, y.im);
-    }
-  };
-}
-```
-
-Consider a transparent ordering operator for `map`:
-```cpp
-struct strong_less
-  template <typename T, typename U>
-  bool operator()(T const& x, U const& y) {
-    using std::strong_order;  // use ADL
-    return strong_order(x, y) < 0;
-  }
-  using is_transparent = std::true_type;
-};
-```
-
-Also say we had a type with an implicit conversion to our `gaussian`:
-```cpp
-template <typename T>
-struct lazy {
-  std::function<T()> make;
-  operator T() const { return make(); }
-};
-```
-
-This function now fails to compile, because the chosen `std::strong_order` is deleted.
-```cpp
-bool exists(lazy<gaussian<int>> const& x,
-            std::set<gaussian<int>, strong_less> const& in) {
-  /* imagine this being a template in both parameters - it's pretty normal */
-  return in.count(x);
-}
-```
-
-The std-provided `std::strong_order` is deleted because it cannot be synthesized from `gaussian`'s `operator<=>`. The reason it is chosen over the friend function, however, is because the standard template matches better than the friend which would require an implicit conversion.
-
-If the std-provided `std::strong_order` did not participate in overload resolution, however, this example would work just fine.
+Removed.
 
 
 Appendix B: The old bikeshedding section on names for fallbacks
@@ -626,6 +569,18 @@ Other options to consider:
  - `X_order_fallback`
 
 This was rejected in Kona in favor of `compare_three_way_fallback<Ordering>`.
+
+
+Appendix C: Considered names for the strong order customization point (R1)
+==========================================================================
+
+These names were rejected in San Diego in favor of `strong_order`. Refer to [[P0891R1]] for the original thing.
+
+- `default_order`
+- `total_order`
+- `arbitrary_order`
+- `default_strong_order`
+- `default_total_order`
 
 
 <!--

@@ -1230,7 +1230,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version 04b354547d55896d854a81cffb3965bd6f8758ec" name="generator">
   <link href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="917f724f4999c66a669a4a3cd1ee0ba6c7902b67" name="document-revision">
+  <meta content="a954b978fd62d4915ddaa3af200da7bd746d7873" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1563,8 +1563,9 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      </ol>
     <li><a href="#wording"><span class="secno">8</span> <span class="content">Proposed Wording</span></a>
     <li><a href="#ack"><span class="secno">9</span> <span class="content">Acknowledgments</span></a>
-    <li><a href="#example-cust-point"><span class="secno"></span> <span class="content">Appendix A: Proof <code class="highlight"><c- n>strong_order</c-></code> is not a valid customisation point</span></a>
+    <li><a href="#appendix-a"><span class="secno"></span> <span class="content">Appendix A</span></a>
     <li><a href="#appendix-b-the-old-bikeshedding-section-on-names-for-fallbacks"><span class="secno"></span> <span class="content">Appendix B: The old bikeshedding section on names for fallbacks</span></a>
+    <li><a href="#appendix-c-considered-names-for-the-strong-order-customization-point-r1"><span class="secno"></span> <span class="content">Appendix C: Considered names for the strong order customization point (R1)</span></a>
     <li>
      <a href="#index"><span class="secno"></span> <span class="content">Index</span></a>
      <ol class="toc">
@@ -1643,7 +1644,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p>Polls and instructions for <a data-link-type="biblio" href="#biblio-p1188r0">[P1188R0]</a> (not this paper), round 2:</p>
    <ul>
     <li data-md>
-     <p>In light of naot wanting the <code class="highlight"><c- n>assumed_</c-><c- o>*</c-><c- n>_order</c-></code> functions in <a data-link-type="biblio" href="#biblio-p0891r2">[P0891R2]</a>, do we continue to want <code class="highlight"><c- n>compare_three_way_fallback</c-></code>? (1/3/5/1/1) [adopted]</p>
+     <p>In light of not wanting the <code class="highlight"><c- n>assumed_</c-><c- o>*</c-><c- n>_order</c-></code> functions in <a data-link-type="biblio" href="#biblio-p0891r2">[P0891R2]</a>, do we continue to want <code class="highlight"><c- n>compare_three_way_fallback</c-></code>? (1/3/5/1/1) [adopted]</p>
     <li data-md>
      <p>We want a fallback/bridging mechanism, we want it to obey the <code class="highlight"><c- n>strong_order</c-></code> customisation point family, we tentatively like the ordering being provided by a template parameter? (1/12/0/0/0) [adopted]</p>
    </ul>
@@ -1652,7 +1653,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p>We want all of the traits (rather than just strong structural equality) (0/2/4/0/3) [refused]</p>
     <li data-md>
-     <p>Drop everything bu <code class="highlight"><c- n>has_strong_structural_equality</c-><c- o>&lt;</c-><c- n>T</c-><c- o>></c-></code>, make sure to coordinate with <a data-link-type="biblio" href="#biblio-p1185r1">[P1185R1]</a> and forward to LWG for C++20? (3/5/1/0/0) [adopted]</p>
+     <p>Drop everything but <code class="highlight"><c- n>has_strong_structural_equality</c-><c- o>&lt;</c-><c- n>T</c-><c- o>></c-></code>, make sure to coordinate with <a data-link-type="biblio" href="#biblio-p1185r1">[P1185R1]</a> and forward to LWG for C++20? (3/5/1/0/0) [adopted]</p>
    </ul>
    <p>R3 of this paper contains the requested edits:</p>
    <ul>
@@ -1660,6 +1661,13 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <p>Removal of fallback functions (in favor of the name <code class="highlight"><c- n>compare_three_way_fallback</c-></code>) with the semantics given in this paper;</p>
     <li data-md>
      <p>Added <code class="highlight"><c- n>compare_three_way_fallback</c-></code> to this paper to replace the proposed fallbacks.</p>
+   </ul>
+   <p>In addition, it has the following changes:</p>
+   <ul>
+    <li data-md>
+     <p>Removed Appendix A. It was a verbose way to prove a fact that is now better stated in <a data-link-type="dfn" href="#ambiguity-of-legacy" id="ref-for-ambiguity-of-legacy">Ambiguity of Legacy</a>, and Arthur O’Dwyer also spotted some bugs in it that detract from the point.</p>
+    <li data-md>
+     <p>Added Appendix C, due to questions received from readers.</p>
    </ul>
    <h2 class="heading settled" data-level="2" id="sup"><span class="secno">2. </span><span class="content">Status of this paper</span><a class="self-link" href="#sup"></a></h2>
    <p>R3 of this paper is a merge of its R1 and Jeff Snyder’s <a data-link-type="biblio" href="#biblio-p0863r1">[P0863R1]</a>, and is synchronized with Barry Revzin’s <a data-link-type="biblio" href="#biblio-d1186r1">[D1186R1]</a>. It incorporates all feedback for R0 and R1, and presents a coherent design for the library components of <code class="highlight"><c- o>&lt;=></c-></code>. It has been amended slightly from R2 in light of the polls.</p>
@@ -1675,6 +1683,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <p>However, the authors of this paper and the author of <a data-link-type="biblio" href="#biblio-p0515r3">[P0515R3]</a> intended for <code class="highlight"><c- n>strong_order</c-></code> to be a customisation point, and it is not currently usable as such.</p>
    <p>In the standard, we need to provide the ability to customize <code class="highlight"><c- n>strong_order</c-></code> and a way to fall back to <code class="highlight"><c- o>==</c-></code> and <code class="highlight"><c- o>&lt;</c-></code>. This paper argues that these are fundamentally incompatible, and cannot be served by the same function.</p>
    <p><a data-link-type="biblio" href="#biblio-p0891r0">[P0891R0]</a> and <a data-link-type="biblio" href="#biblio-p0891r1">[P0891R1]</a> of this paper presented the case for having a customisation point for ordering in the language. This paper only summarizes the currently relevant bits of that discussion. For wider context, the reader should refer to the previous revisions, as well as to <a data-link-type="biblio" href="#biblio-p0863r1">[P0863R1]</a>.</p>
+   <p>This paper tries to solve a similar problem to <a data-link-type="biblio" href="#biblio-p0181r1">[P0181R1]</a>, but without proposing changing the defaults on standard containers.</p>
    <h2 class="heading settled" data-level="4" id="principles"><span class="secno">4. </span><span class="content">Principles</span><a class="self-link" href="#principles"></a></h2>
    <p>To arrive at the final design of this paper, we used the following principles:</p>
    <ul>
@@ -1702,7 +1711,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p><dfn data-dfn-type="dfn" data-noexport id="corollary-3">Corollary 3<a class="self-link" href="#corollary-3"></a></dfn>: from <a data-link-type="dfn" href="#consistency" id="ref-for-consistency②">Consistency</a> and <a data-link-type="dfn" href="#fallback" id="ref-for-fallback">Fallback</a>, it follows that if <code class="highlight"><c- o>&lt;=></c-></code> exists, the fallback function should use it in preference of legacy comparison operators.</p>
     <li data-md>
-     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="corollary-4">Corollary 4</dfn>: From <a data-link-type="dfn" href="#fallback" id="ref-for-fallback①">Fallback</a> and <a data-link-type="dfn" href="#ambiguity-of-legacy" id="ref-for-ambiguity-of-legacy">Ambiguity of Legacy</a>, it follows that by using a fallback function, the user is asserting that <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code> implement the corresponding ordering.</p>
+     <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="corollary-4">Corollary 4</dfn>: From <a data-link-type="dfn" href="#fallback" id="ref-for-fallback①">Fallback</a> and <a data-link-type="dfn" href="#ambiguity-of-legacy" id="ref-for-ambiguity-of-legacy①">Ambiguity of Legacy</a>, it follows that by using a fallback function, the user is asserting that <code class="highlight"><c- o>&lt;</c-></code> and <code class="highlight"><c- o>==</c-></code> implement the corresponding ordering.</p>
     <li data-md>
      <p><dfn class="dfn-paneled" data-dfn-type="dfn" data-noexport id="corollary-5">Corollary 5</dfn>: From <a data-link-type="dfn" href="#customisation" id="ref-for-customisation①">Customisation</a> and the definition of <em>customisation point</em>, it follows that <code class="highlight"><c- o>*</c-><c- n>_order</c-></code> functions must be specified as <i>does not participate in overload resolution</i> when they cannot be synthesized according to the above rules.</p>
     <li data-md>
@@ -1715,7 +1724,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p>If <code class="highlight"><c- n>strong_order</c-></code> is a customisation point for providing a stronger order than <code class="highlight"><c- o>&lt;=></c-></code> does, data structures that recurse to their contents for <code class="highlight"><c- o>&lt;=></c-></code> should also recurse for <code class="highlight"><c- n>strong_order</c-></code>.</p>
     <li data-md>
-     <p>Given that the <code class="highlight"><c- o>&lt;=></c-></code> operator is not being provided for any of the types in the standard library C++20, we are deferring proposing this until such time as <code class="highlight"><c- o>&lt;=></c-></code> is proposed for them as well.</p>
+     <p>Given that the <code class="highlight"><c- o>&lt;=></c-></code> operator is not being provided for any of the types in the standard library C++20, we are deferring proposing this until such time as <code class="highlight"><c- o>&lt;=></c-></code> is proposed for them as well. However, there is the late paper of <a data-link-type="biblio" href="#biblio-d1189r0">[D1189R0]</a> which proposes adding these in time for C++20. If it is adopted, we’ll present a paper adding the missing specializations in the next mailing.</p>
    </ul>
    <h2 class="heading settled" data-level="5" id="discussion"><span class="secno">5. </span><span class="content">Discussion</span><a class="self-link" href="#discussion"></a></h2>
    <h3 class="heading settled" data-level="5.1" id="discussion-customisation"><span class="secno">5.1. </span><span class="content">Discussion of the <a data-link-type="dfn" href="#customisation" id="ref-for-customisation②">Customisation</a> principle</span><a class="self-link" href="#discussion-customisation"></a></h3>
@@ -1731,7 +1740,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <p>How can this be taught?</p>
    </ul>
    <h4 class="heading settled" data-level="5.1.1" id="but-is-it-legal-ill-make-it-legal"><span class="secno">5.1.1. </span><span class="content">Is it useful?</span><a class="self-link" href="#but-is-it-legal-ill-make-it-legal"></a></h4>
-   <p>There are many algorithms and data strucutres that do not care about ordering
+   <p>There are many algorithms and data structures that do not care about ordering
 per se, but do require some arbitrary order. Examples of these include <code class="highlight"><c- n>set</c-></code>, <code class="highlight"><c- n>map</c-></code>, and fast implementations of set algorithms (union, intersection,
 difference, etc), which are typically based on ordered sequences.</p>
    <p>There also exist types for which there is no natural strong ordering, such as <code class="highlight"><c- b>float</c-></code> and <code class="highlight"><c- n>complex</c-></code>. Even though these types do not have a natural strong
@@ -1766,8 +1775,8 @@ paper.</p>
      <p>If you are writing a generic wrapper, or your constituent types have an overloaded <code class="highlight"><c- n>strong_order</c-></code>, you must then also define <code class="highlight"><c- n>strong_order</c-></code> to be:</p>
    </ul>
 <pre class="highlight"><c- n>strong_ordering</c-> <c- nf>strong_order</c-><c- p>(</c-><c- n>T</c-> <c- n>x</c-><c- p>,</c-> <c- n>T</c-> <c- n>y</c-><c- p>)</c-> <c- p>{</c->
-  <c- k>if</c-> <c- p>(</c-><c- k>auto</c-> <c- n>ord</c-> <c- o>=</c-> <c- n>strong_order</c-><c- p>(</c-><c- n>x</c-><c- p>.</c-><c- n>a</c-><c- p>,</c-> <c- n>y</c-><c- p>.</c-><c- n>a</c-><c- p>);</c-> <c- n>is_neq</c-><c- p>(</c-><c- n>ord</c-><c- p>))</c-> <c- p>{</c-> <c- k>return</c-> <c- n>ord</c-><c- p>;</c-> <c- p>}</c->
-  <c- k>if</c-> <c- p>(</c-><c- k>auto</c-> <c- n>ord</c-> <c- o>=</c-> <c- n>strong_order</c-><c- p>(</c-><c- n>x</c-><c- p>.</c-><c- n>b</c-><c- p>,</c-> <c- n>y</c-><c- p>.</c-><c- n>b</c-><c- p>);</c-> <c- n>is_neq</c-><c- p>(</c-><c- n>ord</c-><c- p>))</c-> <c- p>{</c-> <c- k>return</c-> <c- n>ord</c-><c- p>;</c-> <c- p>}</c->
+  <c- k>if</c-> <c- p>(</c-><c- k>auto</c-> <c- n>ord</c-> <c- o>=</c-> <c- n>std</c-><c- o>::</c-><c- n>strong_order</c-><c- p>(</c-><c- n>x</c-><c- p>.</c-><c- n>a</c-><c- p>,</c-> <c- n>y</c-><c- p>.</c-><c- n>a</c-><c- p>);</c-> <c- n>is_neq</c-><c- p>(</c-><c- n>ord</c-><c- p>))</c-> <c- p>{</c-> <c- k>return</c-> <c- n>ord</c-><c- p>;</c-> <c- p>}</c->
+  <c- k>if</c-> <c- p>(</c-><c- k>auto</c-> <c- n>ord</c-> <c- o>=</c-> <c- n>std</c-><c- o>::</c-><c- n>strong_order</c-><c- p>(</c-><c- n>x</c-><c- p>.</c-><c- n>b</c-><c- p>,</c-> <c- n>y</c-><c- p>.</c-><c- n>b</c-><c- p>);</c-> <c- n>is_neq</c-><c- p>(</c-><c- n>ord</c-><c- p>))</c-> <c- p>{</c-> <c- k>return</c-> <c- n>ord</c-><c- p>;</c-> <c- p>}</c->
   <c- c1>// ... for all members</c->
   <c- k>return</c-> <c- n>strong_ordering</c-><c- o>::</c-><c- n>equal</c-><c- p>;</c->
 <c- p>}</c->
@@ -1803,7 +1812,7 @@ paper.</p>
        <p>Rejecting this means that we are rejecting the rationale for their inclusion in the current working draft and that they should be removed.</p>
      </ul>
    </ol>
-   <p>(The <a data-link-type="dfn" href="#consistency" id="ref-for-consistency④">Consistency</a>, <a data-link-type="dfn" href="#weakening" id="ref-for-weakening①">Weakening</a> and <a data-link-type="dfn" href="#ambiguity-of-legacy" id="ref-for-ambiguity-of-legacy①">Ambiguity of Legacy</a> are true from a good design, mathematical, and empirical point of view, respectively, so they are not subject to poll).</p>
+   <p>(The <a data-link-type="dfn" href="#consistency" id="ref-for-consistency④">Consistency</a>, <a data-link-type="dfn" href="#weakening" id="ref-for-weakening①">Weakening</a> and <a data-link-type="dfn" href="#ambiguity-of-legacy" id="ref-for-ambiguity-of-legacy②">Ambiguity of Legacy</a> are true from a good design, mathematical, and empirical point of view, respectively, so they are not subject to poll).</p>
    <h2 class="heading settled" data-level="7" id="proposal"><span class="secno">7. </span><span class="content">Proposal</span><a class="self-link" href="#proposal"></a></h2>
    <h3 class="heading settled" data-level="7.1" id="proposal-remove-equal"><span class="secno">7.1. </span><span class="content">Remove the <code class="highlight"><c- n>strong_equal</c-></code> and <code class="highlight"><c- n>weak_equal</c-></code> comparison algorithms</span><a class="self-link" href="#proposal-remove-equal"></a></h3>
    <p>If we accept <a data-link-type="biblio" href="#biblio-p1185r0">[P1185R0]</a>'s rationale for not calling <code class="highlight"><c- o>&lt;=></c-></code> when the user only
@@ -1837,7 +1846,7 @@ baked into the generic <code class="highlight"><c- n>strong_order</c-></code> fu
      <p><code class="highlight"><c- n>strong_order</c-><c- p>(</c-><c- b>long</c-> <c- b>double</c-><c- p>,</c-> <c- b>long</c-> <c- b>double</c-><c- p>);</c-></code></p>
    </ul>
    <p>These overloads should implement the <code class="highlight"><c- n>totalOrder</c-></code> operation as specified in
-ISO/IEC/IEEE 60559, and should not participate in overload resolution if <code class="highlight"><c- n>numeric_limts</c-><c- o>&lt;</c-><c- n>T</c-><c- o>>::</c-><c- n>is_iec559</c-></code> is <code class="highlight">false</code> for the type of their arguments.</p>
+ISO/IEC/IEEE 60559, and should not participate in overload resolution if <code class="highlight"><c- n>numeric_limits</c-><c- o>&lt;</c-><c- n>T</c-><c- o>>::</c-><c- n>is_iec559</c-></code> is <code class="highlight">false</code> for the type of their arguments.</p>
    <h3 class="heading settled" data-level="7.4" id="proposal-weakening"><span class="secno">7.4. </span><span class="content">Make the weaker customisation points call stronger customisation points</span><a class="self-link" href="#proposal-weakening"></a></h3>
    <p>To handle cases such as where a type provides a <code class="highlight"><c- n>partial_ordering</c-></code> from <code class="highlight"><c- o>&lt;=></c-></code> and a <code class="highlight"><c- n>strong_order</c-></code> overload, if a customisation point cannot get an
 appropriate result from calling <code class="highlight"><c- o>&lt;=></c-></code>, it should try to call a customisation
@@ -1917,32 +1926,35 @@ functions for <code class="highlight"><c- n>strong_equality</c-></code> and <cod
      <li>(3.5) Otherwise, the function shall be defined as deleted.
     </ul>
    </ul>
-   <p>Add the fallback function in their place:</p>
-   <div class="ins"><code class="highlight"><c- k>template</c-><c- o>&lt;</c-><c- k>class</c-> <c- nc>Ordering</c-><c- p>,</c-> <c- k>class</c-> <c- nc>T</c-><c- o>></c-> <c- k>constexpr</c-> <c- n>Ordering</c-> <c- n>compare_three_way_fallback</c-><c- p>(</c-><c- k>const</c-> <c- n>T</c-><c- o>&amp;</c-> <c- n>a</c-><c- p>,</c-> <c- k>const</c-> <c- n>T</c-><c- o>&amp;</c-> <c- n>b</c-><c- p>);</c-></code></div>
-   <ul class="std ins">
-    <li># Effects: Compares two values and produces a result of type <code class="highlight"><c- n>Ordering</c-></code>:
-    <ul>
-     <li>(#.1) If Ordering is not one of <code class="highlight"><c- n>strong_ordering</c-></code>, <code class="highlight"><c- n>weak_ordering</c-></code> or <code class="highlight"><c- n>partial_ordering</c-></code>, <code class="highlight"><c- n>compare_three_way_fallback</c-><c- o>&lt;</c-><c- n>Ordering</c-><c- o>></c-><c- p>(</c-><c- k>const</c-> <c- n>T</c-><c- o>&amp;</c-><c- p>,</c-> <c- k>const</c-> <c- n>T</c-><c- o>&amp;</c-><c- p>)</c-></code> is defined as deleted.
-     <li>(#.2) If Ordering is <code class="highlight"><c- n>strong_ordering</c-></code>:
+   <p>Add the fallback CPO in their place (this <strong>C</strong>PO is not meant for customization):</p>
+   <div class="ins">
+    The name <code class="highlight"><c- n>compare_three_way_fallback</c-><c- o>&lt;</c-><c- n>Ordering</c-><c- o>></c-></code> for <code class="highlight"><c- n>Ordering</c-></code> in the set of <code class="highlight"><c- n>strong_ordering</c-></code>, <code class="highlight"><c- n>weak_ordering</c-></code> and <code class="highlight"><c- n>partial_ordering</c-></code> denotes a customization point object.
+The expression <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>compare_three_way_fallback</c-><c- o>&lt;</c-><c- n>Ordering</c-><c- o>></c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> for some subexpressions <code class="highlight"><c- n>E</c-></code> and <code class="highlight"><c- n>F</c-></code> with type <code class="highlight"><c- n>T</c-></code> is expression-equivalent to: 
+    <ul class="std ins">
      <ul>
-      <li>(#.2.1) If the expression <code class="highlight"><c- n>strong_order</c-><c- p>(</c-><c- n>a</c-><c- p>,</c-> <c- n>b</c-><c- p>)</c-></code> is well-formed and convertible to <code class="highlight"><c- n>strong_ordering</c-></code>, return the result of the expression,
-      <li>(#.2.2) Otherwise, if the expression <code class="highlight"><c- mi>3</c-><c- n>WAY</c-><c- o>&lt;</c-><c- n>strong_ordering</c-><c- o>></c-><c- p>(</c-><c- n>a</c-><c- p>,</c-> <c- n>b</c-><c- p>)</c-></code> is well-formed, return the result of the expression,
-      <li>(#.2.3) Otherwise, the function shall be defined as deleted.
-     </ul>
-     <li>(#.2) If Ordering is <code class="highlight"><c- n>weak_ordering</c-></code>:
-     <ul>
-      <li>(#.2.1) If the expression <code class="highlight"><c- n>weak_order</c-><c- p>(</c-><c- n>a</c-><c- p>,</c-> <c- n>b</c-><c- p>)</c-></code> is well-formed and convertible to <code class="highlight"><c- n>weak_ordering</c-></code>, return the result of the expression,
-      <li>(#.2.2) Otherwise, if the expression <code class="highlight"><c- mi>3</c-><c- n>WAY</c-><c- o>&lt;</c-><c- n>weak_ordering</c-><c- o>></c-><c- p>(</c-><c- n>a</c-><c- p>,</c-> <c- n>b</c-><c- p>)</c-></code> is well-formed, return the result of the expression,
-      <li>(#.2.3) Otherwise, the function shall be defined as deleted.
-     </ul>
-     <li>(#.2) If Ordering is <code class="highlight"><c- n>partial_ordering</c-></code>:
-     <ul>
-      <li>(#.2.1) If the expression <code class="highlight"><c- n>partial_order</c-><c- p>(</c-><c- n>a</c-><c- p>,</c-> <c- n>b</c-><c- p>)</c-></code> is well-formed and convertible to <code class="highlight"><c- n>partial_ordering</c-></code>, return the result of the expression,
-      <li>(#.2.2) Otherwise, if the expression <code class="highlight"><c- mi>3</c-><c- n>WAY</c-><c- o>&lt;</c-><c- n>partial_ordering</c-><c- o>></c-><c- p>(</c-><c- n>a</c-><c- p>,</c-> <c- n>b</c-><c- p>)</c-></code> is well-formed, return the result of the expression,
-      <li>(#.2.3) Otherwise, the function shall be defined as deleted.
+      <li>(#.1) If Ordering is not one of <code class="highlight"><c- n>strong_ordering</c-></code>, <code class="highlight"><c- n>weak_ordering</c-></code> or <code class="highlight"><c- n>partial_ordering</c-></code>, <code class="highlight"><c- n>compare_three_way_fallback</c-><c- o>&lt;</c-><c- n>Ordering</c-><c- o>></c-><c- p>(</c-><c- k>const</c-> <c- n>T</c-><c- o>&amp;</c-><c- p>,</c-> <c- k>const</c-> <c- n>T</c-><c- o>&amp;</c-><c- p>)</c-></code> is defined as deleted.
+      <li>(#.2) If Ordering is <code class="highlight"><c- n>strong_ordering</c-></code>:
+      <ul>
+       <li>(#.2.1) If the expression <code class="highlight"><c- n>strong_order</c-><c- p>(</c-><c- n>a</c-><c- p>,</c-> <c- n>b</c-><c- p>)</c-></code> is well-formed and convertible to <code class="highlight"><c- n>strong_ordering</c-></code>, return the result of the expression,
+       <li>(#.2.2) Otherwise, if the expression <code class="highlight"><c- mi>3</c-><c- n>WAY</c-><c- o>&lt;</c-><c- n>strong_ordering</c-><c- o>></c-><c- p>(</c-><c- n>a</c-><c- p>,</c-> <c- n>b</c-><c- p>)</c-></code> is well-formed, return the result of the expression,
+       <li>(#.2.3) Otherwise, the function shall be defined as deleted.
+      </ul>
+      <li>(#.2) If Ordering is <code class="highlight"><c- n>weak_ordering</c-></code>:
+      <ul>
+       <li>(#.2.1) If the expression <code class="highlight"><c- n>weak_order</c-><c- p>(</c-><c- n>a</c-><c- p>,</c-> <c- n>b</c-><c- p>)</c-></code> is well-formed and convertible to <code class="highlight"><c- n>weak_ordering</c-></code>, return the result of the expression,
+       <li>(#.2.2) Otherwise, if the expression <code class="highlight"><c- mi>3</c-><c- n>WAY</c-><c- o>&lt;</c-><c- n>weak_ordering</c-><c- o>></c-><c- p>(</c-><c- n>a</c-><c- p>,</c-> <c- n>b</c-><c- p>)</c-></code> is well-formed, return the result of the expression,
+       <li>(#.2.3) Otherwise, the function shall be defined as deleted.
+      </ul>
+      <li>(#.2) If Ordering is <code class="highlight"><c- n>partial_ordering</c-></code>:
+      <ul>
+       <li>(#.2.1) If the expression <code class="highlight"><c- n>partial_order</c-><c- p>(</c-><c- n>a</c-><c- p>,</c-> <c- n>b</c-><c- p>)</c-></code> is well-formed and convertible to <code class="highlight"><c- n>partial_ordering</c-></code>, return the result of the expression,
+       <li>(#.2.2) Otherwise, if the expression <code class="highlight"><c- mi>3</c-><c- n>WAY</c-><c- o>&lt;</c-><c- n>partial_ordering</c-><c- o>></c-><c- p>(</c-><c- n>a</c-><c- p>,</c-> <c- n>b</c-><c- p>)</c-></code> is well-formed, return the result of the expression,
+       <li>(#.2.3) Otherwise, the function shall be defined as deleted.
+      </ul>
      </ul>
     </ul>
-   </ul>
+     [Note: the expression <code class="highlight"><c- n>compare_three_way_fallback</c-><c- o>&lt;</c-><c- n>Ordering</c-><c- o>></c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> is always type-convertible to Ordering --end note] 
+   </div>
    <p>From section 24.x.4, Comparison Algorithms [cmp.alg], remove <code class="highlight"><c- n>strong_equal</c-></code> and <code class="highlight"><c- n>weak_equal</c-></code>:</p>
    <div class="del">
      <code class="highlight"><c- k>template</c-><c- o>&lt;</c-><c- k>class</c-> <c- nc>T</c-><c- o>></c-> <c- k>constexpr</c-> <c- n>strong_equality</c-> <c- n>strong_equal</c-><c- p>(</c-><c- k>const</c-> <c- n>T</c-><c- o>&amp;</c-> <c- n>a</c-><c- p>,</c-> <c- k>const</c-> <c- n>T</c-><c- o>&amp;</c-> <c- n>b</c-><c- p>);</c-></code> 
@@ -1980,9 +1992,9 @@ functions for <code class="highlight"><c- n>strong_equality</c-></code> and <cod
      <li>(#.2) Otherwise, <code class="highlight"><c- n>E</c-> <c- o>&lt;=></c-> <c- n>F</c-></code> if it is a valid expression and its type is convertible to <code class="highlight"><c- n>strong_ordering</c-></code>,
      <li>(#.3) Otherwise, <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> is ill-formed. [Note: This case can result in substitution failure when <code class="highlight"><c- n>strong_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> appears in the immediate context of a template instantiation. --end note]
     </ul>
-     [Note: Whenever <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_order</c-></code> is a valid expression, its type is convertible to <code class="highlight"><c- n>strong_ordering</c-></code>. --end note] 
+     [Note: Whenever <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> is a valid expression, its type is convertible to <code class="highlight"><c- n>strong_ordering</c-></code>. --end note] 
    </div>
-   <p>Add overloads for IEC559 types:</p>
+   <p>Add overloads for IEC559 types (as per [basic.fundamental]§12, these are float, double, long double):</p>
    <div class="ins"> (#) <code class="highlight"><c- n>strong_order</c-><c- p>(</c-><c- n>T</c-><c- p>,</c-> <c- n>T</c-><c- p>)</c-></code> when <code class="highlight"><c- n>T</c-></code> is a type for which <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>numeric_limits</c-><c- o>&lt;</c-><c- n>T</c-><c- o>>::</c-><c- n>is_iec559</c-></code> is <code class="highlight">true</code> shall be a valid expression, whose value shall be consistent with the totalOrder operation as specified in ISO/IEC/IEEE 60559. </div>
    <p>Add the <code class="highlight"><c- n>weak_order</c-></code> customisation point object:</p>
    <div class="ins">
@@ -1993,7 +2005,7 @@ functions for <code class="highlight"><c- n>strong_equality</c-></code> and <cod
      <li>(#.3) Otherwise, <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> if it is a valid expression,
      <li>(#.4) Otherwise, <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>weak_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> is ill-formed. [Note: This case can result in substitution failure when <code class="highlight"><c- n>weak_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> appears in the immediate context of a template instantiation. --end note]
     </ul>
-     [Note: Whenever <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>weak_order</c-></code> is a valid expression, its type is convertible to <code class="highlight"><c- n>weak_ordering</c-></code>. --end note] 
+     [Note: Whenever <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>weak_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> is a valid expression, its type is convertible to <code class="highlight"><c- n>weak_ordering</c-></code>. --end note] 
    </div>
    <p>Add the <code class="highlight"><c- n>partial_order</c-></code> customisation point object:</p>
    <div class="ins">
@@ -2004,7 +2016,7 @@ functions for <code class="highlight"><c- n>strong_equality</c-></code> and <cod
      <li>(#.3) Otherwise, <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>weak_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> if it is a valid expression,
      <li>(#.4) Otherwise, <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>partial_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> is ill-formed. [Note: This case can result in substitution failure when <code class="highlight"><c- n>partial_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> appears in the immediate context of a template instantiation. --end note]
     </ul>
-     [Note: Whenever <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>partial_order</c-></code> is a valid expression, its type is convertible to <code class="highlight"><c- n>partial_ordering</c-></code>. --end note] 
+     [Note: Whenever <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>partial_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> is a valid expression, its type is convertible to <code class="highlight"><c- n>partial_ordering</c-></code>. --end note] 
    </div>
    <p>The team humbly petitions the Editor to make the requisite edits to the synopsis of the [compare.syn] section.</p>
    <h2 class="heading settled" data-level="9" id="ack"><span class="secno">9. </span><span class="content">Acknowledgments</span><a class="self-link" href="#ack"></a></h2>
@@ -2028,67 +2040,13 @@ functions for <code class="highlight"><c- n>strong_equality</c-></code> and <cod
      <p><strong>Barry Revzin</strong> for representing the paper at a committee meeting when Gašper could not make it in person, and his various papers that touch ours, and for pre-reviewing our wording and suggesting we make the customisation points CPOs, and reworking his paper to support the <code class="highlight"><c- mi>3</c-><c- n>WAY</c-><c- o>&lt;</c-><c- n>strength</c-><c- o>></c-><c- p>(</c-><c- n>x</c-><c- p>,</c-> <c- n>y</c-><c- p>)</c-></code> syntax, and then finally becoming a co-author :).</p>
     <li data-md>
      <p><strong>Herb Sutter</strong> for his comments and support for getting ordering right.</p>
+    <li data-md>
+     <p><strong>Arthur O’Dwyer</strong> for his thorough reading of R3 before publication and raising a number of important concerns, which resulted in quite a bit of change.</p>
    </ul>
    <p>And, <em>again</em>, a special thank-you to Walter Brown, who, with his final lightning talk in Bellevue, reminded us to remember whose shoulders we are standing on.</p>
    <p>Thank you all!</p>
-   <h2 class="heading settled" id="example-cust-point"><span class="content">Appendix A: Proof <code class="highlight"><c- n>strong_order</c-></code> is not a valid customisation point</span><a class="self-link" href="#example-cust-point"></a></h2>
-   <p>Say we have a template struct representing the Gaussian integers, with a <em>natural order</em> defined by the Manhattan distance from <code class="highlight"><c- mi>0</c-><c- o>+</c-><c- mi>0</c-><c- n>i</c-></code>. This struct still defines a <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_order</c-></code> to model <strong>Regular</strong>.</p>
-   <p class="note" role="note"><span>Note:</span> The <strong>Regular</strong> above refers to the <em>Elements of Programming</em> concept, not the ISO C++ <strong>Regular</strong>, which is weaker.</p>
-   <p class="note" role="note"><span>Note:</span> There is no natural order on Gaussian integers, but humor this example, please.</p>
-<pre class="language-cpp highlight"><c- k>namespace</c-> <c- n>user</c-> <c- p>{</c->
-  <c- k>template</c-> <c- o>&lt;</c-><c- k>typename</c-> <c- n>T</c-><c- o>></c->
-  <c- k>struct</c-> <c- n>gaussian</c-> <c- p>{</c->
-    <c- k>static_assert</c-><c- p>(</c-><c- n>std</c-><c- o>::</c-><c- n>is_integral_v</c-><c- o>&lt;</c-><c- n>T</c-><c- o>></c-><c- p>);</c->
-    <c- n>T</c-> <c- n>re</c-><c- p>;</c->
-    <c- n>T</c-> <c- n>im</c-><c- p>;</c->
-
-    <c- k>constexpr</c-> <c- n>std</c-><c- o>::</c-><c- n>strong_equality</c-> <c- k>operator</c-><c- o>==</c-><c- p>(</c-><c- n>gassian</c-> <c- k>const</c-><c- o>&amp;</c-> <c- n>other</c-><c- p>)</c-> <c- k>const</c-> <c- p>{</c->
-      <c- k>return</c-> <c- n>re</c-> <c- o>==</c-> <c- n>other</c-><c- p>.</c-><c- n>re</c-> <c- o>&amp;&amp;</c-> <c- n>im</c-> <c- o>==</c-> <c- n>other</c-><c- p>.</c-><c- n>im</c-><c- p>;</c->
-    <c- p>}</c->
-    <c- k>constexpr</c-> <c- n>std</c-><c- o>::</c-><c- n>weak_ordering</c-> <c- k>operator</c-><c- o>&lt;=></c-><c- p>(</c-><c- n>gaussian</c-> <c- k>const</c-><c- o>&amp;</c-> <c- n>other</c-><c- p>)</c-> <c- k>const</c-> <c- p>{</c->
-      <c- k>return</c-> <c- p>(</c-><c- o>*</c-><c- k>this</c-> <c- o>==</c-> <c- n>other</c-><c- p>)</c-> <c- o>?</c-> <c- n>std</c-><c- o>::</c-><c- n>weak_ordering</c-><c- o>::</c-><c- nl>equal</c->
-                              <c- p>:</c-> <c- p>(</c-><c- n>abs</c-><c- p>(</c-><c- o>*</c-><c- k>this</c-><c- p>)</c-> <c- o>==</c-> <c- n>abs</c-><c- p>(</c-><c- n>other</c-><c- p>))</c-> <c- o>?</c-> <c- n>std</c-><c- o>::</c-><c- n>weak_ordering</c-><c- o>::</c-><c- nl>equivalent</c->
-                                                           <c- p>:</c-> <c- n>abs</c-><c- p>(</c-><c- o>*</c-><c- k>this</c-><c- p>)</c-> <c- o>&lt;=></c-> <c- n>abs</c-><c- p>(</c-><c- n>other</c-><c- p>);</c->
-    <c- p>}</c->
-    <c- k>friend</c-> <c- k>constexpr</c-> <c- n>T</c-> <c- n>abs</c-><c- p>(</c-><c- n>gaussian</c-> <c- k>const</c-><c- o>&amp;</c-><c- p>)</c-> <c- p>{</c->
-      <c- k>using</c-> <c- n>std</c-><c- o>::</c-><c- n>abs</c-><c- p>;</c->
-      <c- k>return</c-> <c- nf>abs</c-><c- p>(</c-><c- n>re</c-><c- p>)</c-> <c- o>+</c-> <c- n>abs</c-><c- p>(</c-><c- n>im</c-><c- p>);</c->
-    <c- p>}</c->
-
-    <c- k>friend</c-> <c- k>constexpr</c-> <c- n>std</c-><c- o>::</c-><c- n>strong_ordering</c-> <c- n>strong_order</c-><c- p>(</c-><c- n>gaussian</c-> <c- k>const</c-><c- o>&amp;</c-> <c- n>x</c-><c- p>,</c->
-                                                       <c- n>gaussian</c-> <c- k>const</c-><c- o>&amp;</c-> <c- n>y</c-><c- p>)</c-> <c- p>{</c->
-      <c- c1>// compare lexicographically</c->
-      <c- k>return</c-> <c- n>std</c-><c- o>::</c-><c- n>tie</c-><c- p>(</c-><c- n>x</c-><c- p>.</c-><c- n>re</c-><c- p>,</c-> <c- n>x</c-><c- p>.</c-><c- n>im</c-><c- p>)</c-> <c- o>&lt;=></c-> <c- n>std</c-><c- o>::</c-><c- n>tie</c-><c- p>(</c-><c- n>y</c-><c- p>.</c-><c- n>re</c-><c- p>,</c-> <c- n>y</c-><c- p>.</c-><c- n>im</c-><c- p>);</c->
-    <c- p>}</c->
-  <c- p>};</c->
-<c- p>}</c->
-</pre>
-   <p>Consider a transparent ordering operator for <code class="highlight"><c- n>map</c-></code>:</p>
-<pre class="language-cpp highlight"><c- k>struct</c-> <c- n>strong_less</c->
-  <c- k>template</c-> <c- o>&lt;</c-><c- k>typename</c-> <c- n>T</c-><c- p>,</c-> <c- k>typename</c-> <c- n>U</c-><c- o>></c->
-  <c- b>bool</c-> <c- k>operator</c-><c- p>()(</c-><c- n>T</c-> <c- k>const</c-><c- o>&amp;</c-> <c- n>x</c-><c- p>,</c-> <c- n>U</c-> <c- k>const</c-><c- o>&amp;</c-> <c- n>y</c-><c- p>)</c-> <c- p>{</c->
-    <c- k>using</c-> <c- n>std</c-><c- o>::</c-><c- n>strong_order</c-><c- p>;</c->  <c- c1>// use ADL</c->
-    <c- k>return</c-> <c- nf>strong_order</c-><c- p>(</c-><c- n>x</c-><c- p>,</c-> <c- n>y</c-><c- p>)</c-> <c- o>&lt;</c-> <c- mi>0</c-><c- p>;</c->
-  <c- p>}</c->
-  <c- k>using</c-> <c- n>is_transparent</c-> <c- o>=</c-> <c- n>std</c-><c- o>::</c-><c- n>true_type</c-><c- p>;</c->
-<c- p>};</c->
-</pre>
-   <p>Also say we had a type with an implicit conversion to our <code class="highlight"><c- n>gaussian</c-></code>:</p>
-<pre class="language-cpp highlight"><c- k>template</c-> <c- o>&lt;</c-><c- k>typename</c-> <c- n>T</c-><c- o>></c->
-<c- k>struct</c-> <c- n>lazy</c-> <c- p>{</c->
-  <c- n>std</c-><c- o>::</c-><c- n>function</c-><c- o>&lt;</c-><c- n>T</c-><c- p>()</c-><c- o>></c-> <c- n>make</c-><c- p>;</c->
-  <c- k>operator</c-> <c- nf>T</c-><c- p>()</c-> <c- k>const</c-> <c- p>{</c-> <c- k>return</c-> <c- n>make</c-><c- p>();</c-> <c- p>}</c->
-<c- p>};</c->
-</pre>
-   <p>This function now fails to compile, because the chosen <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_order</c-></code> is deleted.</p>
-<pre class="language-cpp highlight"><c- b>bool</c-> <c- nf>exists</c-><c- p>(</c-><c- n>lazy</c-><c- o>&lt;</c-><c- n>gaussian</c-><c- o>&lt;</c-><c- b>int</c-><c- o>>></c-> <c- k>const</c-><c- o>&amp;</c-> <c- n>x</c-><c- p>,</c->
-            <c- n>std</c-><c- o>::</c-><c- n>set</c-><c- o>&lt;</c-><c- n>gaussian</c-><c- o>&lt;</c-><c- b>int</c-><c- o>></c-><c- p>,</c-> <c- n>strong_less</c-><c- o>></c-> <c- k>const</c-><c- o>&amp;</c-> <c- n>in</c-><c- p>)</c-> <c- p>{</c->
-  <c- d>/* imagine this being a template in both parameters - it’s pretty normal */</c->
-  <c- k>return</c-> <c- n>in</c-><c- p>.</c-><c- n>count</c-><c- p>(</c-><c- n>x</c-><c- p>);</c->
-<c- p>}</c->
-</pre>
-   <p>The std-provided <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_order</c-></code> is deleted because it cannot be synthesized from <code class="highlight"><c- n>gaussian</c-></code>'s <code class="highlight"><c- k>operator</c-><c- o>&lt;=></c-></code>. The reason it is chosen over the friend function, however, is because the standard template matches better than the friend which would require an implicit conversion.</p>
-   <p>If the std-provided <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_order</c-></code> did not participate in overload resolution, however, this example would work just fine.</p>
+   <h2 class="heading settled" id="appendix-a"><span class="content">Appendix A</span><a class="self-link" href="#appendix-a"></a></h2>
+   <p>Removed.</p>
    <h2 class="heading settled" id="appendix-b-the-old-bikeshedding-section-on-names-for-fallbacks"><span class="content">Appendix B: The old bikeshedding section on names for fallbacks</span><a class="self-link" href="#appendix-b-the-old-bikeshedding-section-on-names-for-fallbacks"></a></h2>
    <p>The fallback bikeshedding section suggested the following:</p>
    <p>We propose naming the fallback functions <code class="highlight"><c- n>assumed_strong_order</c-></code>, <code class="highlight"><c- n>assumed_weak_order</c-></code> and <code class="highlight"><c- n>assumed_partial_order</c-></code>.</p>
@@ -2106,6 +2064,20 @@ functions for <code class="highlight"><c- n>strong_equality</c-></code> and <cod
      <p><code class="highlight"><c- n>X_order_fallback</c-></code></p>
    </ul>
    <p>This was rejected in Kona in favor of <code class="highlight"><c- n>compare_three_way_fallback</c-><c- o>&lt;</c-><c- n>Ordering</c-><c- o>></c-></code>.</p>
+   <h2 class="heading settled" id="appendix-c-considered-names-for-the-strong-order-customization-point-r1"><span class="content">Appendix C: Considered names for the strong order customization point (R1)</span><a class="self-link" href="#appendix-c-considered-names-for-the-strong-order-customization-point-r1"></a></h2>
+   <p>These names were rejected in San Diego in favor of <code class="highlight"><c- n>strong_order</c-></code>. Refer to <a data-link-type="biblio" href="#biblio-p0891r1">[P0891R1]</a> for the original thing.</p>
+   <ul>
+    <li data-md>
+     <p><code class="highlight"><c- n>default_order</c-></code></p>
+    <li data-md>
+     <p><code class="highlight"><c- n>total_order</c-></code></p>
+    <li data-md>
+     <p><code class="highlight"><c- n>arbitrary_order</c-></code></p>
+    <li data-md>
+     <p><code class="highlight"><c- n>default_strong_order</c-></code></p>
+    <li data-md>
+     <p><code class="highlight"><c- n>default_total_order</c-></code></p>
+   </ul>
   </main>
 <script>
 (function() {
@@ -2261,8 +2233,12 @@ functions for <code class="highlight"><c- n>strong_equality</c-></code> and <cod
   </dl>
   <h3 class="no-num no-ref heading settled" id="informative"><span class="content">Informative References</span><a class="self-link" href="#informative"></a></h3>
   <dl>
+   <dt id="biblio-d1189r0">[D1189R0]
+   <dd><a href="https://wg21.link/d1189r0">Adding &lt;=> to library</a>. URL: <a href="https://wg21.link/d1189r0">https://wg21.link/d1189r0</a>
    <dt id="biblio-p0100r2">[P0100R2]
    <dd>Lawrence Crowl. <a href="https://wg21.link/p0100r2">Comparison in C++</a>. 27 November 2016. URL: <a href="https://wg21.link/p0100r2">https://wg21.link/p0100r2</a>
+   <dt id="biblio-p0181r1">[P0181R1]
+   <dd>Alisdair Meredith. <a href="https://wg21.link/p0181r1">Ordered By Default</a>. 23 June 2016. URL: <a href="https://wg21.link/p0181r1">https://wg21.link/p0181r1</a>
    <dt id="biblio-p0515r3">[P0515R3]
    <dd>Herb Sutter, Jens Maurer, Walter E. Brown. <a href="https://wg21.link/p0515r3">Consistent comparison</a>. 10 November 2017. URL: <a href="https://wg21.link/p0515r3">https://wg21.link/p0515r3</a>
    <dt id="biblio-p0768r1">[P0768R1]
@@ -2301,8 +2277,9 @@ functions for <code class="highlight"><c- n>strong_equality</c-></code> and <cod
   <aside class="dfn-panel" data-for="ambiguity-of-legacy">
    <b><a href="#ambiguity-of-legacy">#ambiguity-of-legacy</a></b><b>Referenced in:</b>
    <ul>
-    <li><a href="#ref-for-ambiguity-of-legacy">4. Principles</a>
-    <li><a href="#ref-for-ambiguity-of-legacy①">6. Questions for LEWG:</a>
+    <li><a href="#ref-for-ambiguity-of-legacy">1.3. R3: Incorporated feedback from LEWG meeting in Kona</a>
+    <li><a href="#ref-for-ambiguity-of-legacy①">4. Principles</a>
+    <li><a href="#ref-for-ambiguity-of-legacy②">6. Questions for LEWG:</a>
    </ul>
   </aside>
   <aside class="dfn-panel" data-for="customisation">
