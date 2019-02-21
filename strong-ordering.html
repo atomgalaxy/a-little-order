@@ -1227,10 +1227,10 @@ Possible extra rowspan handling
       text-align: center;
     }
   </style>
-  <meta content="Bikeshed version 9c6ae748322940994300e90a77c34437364b40a6" name="generator">
+  <meta content="Bikeshed version 04b354547d55896d854a81cffb3965bd6f8758ec" name="generator">
   <link href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="7a0a43ae285f81c4bc81cba915b1c8deed0c403f" name="document-revision">
+  <meta content="7f79247743b565213e3134310ae866f334d9cb44" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1902,25 +1902,25 @@ The expression <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>compare_
       <li>(#.1) If Ordering is not one of <code class="highlight"><c- n>strong_ordering</c-></code>, <code class="highlight"><c- n>weak_ordering</c-></code> or <code class="highlight"><c- n>partial_ordering</c-></code>, <code class="highlight"><c- n>compare_three_way_fallback</c-><c- o>&lt;</c-><c- n>Ordering</c-><c- o>></c-><c- p>(</c-><c- k>const</c-> <c- n>T</c-><c- o>&amp;</c-><c- p>,</c-> <c- k>const</c-> <c- n>T</c-><c- o>&amp;</c-><c- p>)</c-></code> is defined as deleted.
       <li>(#.2) If Ordering is <code class="highlight"><c- n>strong_ordering</c-></code>:
       <ul>
-       <li>(#.2.1) If the expression <code class="highlight"><c- n>strong_order</c-><c- p>(</c-><c- n>a</c-><c- p>,</c-> <c- n>b</c-><c- p>)</c-></code> is well-formed and convertible to <code class="highlight"><c- n>strong_ordering</c-></code>, return the result of the expression,
+       <li>(#.2.1) If the expression <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_order</c-><c- p>(</c-><c- n>a</c-><c- p>,</c-> <c- n>b</c-><c- p>)</c-></code> is well-formed and convertible to <code class="highlight"><c- n>strong_ordering</c-></code>, return the result of the expression,
        <li>(#.2.2) Otherwise, if the expression <code class="highlight"><c- mi>3</c-><c- n>WAY</c-><c- o>&lt;</c-><c- n>strong_ordering</c-><c- o>></c-><c- p>(</c-><c- n>a</c-><c- p>,</c-> <c- n>b</c-><c- p>)</c-></code> is well-formed, return the result of the expression,
        <li>(#.2.3) Otherwise, the function shall be defined as deleted.
       </ul>
       <li>(#.2) If Ordering is <code class="highlight"><c- n>weak_ordering</c-></code>:
       <ul>
-       <li>(#.2.1) If the expression <code class="highlight"><c- n>weak_order</c-><c- p>(</c-><c- n>a</c-><c- p>,</c-> <c- n>b</c-><c- p>)</c-></code> is well-formed and convertible to <code class="highlight"><c- n>weak_ordering</c-></code>, return the result of the expression,
+       <li>(#.2.1) If the expression <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>weak_order</c-><c- p>(</c-><c- n>a</c-><c- p>,</c-> <c- n>b</c-><c- p>)</c-></code> is well-formed and convertible to <code class="highlight"><c- n>weak_ordering</c-></code>, return the result of the expression,
        <li>(#.2.2) Otherwise, if the expression <code class="highlight"><c- mi>3</c-><c- n>WAY</c-><c- o>&lt;</c-><c- n>weak_ordering</c-><c- o>></c-><c- p>(</c-><c- n>a</c-><c- p>,</c-> <c- n>b</c-><c- p>)</c-></code> is well-formed, return the result of the expression,
        <li>(#.2.3) Otherwise, the function shall be defined as deleted.
       </ul>
       <li>(#.2) If Ordering is <code class="highlight"><c- n>partial_ordering</c-></code>:
       <ul>
-       <li>(#.2.1) If the expression <code class="highlight"><c- n>partial_order</c-><c- p>(</c-><c- n>a</c-><c- p>,</c-> <c- n>b</c-><c- p>)</c-></code> is well-formed and convertible to <code class="highlight"><c- n>partial_ordering</c-></code>, return the result of the expression,
+       <li>(#.2.1) If the expression <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>partial_order</c-><c- p>(</c-><c- n>a</c-><c- p>,</c-> <c- n>b</c-><c- p>)</c-></code> is well-formed and convertible to <code class="highlight"><c- n>partial_ordering</c-></code>, return the result of the expression,
        <li>(#.2.2) Otherwise, if the expression <code class="highlight"><c- mi>3</c-><c- n>WAY</c-><c- o>&lt;</c-><c- n>partial_ordering</c-><c- o>></c-><c- p>(</c-><c- n>a</c-><c- p>,</c-> <c- n>b</c-><c- p>)</c-></code> is well-formed, return the result of the expression,
        <li>(#.2.3) Otherwise, the function shall be defined as deleted.
       </ul>
      </ul>
     </ul>
-     [Note: the expression <code class="highlight"><c- n>compare_three_way_fallback</c-><c- o>&lt;</c-><c- n>Ordering</c-><c- o>></c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> is always type-convertible to <code class="highlight"><c- n>Ordering</c-></code> --end note] 
+     [Note: the expression <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>compare_three_way_fallback</c-><c- o>&lt;</c-><c- n>Ordering</c-><c- o>></c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> is always type-convertible to <code class="highlight"><c- n>Ordering</c-></code> --end note] 
    </div>
    <p>From section 24.x.4, Comparison Algorithms [cmp.alg], remove <code class="highlight"><c- n>strong_equal</c-></code> and <code class="highlight"><c- n>weak_equal</c-></code>:</p>
    <div class="del">
@@ -1957,7 +1957,7 @@ The expression <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>compare_
     <ul style="list-style-type: none; padding-left: 0px;">
      <li>(#.1) <code class="highlight"><c- n>strong_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> if it is a valid expression,
      <li>(#.2) Otherwise, <code class="highlight"><c- n>E</c-> <c- o>&lt;=></c-> <c- n>F</c-></code> if it is a valid expression and its type is convertible to <code class="highlight"><c- n>strong_ordering</c-></code>,
-     <li>(#.3) Otherwise, <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> is ill-formed. [Note: This case can result in substitution failure when <code class="highlight"><c- n>strong_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> appears in the immediate context of a template instantiation. --end note]
+     <li>(#.3) Otherwise, <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> is ill-formed. [Note: This case can result in substitution failure when <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> appears in the immediate context of a template instantiation. --end note]
     </ul>
      [Note: Whenever <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> is a valid expression, its type is convertible to <code class="highlight"><c- n>strong_ordering</c-></code>. --end note] 
    </div>
@@ -1970,7 +1970,7 @@ The expression <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>compare_
      <li>(#.1) <code class="highlight"><c- n>weak_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> if it is a valid expression,
      <li>(#.2) Otherwise, <code class="highlight"><c- n>E</c-> <c- o>&lt;=></c-> <c- n>F</c-></code> if it is a valid expression and its type is convertible to <code class="highlight"><c- n>weak_ordering</c-></code>,
      <li>(#.3) Otherwise, <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>strong_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> if it is a valid expression,
-     <li>(#.4) Otherwise, <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>weak_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> is ill-formed. [Note: This case can result in substitution failure when <code class="highlight"><c- n>weak_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> appears in the immediate context of a template instantiation. --end note]
+     <li>(#.4) Otherwise, <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>weak_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> is ill-formed. [Note: This case can result in substitution failure when <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>weak_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> appears in the immediate context of a template instantiation. --end note]
     </ul>
      [Note: Whenever <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>weak_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> is a valid expression, its type is convertible to <code class="highlight"><c- n>weak_ordering</c-></code>. --end note] 
    </div>
@@ -1981,7 +1981,7 @@ The expression <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>compare_
      <li>(#.1) <code class="highlight"><c- n>partial_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> if it is a valid expression,
      <li>(#.2) Otherwise, <code class="highlight"><c- n>E</c-> <c- o>&lt;=></c-> <c- n>F</c-></code> if it is a valid expression and its type is convertible to <code class="highlight"><c- n>partial_ordering</c-></code>,
      <li>(#.3) Otherwise, <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>weak_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> if it is a valid expression,
-     <li>(#.4) Otherwise, <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>partial_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> is ill-formed. [Note: This case can result in substitution failure when <code class="highlight"><c- n>partial_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> appears in the immediate context of a template instantiation. --end note]
+     <li>(#.4) Otherwise, <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>partial_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> is ill-formed. [Note: This case can result in substitution failure when <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>partial_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> appears in the immediate context of a template instantiation. --end note]
     </ul>
      [Note: Whenever <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>partial_order</c-><c- p>(</c-><c- n>E</c-><c- p>,</c-> <c- n>F</c-><c- p>)</c-></code> is a valid expression, its type is convertible to <code class="highlight"><c- n>partial_ordering</c-></code>. --end note] 
    </div>

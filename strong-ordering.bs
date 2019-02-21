@@ -400,25 +400,25 @@ The expression `std::compare_three_way_fallback<Ordering>(E, F)` for some subexp
 <li>(#.1) If Ordering is not one of `strong_ordering`, `weak_ordering` or `partial_ordering`, `compare_three_way_fallback<Ordering>(const T&, const T&)` is defined as deleted.</li>
 <li>(#.2) If Ordering is `strong_ordering`:</li>
 <ul>
-<li>(#.2.1) If the expression `strong_order(a, b)` is well-formed and convertible to `strong_ordering`, return the result of the expression,</li>
+<li>(#.2.1) If the expression `std::strong_order(a, b)` is well-formed and convertible to `strong_ordering`, return the result of the expression,</li>
 <li>(#.2.2) Otherwise, if the expression `3WAY<strong_ordering>(a, b)` is well-formed, return the result of the expression,</li>
 <li>(#.2.3) Otherwise, the function shall be defined as deleted.</li>
 </ul>
 <li>(#.2) If Ordering is `weak_ordering`:</li>
 <ul>
-<li>(#.2.1) If the expression `weak_order(a, b)` is well-formed and convertible to `weak_ordering`, return the result of the expression,</li>
+<li>(#.2.1) If the expression `std::weak_order(a, b)` is well-formed and convertible to `weak_ordering`, return the result of the expression,</li>
 <li>(#.2.2) Otherwise, if the expression `3WAY<weak_ordering>(a, b)` is well-formed, return the result of the expression,</li>
 <li>(#.2.3) Otherwise, the function shall be defined as deleted.</li>
 </ul>
 <li>(#.2) If Ordering is `partial_ordering`:</li>
 <ul>
-<li>(#.2.1) If the expression `partial_order(a, b)` is well-formed and convertible to `partial_ordering`, return the result of the expression,</li>
+<li>(#.2.1) If the expression `std::partial_order(a, b)` is well-formed and convertible to `partial_ordering`, return the result of the expression,</li>
 <li>(#.2.2) Otherwise, if the expression `3WAY<partial_ordering>(a, b)` is well-formed, return the result of the expression,</li>
 <li>(#.2.3) Otherwise, the function shall be defined as deleted.</li>
 </ul>
 </ul>
 </ul>
-[Note: the expression `compare_three_way_fallback<Ordering>(E, F)` is always type-convertible to `Ordering` --end note]
+[Note: the expression `std::compare_three_way_fallback<Ordering>(E, F)` is always type-convertible to `Ordering` --end note]
 </div>
 
 
@@ -463,7 +463,7 @@ Then add the `strong_order` customisation point object:
 <ul style='list-style-type: none; padding-left: 0px;'>
 <li>(#.1) `strong_order(E, F)` if it is a valid expression,</li>
 <li>(#.2) Otherwise, `E <=> F` if it is a valid expression and its type is convertible to `strong_ordering`,</li>
-<li>(#.3) Otherwise, `std::strong_order(E, F)` is ill-formed. [Note: This case can result in substitution failure when `strong_order(E, F)` appears in the immediate context of a template instantiation. --end note]</li>
+<li>(#.3) Otherwise, `std::strong_order(E, F)` is ill-formed. [Note: This case can result in substitution failure when `std::strong_order(E, F)` appears in the immediate context of a template instantiation. --end note]</li>
 </ul>
 [Note: Whenever `std::strong_order(E, F)` is a valid expression, its type is convertible to `strong_ordering`. --end note]
 </div>
@@ -484,7 +484,7 @@ Add the `weak_order` customisation point object:
 <li>(#.1) `weak_order(E, F)` if it is a valid expression,</li>
 <li>(#.2) Otherwise, `E <=> F` if it is a valid expression and its type is convertible to `weak_ordering`,</li>
 <li>(#.3) Otherwise, `std::strong_order(E, F)` if it is a valid expression,</li>
-<li>(#.4) Otherwise, `std::weak_order(E, F)` is ill-formed. [Note: This case can result in substitution failure when `weak_order(E, F)` appears in the immediate context of a template instantiation. --end note]</li>
+<li>(#.4) Otherwise, `std::weak_order(E, F)` is ill-formed. [Note: This case can result in substitution failure when `std::weak_order(E, F)` appears in the immediate context of a template instantiation. --end note]</li>
 </ul>
 [Note: Whenever `std::weak_order(E, F)` is a valid expression, its type is convertible to `weak_ordering`. --end note]
 </div>
@@ -498,7 +498,7 @@ Add the `partial_order` customisation point object:
 <li>(#.1) `partial_order(E, F)` if it is a valid expression,</li>
 <li>(#.2) Otherwise, `E <=> F` if it is a valid expression and its type is convertible to `partial_ordering`,</li>
 <li>(#.3) Otherwise, `std::weak_order(E, F)` if it is a valid expression,</li>
-<li>(#.4) Otherwise, `std::partial_order(E, F)` is ill-formed. [Note: This case can result in substitution failure when `partial_order(E, F)` appears in the immediate context of a template instantiation. --end note]</li>
+<li>(#.4) Otherwise, `std::partial_order(E, F)` is ill-formed. [Note: This case can result in substitution failure when `std::partial_order(E, F)` appears in the immediate context of a template instantiation. --end note]</li>
 </ul>
 [Note: Whenever `std::partial_order(E, F)` is a valid expression, its type is convertible to `partial_ordering`. --end note]
 </div>
