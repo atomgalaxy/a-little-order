@@ -328,7 +328,7 @@ point for an order stronger than its own. Specifically:
 - `partial_order` should fall back to calling `weak_order`
 
 
-Add the `compare_three_way_fallback` customization point object template {#proposal-fallback}
+Add the `compare_three_way_fallback` customisation point object template {#proposal-fallback}
 ---------------------------------------------------------------------------------------------
 
 To avoid losing the functionality of the existing comparison algorithms, we
@@ -414,10 +414,10 @@ Remove the sections on `strong_order`, `weak_order` and `partial_order` complete
 </ul>
 
 
-Add the fallback CPO in their place (this **C**PO is not meant for customization):
+Add the fallback CPO in their place (this **C**PO is not meant for customisation):
 
 
-<div class='ins'>The name `compare_three_way_fallback<Ordering>` for `Ordering` in the set of `strong_ordering`, `weak_ordering` and `partial_ordering` denotes a customization point object.
+<div class='ins'>The name `compare_three_way_fallback<Ordering>` for `Ordering` in the set of `strong_ordering`, `weak_ordering` and `partial_ordering` denotes a customisation point object.
 The expression `std::compare_three_way_fallback<Ordering>(E, F)` for some subexpressions `E` and `F` with type `T` is expression-equivalent to:
 <ul class='std ins'>
 <ul>
@@ -573,7 +573,7 @@ Other options to consider:
 This was rejected in Kona in favor of `compare_three_way_fallback<Ordering>`.
 
 
-Appendix C: Considered names for the strong order customization point (R1)
+Appendix C: Considered names for the strong order customisation point (R1)
 ==========================================================================
 
 These names were rejected in San Diego in favor of `strong_order`. Refer to [[P0891R1]] for the original thing.
