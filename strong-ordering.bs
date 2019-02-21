@@ -66,53 +66,28 @@ Feedback in San Diego was:
 R3: Incorporated feedback from LEWG meeting in Kona
 ---------------------------------------------------
 
-Paper was reviewed in parallel with [[P1188R0]] and [[P1154R1]]. Recording polls for all papers to ease reading the addenda to this one.
+R2 was discussed by LEWG in parallel with [[P1188R0]] at the Kona meeting.
 
-Polls and instructions for [[P1188R0]] (not this paper), round 1:
+LEWG encouraged the direction of replacing `strong_order` and friends with customisation points.
 
-- Change name from `compare_3way_type_t` to `compare_3way_result_t`? (7/6/1/0/0) (SF/F/N/A/SA) [adopt]
-- Clean up all spellings of `3way` to `three_way`/`ThreeWay`? (2/6/6/1/0) [adopt]
-- Do above and also:
-    - replace `compare_3way` with a comparison object that invokes just invokes `<=>`.
-    - introduce `compare_three_way_fallback`
-    - (3/8/2/0/0) [adopted]
-- Threeway is one word (0/3/6/5/2) [refused]
+[[P1188R0]] had an alternative desgin for fallback functions under the name `comapre_3way_fallback<X_ordering>`. LEWG preferred the semantics of the `assumed_X_order` functions, but the name `compare_three_way_fallback` from [[P1188R0]].
 
+The following changes were made to incoporate this feedback:
 
-Polls and instructions for [[P0891R2]] (this paper):
+- Removed the `assumed_X_order` fallback functions
+- Added `compare_three_way_fallback` to replace the `assumed_X_order` fallback functions, with the semantics of the `assumed_X_order` functions
 
-- We want to make `strong_order` and friends customisation points, and remove `strong_equals`, `weak_equals`? (2/8/1/0/1) [adopted]
-- Do we want the `assume_*_order` functions? (1/3/4/1/1), after discussion repeat (1/0/3/5/1) [(refused in favor of name `compare_three_way_fallback`)]
+The following additional changes were made:
 
-
-Polls and instructions for [[P1188R0]] (not this paper), round 2:
-
-- In light of not wanting the `assumed_*_order` functions in [[P0891R2]], do we continue to want `compare_three_way_fallback`? (1/3/5/1/1) [adopted]
-- We want a fallback/bridging mechanism, we want it to obey the `strong_order` customisation point family, we tentatively like the ordering being provided by a template parameter? (1/12/0/0/0) [adopted]
-
-
-Polls and instructions for [[P1154R1]]:
-
-- We want all of the traits (rather than just strong structural equality) (0/2/4/0/3) [refused]
-- Drop everything but `has_strong_structural_equality<T>`, make sure to coordinate with [[P1185R1]] and forward to LWG for C++20? (3/5/1/0/0) [adopted]
-
-
-R3 of this paper contains the requested edits:
-
-- Removal of fallback functions (in favor of the name `compare_three_way_fallback`) with the semantics given in this paper;
-- Added `compare_three_way_fallback` to this paper to replace the proposed fallbacks.
-
-In addition, it has the following changes:
-
-- Removed Appendix A. It was a verbose way to prove a fact that is now better stated in [=Ambiguity of Legacy=], and Arthur O'Dwyer also spotted some bugs in it that detract from the point.
-- Added Appendix C, due to questions received from readers.
-
+- Removed Appendix A; it was a verbose way to prove a fact that is now better stated in [=Ambiguity of Legacy=]
+- Added Appendix B, containing the now-obsolete options for naming the fallback functions
+- Added Appendix C, due to questions received from readers
 
 
 Status of this paper {#sup}
 ===========================
 
-R3 of this paper is a merge of its R1 and Jeff Snyder's [[P0863R1]], and is synchronized with Barry Revzin's [[D1186R1]]. It incorporates all feedback for R0 and R1, and presents a coherent design for the library components of `<=>`. It has been amended slightly from R2 in light of the polls.
+R3 of this paper is a merge of its R1 and Jeff Snyder's [[P0863R1]], and is synchronized with Barry Revzin's [[D1186R1]]. It incorporates all feedback for R0, R1 and R2, and presents a coherent design for the library components of `<=>`.
 
 
 Problem Description {#problem}
@@ -257,7 +232,7 @@ The second two questions boil down to the same thing: if we have a type that imp
 
 However, as C++ applications and libraries are updated to implement `operator <=>` for their types, the need for these fallback functions should diminish. On the other hand, the customisation points are a feature with permenant utility. Due to customziation points having a longer term utility, they should get the `X_order` names, and we should find new names for fallback functions.
 
-Questions for LEWG: {#lewg-questions}
+Questions for LEWG {#lewg-questions}
 =====================================
 
 1. Is there consensus that the [=Customisation=] premise (as above) is correct and should be adopted?
@@ -417,7 +392,7 @@ Remove the sections on `strong_order`, `weak_order` and `partial_order` complete
 Add the fallback CPO in their place (this **C**PO is not meant for customisation):
 
 
-<div class='ins'>The name `compare_three_way_fallback<Ordering>` for `Ordering` in the set of `strong_ordering`, `weak_ordering` and `partial_ordering` denotes a customisation point object.
+<div class='ins'>The name `compare_three_way_fallback<Ordering>` denotes a customisation point object.
 The expression `std::compare_three_way_fallback<Ordering>(E, F)` for some subexpressions `E` and `F` with type `T` is expression-equivalent to:
 <ul class='std ins'>
 <ul>
@@ -442,7 +417,7 @@ The expression `std::compare_three_way_fallback<Ordering>(E, F)` for some subexp
 </ul>
 </ul>
 </ul>
-[Note: the expression `compare_three_way_fallback<Ordering>(E, F)` is always type-convertible to Ordering --end note]
+[Note: the expression `compare_three_way_fallback<Ordering>(E, F)` is always type-convertible to `Ordering` --end note]
 </div>
 
 
