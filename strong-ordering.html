@@ -1230,7 +1230,7 @@ Possible extra rowspan handling
   <meta content="Bikeshed version 9c6ae748322940994300e90a77c34437364b40a6" name="generator">
   <link href="https://github.com/atomgalaxy/a-little-order/strong-ordering.bs" rel="canonical">
   <link href="https://isocpp.org/favicon.ico" rel="icon">
-  <meta content="1e806facf20131c3d0ee20c2ef723cb7ce47c66f" name="document-revision">
+  <meta content="7a0a43ae285f81c4bc81cba915b1c8deed0c403f" name="document-revision">
 <style>
 .ins, ins, ins *, span.ins, span.ins * {
   background-color: rgb(200, 250, 200);
@@ -1622,7 +1622,9 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
     <li data-md>
      <p>Removed the <code class="highlight"><c- n>assumed_X_order</c-></code> fallback functions</p>
     <li data-md>
-     <p>Added <code class="highlight"><c- n>compare_three_way_fallback</c-></code> to replace the <code class="highlight"><c- n>assumed_X_order</c-></code> fallback functions, with the semantics of the <code class="highlight"><c- n>assumed_X_order</c-></code> functions</p>
+     <p>Added <code class="highlight"><c- n>compare_three_way_fallback</c-></code> from <a data-link-type="biblio" href="#biblio-p1186r1">[P1186R1]</a> to replace the <code class="highlight"><c- n>assumed_X_order</c-></code> fallback functions, but keeping the semantics of the <code class="highlight"><c- n>assumed_X_order</c-></code> functions</p>
+    <li data-md>
+     <p>Added Barry Revzin as an author</p>
    </ul>
    <p>The following additional changes were made:</p>
    <ul>
@@ -1634,7 +1636,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
      <p>Added Appendix C, due to questions received from readers</p>
    </ul>
    <h2 class="heading settled" data-level="2" id="sup"><span class="secno">2. </span><span class="content">Status of this paper</span><a class="self-link" href="#sup"></a></h2>
-   <p>R3 of this paper is a merge of its R1 and Jeff Snyder’s <a data-link-type="biblio" href="#biblio-p0863r1">[P0863R1]</a>, and is synchronized with Barry Revzin’s <a data-link-type="biblio" href="#biblio-d1186r1">[D1186R1]</a>. It incorporates all feedback for R0, R1 and R2, and presents a coherent design for the library components of <code class="highlight"><c- o>&lt;=></c-></code>.</p>
+   <p>R3 of this paper is a merge of <a data-link-type="biblio" href="#biblio-p0891r1">R1</a>, Jeff Snyder’s <a data-link-type="biblio" href="#biblio-p0863r1">[P0863R1]</a>, and the <code class="highlight"><c- n>compare_3way_fallback</c-></code> facility from Barry Revzin’s <a data-link-type="biblio" href="#biblio-d1186r1">[D1186R1]</a>. It incorporates all feedback for R0, R1 and R2, and presents a coherent design for the library components of <code class="highlight"><c- o>&lt;=></c-></code>.</p>
    <h2 class="heading settled" data-level="3" id="problem"><span class="secno">3. </span><span class="content">Problem Description</span><a class="self-link" href="#problem"></a></h2>
    <p>This paper is a proposal to amend the <em>comparison algorithms</em> that have been voted into the working draft as part of <a data-link-type="biblio" href="#biblio-p0768r1">[P0768R1]</a>.</p>
    <p>As worded, the <code class="highlight"><c- n>strong_order</c-></code> comparison algorithm provides:</p>
@@ -2216,6 +2218,8 @@ The expression <code class="highlight"><c- n>std</c-><c- o>::</c-><c- n>compare_
    <dd>Gašper Ažman. <a href="https://wg21.link/p0891r1">Everyone Deserves a Little Order</a>. 27 October 2018. URL: <a href="https://wg21.link/p0891r1">https://wg21.link/p0891r1</a>
    <dt id="biblio-p1185r0">[P1185R0]
    <dd>Barry Revzin. <a href="https://wg21.link/p1185r0">&lt;=> != ==</a>. 7 October 2018. URL: <a href="https://wg21.link/p1185r0">https://wg21.link/p1185r0</a>
+   <dt id="biblio-p1186r1">[P1186R1]
+   <dd>Barry Revzin. <a href="https://wg21.link/p1186r1">When do you actually use &lt;=>?</a>. 22 January 2019. URL: <a href="https://wg21.link/p1186r1">https://wg21.link/p1186r1</a>
    <dt id="biblio-p1188r0">[P1188R0]
    <dd>Barry Revzin. <a href="https://wg21.link/p1188r0">Library utilities for &lt;=></a>. 22 January 2019. URL: <a href="https://wg21.link/p1188r0">https://wg21.link/p1188r0</a>
   </dl>

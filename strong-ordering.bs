@@ -75,7 +75,8 @@ LEWG encouraged the direction of replacing `strong_order` and friends with custo
 The following changes were made to incoporate this feedback:
 
 - Removed the `assumed_X_order` fallback functions
-- Added `compare_three_way_fallback` to replace the `assumed_X_order` fallback functions, with the semantics of the `assumed_X_order` functions
+- Added `compare_three_way_fallback` from [[P1186R1]] to replace the `assumed_X_order` fallback functions, but keeping the semantics of the `assumed_X_order` functions
+- Added Barry Revzin as an author
 
 The following additional changes were made:
 
@@ -87,7 +88,7 @@ The following additional changes were made:
 Status of this paper {#sup}
 ===========================
 
-R3 of this paper is a merge of its R1 and Jeff Snyder's [[P0863R1]], and is synchronized with Barry Revzin's [[D1186R1]]. It incorporates all feedback for R0, R1 and R2, and presents a coherent design for the library components of `<=>`.
+R3 of this paper is a merge of [[P0891R1|R1]], Jeff Snyder's [[P0863R1]], and the `compare_3way_fallback` facility from Barry Revzin's [[D1186R1]]. It incorporates all feedback for R0, R1 and R2, and presents a coherent design for the library components of `<=>`.
 
 
 Problem Description {#problem}
