@@ -3,8 +3,9 @@ Title: Make strong_order a Customisation Point!
 Status: D
 Audience: LEWG, LWG
 Editor: Gašper Ažman <gasper.azman@gmail.com>
-Editor: Barry Revzin <barry dot revzin at gmail dot com>
 Editor: Jeff Snyder <jeff-isocpp@caffeinated.me.uk>
+Editor: Barry Revzin <barry dot revzin at gmail dot com>
+Editor: Lawrence Crowl <Lawrence@Crowl.org>
 Shortname: D0891
 Abstract: The specification of ordering algorithms at the end of [[P0768R1]] does not provide the ability to provide a default order for user-defined types (since they are specified in such a way that they are not intended to be customisation points), and yet mixes in such a customisation for IEC559 floating point types. This paper suggests providing the functionality of both in a composable and principled way.
 Group: WG21
@@ -72,17 +73,26 @@ LEWG encouraged the direction of replacing `strong_order` and friends with custo
 
 [[P1188R0]] had an alternative desgin for fallback functions under the name `comapre_3way_fallback<X_ordering>`. LEWG preferred the semantics of the `assumed_X_order` functions, but the name `compare_three_way_fallback` from [[P1188R0]].
 
+Furthermore, EWG reviewed [[P1380R1]], which has substantial overlap with this paper.
+That review resulted in a decision to continue with this paper's approach to the customisation points and fallback functions, and incorporate the extensions to floating-point ordering from [[P1380R1]] into this paper.
+
 The following changes were made to incoporate this feedback:
 
 - Removed the `assumed_X_order` fallback functions
 - Added `compare_three_way_fallback` from [[P1186R1]] to replace the `assumed_X_order` fallback functions, but keeping the semantics of the `assumed_X_order` functions
-- Added Barry Revzin as an author
 
-The following additional changes were made:
+The following changes from [[P1380R1]] were merged into this paper:
+
+- Require an implementation-defined `strong_order` for floating-point types on non-IEC559 platforms
+- Provide an overload of `weak_order` for floating-point types
+
+The following additional editorial changes were made:
 
 - Removed Appendix A; it was a verbose way to prove a fact that is now better stated in [=Ambiguity of Legacy=]
 - Added Appendix B, containing the now-obsolete options for naming the fallback functions
 - Added Appendix C, due to questions received from readers
+- Added Barry Revzin as an author
+- Added Lawrence Crowl as an author
 
 
 Status of this paper {#sup}
@@ -171,8 +181,8 @@ and `map`. Having an arbitrary strong ordering is in fact so useful that
 <i>Elements of Programming</i>.
 
 In order to make it possible to use IEC559 floating-point types in `set`s and
-`map`s, the existing `strong_order` comparison algorithm includes a special rule for IEC559 floating point types. This works well for simple sets of
-floating point numbers, but it breaks down quickly when we try more complicated
+`map`s, the existing `strong_order` comparison algorithm includes a special rule for IEC559 floating-point types. This works well for simple sets of
+floating-point numbers, but it breaks down quickly when we try more complicated
 examples such as `set<optional<float>>` or `set<pair<float,int>>`. To make
 these examples work, we need to *customise* `strong_order` for `optional`,
 `pair` and other container types, and for that to be permitted `strong_order`
@@ -275,21 +285,24 @@ For the functions `strong_order`, `weak_order` and `partial_order` we propose to
 Replace the IEC559 rule in `strong_order` with separate overloads {#proposal-iec559}
 ------------------------------------------------------------------------------------
 
-Since `strong_order` is a customisation point, the strong order for floating
-point types should be provided as overloads of `strong_order` rather than being
+Since `strong_order` is a customisation point, the strong order for floating-point
+types should be provided as overloads of `strong_order` rather than being
 baked into the generic `strong_order` function.
 
 We propose that the bullet point regarding `IEC559` be removed from the
-`strong_order` algorithm, and that the following three overloads for
-`strong_order` are added:
-
-- `strong_order(float, float);` 
-- `strong_order(double, double);` 
-- `strong_order(long double, long double);` 
+`strong_order` algorithm, and that overloads of `strong_order` for the built-in
+floating-point types are added.
 
 These overloads should implement the `totalOrder` operation as specified in
-ISO/IEC/IEEE 60559, and should not participate in overload resolution if
-`numeric_limits<T>::is_iec559` is `false` for the type of their arguments.
+ISO/IEC/IEEE 60559, and should provide an implementation-defined order that is
+consistent with `T`'s comparison operators otherwise. This incorporates a
+proposed change from [[P1380R1]] to require an implementation-defined order on
+platforms with non-IEC559 floating-point types.
+
+Furthermore, we propose adding the overloads of `weak_order` for floating-point
+types from [[P1380R1]], which treats all positive NaNs as equivalent, all
+negative NaNs as equivalent, both zeros as equivalent, and otherwise is
+consistent with the comparison operators.
 
 
 Make the weaker customisation points call stronger customisation points {#proposal-weakening}
@@ -469,10 +482,10 @@ Then add the `strong_order` customisation point object:
 </div>
 
 
-Add overloads for IEC559 types (as per [basic.fundamental]§12, these are float, double, long double):
+Add an overload of `strong_order` for the floating point types (as per [basic.fundamental]§12, these are float, double, long double):
 
 <div class='ins'>
-(#) `strong_order(T, T)` when `T` is a type for which `std::numeric_limits<T>::is_iec559` is `true` shall be a valid expression, whose value shall be consistent with the totalOrder operation as specified in ISO/IEC/IEEE 60559.
+(#) If `is_floating_point<T>::value` is is true, `strong_order(T, T)` returns a result of type `strong_ordering` that is a strong order and that is consistent with `T`'s comparison operators. If `numeric_limits<T>::is_iec559` is also true, returns a result of type `strong_ordering` that is consistent with the totalOrder operation as specified in ISO/IEC/IEEE 60559.
 </div>
 
 
@@ -489,6 +502,21 @@ Add the `weak_order` customisation point object:
 [Note: Whenever `std::weak_order(E, F)` is a valid expression, its type is convertible to `weak_ordering`. --end note]
 </div>
 
+Add an overload of `weak_order` for the floating point types (as per [basic.fundamental]§12, these are float, double, long double):
+
+<div class='ins'>
+(#) If `is_floating_point<T>::value` is is true, `weak_order(T, T)` returns a result of type `weak_ordering` that is a weak order and that is consistent with both `T`'s comparison operators and `strong_order`.
+If `numeric_limits<T>::is_iec559` is also true, returns a result of type `weak_ordering` that has the following equivalence classes, ordered from lesser to greater:
+<ul style='list-style-type: none;'>
+<li>(#.1)Together, all negative NaN values
+<li>(#.2)Negative infinity
+<li>(#.3)Separately, each normal and subnormal negative value
+<li>(#.4)Together, both zero values
+<li>(#.5)Separately, each subnormal and normal positive value
+<li>(#.6)Positive infinity
+<li>(#.7)Together, all positive NaN values
+</ul>
+</div>
 
 Add the `partial_order` customisation point object:
 
